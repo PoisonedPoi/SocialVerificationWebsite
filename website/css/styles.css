@@ -1,0 +1,160 @@
+/*css for interaction design*/
+.interaction-container {
+  display: flex;
+  flex: 0px;
+}
+
+.interaction-sidebar-left {
+  flex: 0.25;
+  border: 2px solid black;
+  margin-right: 0px;
+  row-gap: 0px;
+}
+
+.interaction-sidebar-right {
+  flex: 0.25;
+  border: 2px solid black;
+  margin-right: 0px;
+  row-gap: 0px;
+}
+
+/*css for main interaction canvas where DND(drag and drop) boxes are placed*/
+.interaction-canvas {
+  /*
+  width: 1500px;
+  height: 1000px;
+  */
+  flex: 1;
+  left: auto;
+  top: auto;
+  border: 5px solid #cccccc;
+  position: relative;
+}
+
+.micro-box {
+  width: 70px;
+  height: 30px;
+  background: lightgoldenrodyellow;
+  border: 2px solid black;
+}
+
+.group-box {
+  position: absolute;
+  width: 100px;
+  height: 170px;
+  border: 2px solid black;
+  background: lightgray;
+  left: 0;
+  top: 0;
+}
+
+.group-box-selected {
+  background: lightyellow;
+}
+
+.button-unpressed {
+  background-color: lightgray;
+}
+
+.button-pressed {
+  background-color: darkgrey;
+}
+
+.svg-arrow {
+  position: absolute;
+  width: 100vw; /*TODO find out how to get this fully dynamic */
+  height: 100vh;
+  left: 0;
+  top: 0;
+  /*border: 2px solid black; */
+  z-index: 10;
+  pointer-events: none;
+}
+
+.svg-arrow-text {
+  color: blue;
+  pointer-events: auto;
+  z-index: 10;
+}
+
+.arrow {
+  stroke: rgb(0, 0, 0);
+  stroke-width: 2;
+  marker-end: url(#markerArrow);
+  position: absolute;
+}
+
+.arrowSVG {
+  background: darkgrey;
+}
+
+/* CSS for basic page layout */
+.control-bar {
+  display: inline;
+  flex: 30px;
+}
+
+.nav-bar {
+  background: darkgrey;
+  border: 2px solid black;
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-bar li {
+  float: left;
+}
+
+.nav-bar li a {
+  display: block;
+  width: 50px;
+  height: 10px;
+  padding: 10px;
+  color: green;
+}
+
+/* CSS for all tab objects */
+.tabs {
+  border: 1px solid #cccccc;
+  display: flex;
+}
+
+.tabs-sidebar {
+  width: 125px;
+  flex-shrink: 0;
+  background: #cccccc;
+}
+
+.tabs-button {
+  display: block;
+  padding: 10px;
+  background: #eeeeee;
+  border: none;
+  width: 100%;
+  outline: none;
+  cursor: pointer;
+}
+
+.tabs-button:active {
+  background: yellow;
+}
+
+.tabs-button:hover {
+  background: darkgrey;
+}
+
+.tab-button-active {
+  background: lightgrey;
+  font-weight: bold;
+}
+
+.tabs-content {
+  padding: 15px;
+  font-size: 0.8rem;
+  display: none;
+}
+
+.tabs-content-active {
+  display: block;
+}

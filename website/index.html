@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+
+<!-- Notes: (DELETE WHEN DONE )   
+1. have button state class in javascript to handel multiple options in the future? ex. buttonStates.controlButtonPressed()
+2. is there a better way to remove groups than current implementation ( saving group id in remove button )
+3. verify mvc is in proper format
+4. is it better to use class = and make a css .class or to do style =
+-->
+<html>
+  <head>
+    <title>Social Verification</title>
+    <meta
+      name="description"
+      content="TODO: DESCRIPTION OF WHAT THIS WEBSITE IS"
+    />
+    <meta charset="utf-8" />
+
+    <link rel="stylesheet" href="css/styles.css" />
+     
+  </head>
+  <body>
+    <h1>Social Verification Designer</h1>
+    <header class = 'control-bar'>
+     
+        <button id = 'newGroupBtn' class = "button-unpressed" value="newGroup" onclick="newGroupBtnPressed(this)">Add Group</button>
+        <button id = "drawLineBtn" class = "button-unpressed" value="drawLine" onclick="newLineBtnPressed(this)">Add Line</button>
+        <nav>
+          <ul class = "nav-bar">   <!-- TODO Q  should this be part of nav or does that not matter?-->
+            <li><a href ="/index.html">Home</a></li>
+            <li><a href ="/help">Help</a></li>
+            <li><a href ="https://google.com">link1</a></li>
+          </ul>
+        </nav>
+    </header>
+  
+    
+    <div class = "interaction-container" style = "height: 400px" >
+
+      <div class = "interaction-sidebar-left" id = "interaction-microinteraction-container">
+
+      </div>
+
+    
+      <!-- this is the main canvas that new groups are moved around and dropped into-->
+      <div id = 'interaction-group-canvas' class = "interaction-canvas" ondragover="drag_over(event)" ondrop="dropOnInteractionCanvas(event)">
+      </div>
+
+        <div class = "interaction-sidebar-right" id = "interaction-right-panel">
+
+
+      </div>
+
+  </div>
+
+  
+    <!-- the context menus for right click -->
+    <div id="contextMenuGroup" class="context-menu" style="z-index: 9; display: none; position: absolute" data-currentGroup = "">
+      <button id="removeGroupBtn" class = "button-unpressed" value=""  onclick="removeGroup(this.value)">Remove Group</button>
+    </div>
+
+    <div id="contextMenuMicro" class="context-menu" style="z-index: 9; display: none; position: absolute" data-currentGroup = "">
+      <button id="removeMicroBtn" class = "button-unpressed" value=""  onclick="removeMicro(this.value)">Remove MicroInteraction</button>
+    </div>
+    <!--------------------------------------->
+    
+  
+    <Script  src = "javascript/model.js"></Script>
+    <Script  src = "javascript/dragdrophandler.js"></Script>
+    <Script src = "javascript/tabs.js"></Script>
+    <svg> <!-- needed reference -->
+      <defs>
+        <marker id="markerArrow" markerwidth="13" markerheight="13" refx="2" refy="6"
+               orient="auto">
+            <path d="M2,2 L2,11 L10,6 L2,2" style="fill: #000000;" />
+        </marker>
+    </defs>
+    </svg>
+
+
+
+<!-- this is for tabbed div, if server side have a way for this to be returned with i in 1 2 and 3 etc.
+    <div class="tabs">
+      <div class="tabs-sidebar">
+        <button class="tabs-button " data-for-tab="1">tab 1</button>
+        <button class="tabs-button" data-for-tab="2">tab 2</button>
+        <button class="tabs-button" data-for-tab="3">tab 3</button>
+      </div>
+      <div class="tabs-content " data-tab="1">
+        <h2>tab 1</h2>
+        <p>text for tab 1</p>
+      </div>
+      <div class="tabs-content" data-tab="2">
+        <h2>tab 2</h2>
+        <p>text for tab 2</p>
+      </div>
+      <div class="tabs-content" data-tab="3">
+        <h2>tab 3</h2>
+        <p>text for tab 3</p>
+      </div>
+    </div>
+-->
+
+
+
+  </body>
+</html>

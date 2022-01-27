@@ -1,0 +1,259 @@
+
+//transition states enums   //human ready is hReady
+//note, human states are ready, busy and suspended, a transition can have one or all of these states as a condition to switch
+const hReady = Symbol("hready");
+const hReadyBusy = Symbol("hreadybusy");
+const hReadyBusySusp = Symbol("hreadybusysuspended");
+const hReadySusp = Symbol("hreadysuspended");
+const hBusy = Symbol("hbusy");
+const hBusySusp = Symbol("hbusysuspended");
+const hSusp = Symbol("hsuspended");
+
+
+
+
+
+
+// model classes
+
+class Interaction {
+    errors;
+    trackedMicroTypes = [];
+    groups = [];
+    transitions = [];
+
+    //these only get incremented and serve as unique id
+    numGroups;
+    numMicros;
+    numTransitions;
+
+    constructor(){
+        this.numGroups = 0;
+        this.numTransitions = 0;
+        this.errors = new Errors();
+    }
+
+    exportModelToXML(){
+
+
+
+    }
+
+    addErrors(){
+        //todo figure out how to add in errors
+    }
+
+    loadMicroTypes(newMicroTypes){
+        //TODO load all micro types automatically by controller
+        for(let i=0;i< newMicroTypes.length;i++){
+            this.trackedMicroTypes.push(newMicroTypes[i]);
+        }
+    }
+
+    createGroup(){
+        let newGroup;
+        if(this.numGroups === 0){
+            newGroup = new Group(0, true);
+        }else{
+            newGroup = new Group(this.numGroups, false); 
+        }
+        newGroup.name = "untitled" + this.numGroups;
+        this.groups.push(newGroup);
+        this.numGroups++;
+        return newGroup.id;
+    }
+    
+
+    getGroup(id){
+        for(let i=0;i<this.numGroups;i++){
+            if(this.groups[i].id == id){
+                return this.groups[i];
+            }
+        }
+        console.log("couldnt find id " + id + " in getGroup");
+        return;
+    }
+
+
+    removeGroup(id){
+        for (let i = 0; i < this.groups.length; i++) {
+            if (this.groups[i].id === id) {
+                this.groups.splice(i, 1);
+                return;
+            }
+        }
+        for(let i=0;i<this.transitions.length;i++){
+            if(this.transitions[i].firstGroup.id === id || this.transitions[i].secondGroup.id === id){
+                this.transitions.splice(i,1);
+            }
+        }
+    }
+
+    getMicroTypeByName(name){
+        for(let i = 0; i< this.trackedMicroTypes.length;i++){
+            if(this.trackedMicroTypes[i].type === name){
+                //make a deep copy and then return it
+                let copiedMicroType = JSON.parse(JSON.stringify(this.trackedMicroTypes[i]));
+                return copiedMicroType;
+            }
+        }
+        console.log("Micro type name " + name + " was not found, it must be loaded into interaction");
+        return null;
+    }
+
+    addMicroToGroup(id, microTypeName){
+        let group = this.getGroup(id);
+        let microType = this.getMicroTypeByName(microTypeName);
+        let newMicro = new MicroInteraction(numMicros, microType);
+        group.addMicro(newMicro);
+        this.numMicros++;
+        return newMicro.id;
+    }
+
+    
+
+    removeMicroFromGroup(groupid, microid){
+        let group = this.getGroup(groupid);
+        group.removeMicro(microid);
+    }
+
+    addTransition(group1id, group2id){
+        let group1 = this.getGroup(group1id);
+        let group2 = this.getGroup(group2id);
+        let newTransition = new Transition(this.numTransitions, group1, group2);
+        this.transitions.push(newTransition);
+        this.numTransitions++;
+        return newTransition.id;
+    }
+
+    removeTransition(id){
+        for(let i=0;i<this.transitions.length;i++){
+            if(transitions[i].id === id){
+                transitions.splice(i, 1);
+                return;
+            }
+        }
+    }
+
+}
+
+
+class Group{
+    initialGroup;
+    id;
+    name;
+    micros = [];
+
+    constructor(id, isFirst){
+        this.initialGroup = isFirst;
+        this.id = id;
+    }
+
+    addMicro(micro){
+        this.micros.push(micro);
+    }
+
+    removeMicro(microid){
+        for (let i = 0; i < this.micros.length; i++) {
+            if (this.micros[i].id === microid) {
+                this.micros.splice(i, 1);
+                return;
+            }
+        }
+    }
+
+}
+
+
+class Transition {
+    firstGroup;
+    secondGroup;
+    state;
+    id;
+
+    constructor(id, firstGroup, secondGroup){
+        this.firstGroup = firstGroup;
+        this.secondGroup = secondGroup;
+        this.state=hReadyBusySusp;
+        this.id = id;
+    }
+}
+
+
+class MicroInteraction{
+    id;
+    type;
+    parameters = [];
+    parameterResults = []; //TODO see if this should be integrated into parameterResults
+    constructor(id, microType){ //micros are built off a microType defined
+        this.type = microType.type;
+        this.parameters = microType.parameters;
+        this.id = id;
+    }
+}
+
+
+class MicroType{
+    parameters = [];
+    type;
+    constructor(type,parameters){
+        this.type = type;
+        this.parameters = parameters;
+    }
+}
+
+
+class Parameter {
+    id;
+    description;
+    field;
+    value;
+    isBoolean;
+    isField;
+    isDropDown;
+    dropDownSelections = [];
+
+    constructor(id, description, isBoolean, isField, isDropdown, dropDownSelections) { //used to add dropDownSelections
+        this.id = id;
+        this.description = description;
+        this.isBoolean = isBoolean;
+        this.isField = isField;
+        this.isDropDown = isDropdown;
+        this.dropDownSelections = dropDownSelections;//this may be null if not used
+    }
+
+
+}
+
+class Errors {
+    flubs;
+    
+    constructor(){
+        this.flubs = [];
+    }
+
+    addFlub(flub){
+        this.flubs.push(flub);
+    }
+
+    getFlubs(){
+        return this.flubs;
+    }
+
+
+}
+
+class Flub{
+    category;
+    targetID;
+    description;
+    
+    constructor(targetID, category, description){
+        this.targetID = targetID;
+        this.category = category;
+        this.description = description;
+    }
+
+}
+
+//export {Interaction, Group, Transition, MicroInteraction, MicroType, Parameter };

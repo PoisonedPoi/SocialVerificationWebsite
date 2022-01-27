@@ -1,0 +1,100 @@
+<!doctype html>
+<html>
+    <!-- 
+        https://stackoverflow.com/questions/21864989/draw-lines-between-2-elements-in-html-page  
+    -->
+<head>
+<link rel="stylesheet" type="text/css" media="all" href="css/reset.css" /> <!-- reset css -->
+<script type="text/javascript" src="http://code.jquery.com/jquery.min.js"></script>
+<script src="http://code.jquery.com/ui/1.9.2/jquery-ui.min.js"></script>
+<style>
+    body{ background-color: ivory; margin:0; padding:0; }
+    #canvas{
+        position:absolute;
+        border:1px solid red;
+        width:100%;height:100%;
+    }
+    .draggable{
+        width:50px;
+        height:30px;
+        background:skyblue;
+        border:1px solid green;
+    }
+    .right{
+        margin-left:100px; 
+        background:salmon;
+    }
+    #wrap2{margin-top:-95px;}
+</style>
+<script>
+$(function(){
+
+    var canvas=document.getElementById("canvas");
+    var ctx=canvas.getContext("2d");
+    canvas.width=window.innerWidth;
+    canvas.height=window.innerHeight;
+    ctx.lineWidth=3;
+
+    var $canvas=$("#canvas");
+    var canvasOffset=$canvas.offset();
+    var offsetX=canvasOffset.left;
+    var offsetY=canvasOffset.top;
+
+    var $0=$("#0");
+    var $1=$("#1");
+    var $2=$("#2");
+    var $0r=$("#0r");
+    var $1r=$("#1r");
+    var $2r=$("#2r");
+
+    var connectors=[];
+    connectors.push({from:$0,to:$0r});
+    connectors.push({from:$1,to:$0r});
+    connectors.push({from:$2,to:$2r});
+
+    connect();
+
+    $(".draggable").draggable({
+        // event handlers
+        start: noop,
+        drag:  connect,
+        stop:  noop
+    });
+
+    function noop(){}
+
+    function connect(){
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        for(var i=0;i<connectors.length;i++){
+            var c=connectors[i];
+            var eFrom=c.from;
+            var eTo=c.to;
+            var pos1=eFrom.offset();
+            var pos2=eTo.offset();
+            var size1=eFrom.size();
+            var size2=eTo.size();
+            ctx.beginPath();
+            ctx.moveTo(pos1.left+eFrom.width()+3,pos1.top+eFrom.height()/2);
+            ctx.lineTo(pos2.left+3,pos2.top+eTo.height()/2);
+            ctx.stroke();
+
+        }
+    }
+
+}); // end $(function(){});
+</script>
+</head>
+<body>
+    <canvas id="canvas" width=300 height=300></canvas>
+    <div>
+        <div id="0" class="draggable">0</div>
+        <div id="1" class="draggable">1</div>
+        <div id="2" class="draggable">2</div>
+    </div>
+    <div id="wrap2">
+        <div id="0r" class="draggable right">0</div>
+        <div id="1r" class="draggable right">1</div>
+        <div id="2r" class="draggable right">2</div>
+    </div>
+</body>
+</html>
