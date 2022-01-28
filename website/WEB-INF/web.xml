@@ -1,0 +1,7 @@
+<web-app>
+    <display-name>Hello World</display-name>
+    <servlet>
+     <servlet-name>Checker</servlet-name>
+     <servlet-class>CheckerServlet</servlet-class>
+    </servlet>
+</web-app>

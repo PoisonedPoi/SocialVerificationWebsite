@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 
 <!-- Notes: (DELETE WHEN DONE )   
-1. have button state class in javascript to handel multiple options in the future? ex. buttonStates.controlButtonPressed()
-2. is there a better way to remove groups than current implementation ( saving group id in remove button )
-3. verify mvc is in proper format
-4. is it better to use class = and make a css .class or to do style =
+1. is there a better way to remove groups than current implementation ( saving group id in remove button )
+2. verify mvc is in proper format
+3. is it better to use class = and make a css .class or to do style =
 -->
 <html>
   <head>
@@ -16,14 +15,28 @@
     <meta charset="utf-8" />
 
     <link rel="stylesheet" href="css/styles.css" />
-     
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
   </head>
   <body>
+    <div class="container">
+      <div class="row">
+        <div class="col-8">
+          One of three columns
+        </div>
+        <div class="col-sm">
+          One of three columns
+        </div>
+        <div class="col-sm">
+          One of three columns
+        </div>
+      </div>
+    </div>
     <h1>Social Verification Designer</h1>
     <header class = 'control-bar'>
      
-        <button id = 'newGroupBtn' class = "button-unpressed" value="newGroup" onclick="newGroupBtnPressed(this)">Add Group</button>
-        <button id = "drawLineBtn" class = "button-unpressed" value="drawLine" onclick="newLineBtnPressed(this)">Add Line</button>
+        <button id = 'newGroupBtn' class = "button-unpressed btn btn-primary" value="newGroup" onclick="newGroupBtnPressed(evt)">Add Group</button>
+        <button id = "drawLineBtn" class = "button-unpressed btn btn-primary" value="drawLine" onclick="newLineBtnPressed(this)">Add Line</button>
         <nav>
           <ul class = "nav-bar">   <!-- TODO Q  should this be part of nav or does that not matter?-->
             <li><a href ="/index.html">Home</a></li>
@@ -64,9 +77,9 @@
     <!--------------------------------------->
     
   
-    <Script  src = "javascript/model.js"></Script>
-    <Script  src = "javascript/dragdrophandler.js"></Script>
-    <Script src = "javascript/tabs.js"></Script>
+    <script  src = "javascript/model.js"></script>
+    <script  src = "javascript/dragdrophandler.js"></script>
+    <script src = "javascript/tabs.js"></script>
     <svg> <!-- needed reference -->
       <defs>
         <marker id="markerArrow" markerwidth="13" markerheight="13" refx="2" refy="6"

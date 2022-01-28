@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 class controller {
-    interaction;
+    //interaction;
 
     constructor(){
         //load the interaction model

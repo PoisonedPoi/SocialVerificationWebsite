@@ -17,6 +17,7 @@ const hSusp = Symbol("hsuspended");
 // model classes
 
 class Interaction {
+    /*
     errors;
     trackedMicroTypes = [];
     groups = [];
@@ -26,11 +27,14 @@ class Interaction {
     numGroups;
     numMicros;
     numTransitions;
-
+*/
     constructor(){
         this.numGroups = 0;
         this.numTransitions = 0;
         this.errors = new Errors();
+        this.trackedMicroTypes = [];
+        this.groups = [];
+        this.transitions = [];
     }
 
     exportModelToXML(){
@@ -139,14 +143,16 @@ class Interaction {
 
 
 class Group{
+    /*
     initialGroup;
     id;
     name;
     micros = [];
-
+*/
     constructor(id, isFirst){
         this.initialGroup = isFirst;
         this.id = id;
+        this.micros = [];
     }
 
     addMicro(micro){
@@ -166,11 +172,12 @@ class Group{
 
 
 class Transition {
+    /*
     firstGroup;
     secondGroup;
     state;
     id;
-
+*/
     constructor(id, firstGroup, secondGroup){
         this.firstGroup = firstGroup;
         this.secondGroup = secondGroup;
@@ -181,29 +188,37 @@ class Transition {
 
 
 class MicroInteraction{
+    /*
     id;
     type;
     parameters = [];
     parameterResults = []; //TODO see if this should be integrated into parameterResults
+    */
     constructor(id, microType){ //micros are built off a microType defined
         this.type = microType.type;
         this.parameters = microType.parameters;
         this.id = id;
+        this.parameters = [];
+        this.parameterResults = [];
     }
 }
 
 
 class MicroType{
+    /*
     parameters = [];
     type;
+    */
     constructor(type,parameters){
         this.type = type;
         this.parameters = parameters;
     }
+    
 }
 
 
 class Parameter {
+    /*
     id;
     description;
     field;
@@ -212,21 +227,21 @@ class Parameter {
     isField;
     isDropDown;
     dropDownSelections = [];
-
+    */
     constructor(id, description, isBoolean, isField, isDropdown, dropDownSelections) { //used to add dropDownSelections
         this.id = id;
         this.description = description;
         this.isBoolean = isBoolean;
         this.isField = isField;
         this.isDropDown = isDropdown;
-        this.dropDownSelections = dropDownSelections;//this may be null if not used
+        this.dropDownSelections = [];//this may be null if not used
     }
 
 
 }
 
 class Errors {
-    flubs;
+   // flubs;
     
     constructor(){
         this.flubs = [];
@@ -244,10 +259,12 @@ class Errors {
 }
 
 class Flub{
+    /*
     category;
     targetID;
     description;
-    
+    */
+
     constructor(targetID, category, description){
         this.targetID = targetID;
         this.category = category;
