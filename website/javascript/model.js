@@ -26,21 +26,39 @@ class Interaction {
     //these only get incremented and serve as unique id
     numGroups;
     numMicros;
-    numTransitions;
+    microIDNum;
 */
     constructor(){
-        this.numGroups = 0;
-        this.numTransitions = 0;
+        this.groupIDNum = 0;
+        this.transitionIDNum = 0;
+        this.microIDNum = 0;
         this.errors = new Errors();
         this.trackedMicroTypes = [];
         this.groups = [];
         this.transitions = [];
+        this.micros = [];   
     }
 
-    exportModelToXML(){
+    getMicro(id){
+        for(let i=0;i<this.micros.length;i++){
+            if(this.micros[i].id == id){
+                return this.micros[i];
+            }
+        }
+        console.log("ERROR: Model couldnt find getMicro with id " + id);
+    }
 
+    getMicroParameters(id){
+        return this.getMicro(id).parameters;
+    }
 
+    setMicroResults(id, results){
+        let micro = this.getMicro(id);
+        micro.updateResults(results);
+    }
 
+    exportModelToJSON(){
+        return(JSON.parse(JSON.stringify(this)));
     }
 
     addErrors(){
@@ -56,20 +74,20 @@ class Interaction {
 
     createGroup(){
         let newGroup;
-        if(this.numGroups === 0){
+        if (this.groupIDNum === 0){
             newGroup = new Group(0, true);
         }else{
-            newGroup = new Group(this.numGroups, false); 
+            newGroup = new Group(this.groupIDNum, false); 
         }
-        newGroup.name = "untitled" + this.numGroups;
+        newGroup.name = "untitled" + this.groupIDNum;
         this.groups.push(newGroup);
-        this.numGroups++;
+        this.groupIDNum++;
         return newGroup.id;
     }
     
 
     getGroup(id){
-        for(let i=0;i<this.numGroups;i++){
+        for (let i = 0; i < this.groupIDNum;i++){
             if(this.groups[i].id == id){
                 return this.groups[i];
             }
@@ -80,22 +98,59 @@ class Interaction {
 
 
     removeGroup(id){
+        let removeGroup = this.getGroup(id);
         for (let i = 0; i < this.groups.length; i++) {
-            if (this.groups[i].id === id) {
+            if (this.groups[i].id == id) {
+                if(this.groups[i].initialGroup == true){
+                    console.log("cannot remove initial group, no change to database TODO make this an error message"); 
+                    return false;
+                }
+
                 this.groups.splice(i, 1);
-                return;
+                break;
             }
         }
+        let toRemove = [];
         for(let i=0;i<this.transitions.length;i++){
-            if(this.transitions[i].firstGroup.id === id || this.transitions[i].secondGroup.id === id){
-                this.transitions.splice(i,1);
+            if(this.transitions[i].firstGroup.id == id || this.transitions[i].secondGroup.id == id){
+                toRemove.push(this.transitions[i].id);
+            }
+        }
+        for(let i=0;i<toRemove.length;i++){
+            this.removeTransition(toRemove[i]);
+        }
+
+        let microsToRemove = removeGroup.getMicros();
+        for (let i = 0; i < this.micros.length; i++) {
+            for(let j=0;j<microsToRemove.length;j++){
+                if(this.micros[i].id == microsToRemove[j].id){
+                    this.micros.splice(i, 1);
+                }   
+            }
+        }
+        return true;
+    }
+
+    setTransitionState(id, transitionState){
+        for (let i = 0; i < this.transitions.length; i++) {
+            if (this.transitions[i].id == id) {
+                this.transitions[i].state = transitionState;
             }
         }
     }
 
+    getTransitionState(id){
+        for(let i=0;i<this.transitions.length;i++){
+            if(this.transitions[i].id == id){
+                return this.transitions[i].state;
+            }
+        }
+        console.log("Error: getTransitionState ID " + id + " is not found");
+    }
+
     getMicroTypeByName(name){
         for(let i = 0; i< this.trackedMicroTypes.length;i++){
-            if(this.trackedMicroTypes[i].type === name){
+            if(this.trackedMicroTypes[i].type == name){
                 //make a deep copy and then return it
                 let copiedMicroType = JSON.parse(JSON.stringify(this.trackedMicroTypes[i]));
                 return copiedMicroType;
@@ -108,9 +163,10 @@ class Interaction {
     addMicroToGroup(id, microTypeName){
         let group = this.getGroup(id);
         let microType = this.getMicroTypeByName(microTypeName);
-        let newMicro = new MicroInteraction(numMicros, microType);
+        let newMicro = new MicroInteraction(this.microIDNum, microType);
+        this.micros.push(newMicro);
         group.addMicro(newMicro);
-        this.numMicros++;
+        this.microIDNum++;
         return newMicro.id;
     }
 
@@ -118,22 +174,27 @@ class Interaction {
 
     removeMicroFromGroup(groupid, microid){
         let group = this.getGroup(groupid);
+        for(let i=0;i<this.micros.length;i++){
+            if(this.micros[i].id== microid){
+                this.micros.splice(i, 1);
+            }
+        }
         group.removeMicro(microid);
     }
 
     addTransition(group1id, group2id){
         let group1 = this.getGroup(group1id);
         let group2 = this.getGroup(group2id);
-        let newTransition = new Transition(this.numTransitions, group1, group2);
+        let newTransition = new Transition(this.transitionIDNum, group1, group2);
         this.transitions.push(newTransition);
-        this.numTransitions++;
+        this.transitionIDNum++;
         return newTransition.id;
     }
 
     removeTransition(id){
         for(let i=0;i<this.transitions.length;i++){
-            if(transitions[i].id === id){
-                transitions.splice(i, 1);
+            if(this.transitions[i].id === id){
+                this.transitions.splice(i, 1);
                 return;
             }
         }
@@ -167,6 +228,9 @@ class Group{
             }
         }
     }
+    getMicros(){
+        return this.micros;
+    }
 
 }
 
@@ -175,15 +239,16 @@ class Transition {
     /*
     firstGroup;
     secondGroup;
-    state;
+    state;   Note: states are stored as objects of, { ready: bool, busy: bool, suspended: bool}
     id;
 */
     constructor(id, firstGroup, secondGroup){
         this.firstGroup = firstGroup;
         this.secondGroup = secondGroup;
-        this.state=hReadyBusySusp;
+        this.state= {ready: true, busy: true, suspended: true};
         this.id = id;
     }
+
 }
 
 
@@ -192,14 +257,18 @@ class MicroInteraction{
     id;
     type;
     parameters = [];
-    parameterResults = []; //TODO see if this should be integrated into parameterResults
+    parameterResults = [];
+    Note: results are stored as follows: {parameter id: resultString} so parameterResults looks like [{0,"yes"},{20,"option1"}]
     */
     constructor(id, microType){ //micros are built off a microType defined
         this.type = microType.type;
         this.parameters = microType.parameters;
         this.id = id;
-        this.parameters = [];
         this.parameterResults = [];
+    }
+
+    updateResults(results){
+        this.parameterResults = results;
     }
 }
 
@@ -234,7 +303,7 @@ class Parameter {
         this.isBoolean = isBoolean;
         this.isField = isField;
         this.isDropDown = isDropdown;
-        this.dropDownSelections = [];//this may be null if not used
+        this.dropDownSelections = dropDownSelections;//this may be null if not used
     }
 
 

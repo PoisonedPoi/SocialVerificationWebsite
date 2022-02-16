@@ -1,4 +1,13 @@
 <!DOCTYPE html>
+<!-- TODO
+1. Fix Rick click bars
+1. How to handel ids between model and view, should view id be different than model id
+1. should id be unique or only unique within scope
+formalize difference between model id and view id
+-->
+
+
+
 
 <!-- Notes: (DELETE WHEN DONE )   
 1. is there a better way to remove groups than current implementation ( saving group id in remove button )
@@ -9,111 +18,213 @@
   <head>
     <title>Social Verification</title>
     <meta
-      name="description"
+      name="Social Verification using drag and drop groups and micro-interactions"
       content="TODO: DESCRIPTION OF WHAT THIS WEBSITE IS"
     />
     <meta charset="utf-8" />
+    <script
+      src="https://code.jquery.com/jquery-3.6.0.min.js"
+      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://rawgit.com/RickStrahl/jquery-resizable/master/src/jquery-resizable.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
 
     <link rel="stylesheet" href="css/styles.css" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-
+    <script src="javascript/model.js"></script>
+    <script src="javascript/dragdrophandler.js"></script>
+    <script src="javascript/tabs.js"></script>
   </head>
+
   <body>
-    <div class="container">
+    <nav id="" class="navbar bg-dark navbar-dark px-2">
+      <label class="navbar-brand" style="color: white;" href="#">
+        Website Logo
+      </label>
+      <button class="btn btn-primary">navbar stuff</button>
+    </nav>
+
+    <div class="container-fluid px-4">
       <div class="row">
-        <div class="col-8">
-          One of three columns
+        <div class="col-8 h3">
+          <label>Social Verification Designer</label>
         </div>
-        <div class="col-sm">
-          One of three columns
-        </div>
-        <div class="col-sm">
-          One of three columns
+        <div class="col-4">
+          <label class="h5">Verification Status:</label>
+          <label class="h5">Complete</label>
         </div>
       </div>
-    </div>
-    <h1>Social Verification Designer</h1>
-    <header class = 'control-bar'>
-     
-        <button id = 'newGroupBtn' class = "button-unpressed btn btn-primary" value="newGroup" onclick="newGroupBtnPressed(evt)">Add Group</button>
-        <button id = "drawLineBtn" class = "button-unpressed btn btn-primary" value="drawLine" onclick="newLineBtnPressed(this)">Add Line</button>
-        <nav>
-          <ul class = "nav-bar">   <!-- TODO Q  should this be part of nav or does that not matter?-->
-            <li><a href ="/index.html">Home</a></li>
-            <li><a href ="/help">Help</a></li>
-            <li><a href ="https://google.com">link1</a></li>
-          </ul>
-        </nav>
-    </header>
-  
-    
-    <div class = "interaction-container" style = "height: 400px" >
 
-      <div class = "interaction-sidebar-left" id = "interaction-microinteraction-container">
-
+      <!-- this is the button control panel-->
+      <div class="row form-inline">
+        <div class="col control-bar">
+          <button
+            id="newGroupBtn"
+            class="button-unpressed btn btn-primary"
+            value="newGroup"
+            onclick="newGroupBtnPressed(this)"
+          >
+            Add Group
+          </button>
+          <button
+            id="drawLineBtn"
+            class="button-unpressed btn btn-primary"
+            value="drawLine"
+            onclick="newLineBtnPressed(this)"
+          >
+            Add Line
+          </button>
+          <button
+            id="exportToXML"
+            class="button-unpressed btn btn-primary"
+            value="export"
+            onclick="exportToXML()"
+          >
+            Export
+          </button>
+        </div>
       </div>
 
-    
-      <!-- this is the main canvas that new groups are moved around and dropped into-->
-      <div id = 'interaction-group-canvas' class = "interaction-canvas" ondragover="drag_over(event)" ondrop="dropOnInteractionCanvas(event)">
+      <div class="row interaction-container">
+        <!-- this is the the micro interaction selector-->
+        <div class="interaction-sidebar-left">
+          <div
+            class="row inline-flex text-center mb-2"
+            style="font-size: 100%;"
+          >
+            <label style="font-size: 17px; border-bottom: 2px solid black;">
+              Micro-Interactions
+            </label>
+          </div>
+          <div id="interaction-microinteraction-container" class="px-2"></div>
+        </div>
+
+        <!-- this is the main canvas that new groups are moved around and dropped into-->
+        <div
+          id="interaction-group-canvas"
+          class="interaction-canvas"
+          ondragover="drag_over(event)"
+          ondrop="dropOnInteractionCanvas(event)"
+        ></div>
+
+        <!-- this is the properties sidebar, after clicking on a micro interaction or a transition node this will appear-->
+        <div
+          class="interaction-sidebar-right"
+          id="interaction-right-panel"
+        >
+            <div id="transition-states-panel" class = "transitions-panel row" hideable="true" class="display:none;">
+              <label style="font-size: 15px; border-bottom: 2px solid black;">
+              Select States to Transition on
+              </label>
+              <div class="row mt-4 col-md-6 offset-md-2 ">
+                <div class = "col">
+                  <input type="checkbox" name="ready" id="context-ready" value="ready" onclick="updateTransition()">
+                  <label for="context-ready">Ready</label>
+                </div>  
+              </div>
+
+              <div class="row mt-4 col-md-6 offset-md-2 ">
+                <div class = "col">
+                  <input type="checkbox" name="busy" id="context-busy"  value="busy" onclick="updateTransition()"> 
+                  <label for="context-busy">Busy</label>
+                </div>  
+              </div>
+
+              <div class="row mt-4 col-md-8 offset-md-2 ">
+                <div class = "col">
+                <input type="checkbox" name="suspended" id="context-suspended"  value="suspended" onclick="updateTransition()"> 
+                <label for="context-suspended">Suspended</label>
+                </div>  
+              </div>
+            </div>
+
+
+            <div id="parameters-panel" hideable="true">
+            <label style="font-size: 17px; border-bottom: 2px solid black;">
+              Parameters
+            </label>
+            </div>
+            <!--
+            <label id="no-micros-parameters" class="px-2" style="font-size: 15px;">
+              (click a micro-interaction to see its parameters)
+            </label>
+          -->
       </div>
 
-        <div class = "interaction-sidebar-right" id = "interaction-right-panel">
-
-
+     <!----------------->
+     <!-- the context menus for handeling right click -->
+    </div>
+      <div
+        id="contextMenuGroup"
+        class="context-menu context-box"
+        style="z-index: 200; display: none; position: absolute;"
+        hideable="true"
+        data-currentGroup=""
+      >
+        <button
+          id="removeGroupBtn"
+          class="button-unpressed"
+          value=""
+          hideable="true"
+          onclick="removeGroup(this.value)"
+        >
+          Remove Group
+        </button>
       </div>
-
-  </div>
-
-  
-    <!-- the context menus for right click -->
-    <div id="contextMenuGroup" class="context-menu" style="z-index: 9; display: none; position: absolute" data-currentGroup = "">
-      <button id="removeGroupBtn" class = "button-unpressed" value=""  onclick="removeGroup(this.value)">Remove Group</button>
-    </div>
-
-    <div id="contextMenuMicro" class="context-menu" style="z-index: 9; display: none; position: absolute" data-currentGroup = "">
-      <button id="removeMicroBtn" class = "button-unpressed" value=""  onclick="removeMicro(this.value)">Remove MicroInteraction</button>
-    </div>
-    <!--------------------------------------->
-    
-  
-    <script  src = "javascript/model.js"></script>
-    <script  src = "javascript/dragdrophandler.js"></script>
-    <script src = "javascript/tabs.js"></script>
-    <svg> <!-- needed reference -->
+      <div
+        id="contextMenuMicro"
+        class="context-menu context-box"
+        style="z-index: 200; display: none; position: absolute;"
+        hideable="true"
+        data-currentGroup=""
+      >
+        <button
+          id="removeMicroBtn"
+          class="button-unpressed"
+          value=""
+          onclick="removeMicro(this.value)"
+        >
+          Remove MicroInteraction
+        </button>
+      </div>
+      
+    <svg>
+      <!-- needed reference -->
       <defs>
-        <marker id="markerArrow" markerwidth="13" markerheight="13" refx="2" refy="6"
-               orient="auto">
-            <path d="M2,2 L2,11 L10,6 L2,2" style="fill: #000000;" />
+        <marker
+          id="markerArrow"
+          markerwidth="13"
+          markerheight="13"
+          refx="2"
+          refy="6"
+          orient="auto"
+        >
+          <path d="M2,2 L2,11 L10,6 L2,2" style="fill: #000000;" />
         </marker>
-    </defs>
+      </defs>
     </svg>
-
-
-
-<!-- this is for tabbed div, if server side have a way for this to be returned with i in 1 2 and 3 etc.
-    <div class="tabs">
-      <div class="tabs-sidebar">
-        <button class="tabs-button " data-for-tab="1">tab 1</button>
-        <button class="tabs-button" data-for-tab="2">tab 2</button>
-        <button class="tabs-button" data-for-tab="3">tab 3</button>
-      </div>
-      <div class="tabs-content " data-tab="1">
-        <h2>tab 1</h2>
-        <p>text for tab 1</p>
-      </div>
-      <div class="tabs-content" data-tab="2">
-        <h2>tab 2</h2>
-        <p>text for tab 2</p>
-      </div>
-      <div class="tabs-content" data-tab="3">
-        <h2>tab 3</h2>
-        <p>text for tab 3</p>
-      </div>
-    </div>
--->
-
-
-
   </body>
 </html>
+
+
+<!--
+
+
+
+<div
+        id="contextMenuTransition"
+        class="context-menu context-box"
+        style="z-index: 9; display: none; position: absolute;"
+        data-transition=""
+      >
+
+
+
+
+-->

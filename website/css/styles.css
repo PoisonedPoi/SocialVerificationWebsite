@@ -5,51 +5,66 @@
 }
 
 .interaction-sidebar-left {
-  flex: 0.25;
+  flex-basis: 170px;
+  min-width: 150px;
+  max-width: 150px;
   border: 2px solid black;
   margin-right: 0px;
   row-gap: 0px;
+  background: white;
 }
 
 .interaction-sidebar-right {
-  flex: 0.25;
+  flex-basis: 230px;
+  min-width: 150px;
+  max-width: 150px;
   border: 2px solid black;
   margin-right: 0px;
   row-gap: 0px;
+  z-index: 100;
+  background: white;
 }
 
 /*css for main interaction canvas where DND(drag and drop) boxes are placed*/
 .interaction-canvas {
-  /*
-  width: 1500px;
-  height: 1000px;
-  */
+  min-height: 400px;
+  height: auto;
   flex: 1;
-  left: auto;
-  top: auto;
+
   border: 5px solid #cccccc;
   position: relative;
+  overflow-y: scroll;
+  overflow-x: scroll;
 }
 
 .micro-box {
-  width: 70px;
-  height: 30px;
   background: lightgoldenrodyellow;
+  height: 30px;
   border: 2px solid black;
+  text-align: center;
+  border-radius: 0.7rem;
+  z-index: 9;
 }
 
 .group-box {
   position: absolute;
   width: 100px;
-  height: 170px;
+  height: 150px;
   border: 2px solid black;
   background: lightgray;
   left: 0;
   top: 0;
+  z-index: 8;
 }
 
 .group-box-selected {
   background: lightyellow;
+}
+
+.group-box-initial {
+  border: greenyellow;
+  border-width: 5px;
+  border-style: groove;
 }
 
 .button-unpressed {
@@ -82,6 +97,11 @@
   stroke-width: 2;
   marker-end: url(#markerArrow);
   position: absolute;
+  z-index: 90;
+}
+
+.arrow-text {
+  font: 12px sans-serif;
 }
 
 .arrowSVG {
@@ -90,11 +110,14 @@
 
 /* CSS for basic page layout */
 .control-bar {
+  padding-top: 10px;
+  padding-bottom: 10px;
   display: inline;
-  flex: 30px;
+  background: lightGrey;
+  border: 2px solid black;
 }
 
-.nav-bar {
+.verif-navbar {
   background: darkgrey;
   border: 2px solid black;
   list-style-type: none;
@@ -134,6 +157,17 @@
   width: 100%;
   outline: none;
   cursor: pointer;
+}
+
+.context-box {
+  background: lightGrey;
+  border: 2px solid black;
+  z-index: 100;
+  display: none;
+}
+
+.transitions-panel {
+  display: none;
 }
 
 .tabs-button:active {

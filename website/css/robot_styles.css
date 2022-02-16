@@ -1,0 +1,11 @@
+.robot-box {
+  background-color: blanchedalmond;
+  border: 2px solid black;
+  width: 500px;
+  height: 700px;
+}
+.robot-control-panel {
+  background-color: aqua;
+  width: 500px;
+  height: 200px;
+}
