@@ -1,12 +1,14 @@
 //TODOS and possible addons,
 //add canvas "push" buttons to increase screen width/height
 //add error flub handlers to display violations
+//-----------------------------------------------------------------------------------------------------------------
 
-var interactionController;
 
-//Adding and removing microinteractions to groups
+
+
+var IC; //Interaction Controller
 document.addEventListener("DOMContentLoaded", () => {
-    interactionController = new controller();
+    IC = new controller();
 });
 
 class controller {
@@ -18,8 +20,8 @@ class controller {
         var initialTypes = this.gatherMicrosFromDatabase();
         this.interaction.loadMicroTypes(initialTypes); //load types of microinteractions into the model
         loadMicrointeractions(this.interaction.trackedMicroTypes); //view loads micro interaction types on left sidebar
-
     }
+
 
     gatherMicrosFromDatabase(){
         //TODO access serverlet to get all micros and store them as micro types, for now hard code
@@ -35,33 +37,35 @@ class controller {
         microTypes.push(micro2);
         return microTypes;
     }
-}
 
+    sendModelToDatabase(){
+        //send model to database via post request
+        //get back response, if 200 it should give back a list of violations
+        //parse violations
+        let violations = []
+        this.interaction.storeViolations(violations); //model
+        this.makeConflicts(violations); //view
+    }
+
+    makeConflicts(violations){
+        //for each violation update view to show a conflict in conflicts div
+    }
+
+    exportToXML() {
+    let JSONInteraction = this.interaction.exportModelToJSON();
+    console.log(JSONInteraction);
+}
+}
 
 //------- important event handlers and functions related to the controller --------------------------------
 
 function exportToXML(){
-    let JSONInteraction = interactionController.interaction.exportModelToJSON();
-    console.log(JSONInteraction);
+    interaction.exportToXML();
 }
 
-
-function dropOnGroup(event) {
-    let offset = event.dataTransfer.getData("Text").split(',');//expects x , y , id
-    let micro = document.getElementById(offset[2]); //this is the micro type box element, we check this below
-    if (micro === null || micro.classList === null || !micro.classList.contains("micro-box")) {
-        return false;
-    }
-
-    let groupBox = event.target;
-    let groupID = groupBox.getAttribute("group-num");
-
-    addMicroToGroup(groupID, micro.getAttribute("type"));
-}
-
-
+//called by dropOnGroup
 function addMicroToGroup(groupID, type){
-    let newMicroID = interactionController.interaction.addMicroToGroup(groupID, type);//model
+    let newMicroID = IC.interaction.addMicroToGroup(groupID, type);//model
     let microBox = newMicroBox(type);
     microBox.setAttribute("id", "micro"+newMicroID);
     microBox.setAttribute("microID", newMicroID);
@@ -70,48 +74,48 @@ function addMicroToGroup(groupID, type){
 
 function removeMicro(microBoxID){
     var micro = document.getElementById(microBoxID);
-    var microID = micro.getAttribute("microid").replace(/\D/g, '');;
+    var microID = micro.getAttribute("microid").replace(/\D/g, '');//TODO find better way to do this
     let group = micro.parentNode;
     let groupID = group.getAttribute("group-num");
-    interactionController.interaction.removeMicroFromGroup(groupID ,microID);//model
+    IC.interaction.removeMicroFromGroup(groupID ,microID);//model
     group.removeChild(micro);//view
 }
 
-
+//called by dropOnCanvas
 function addGroup(ev){
-    groupID = interactionController.interaction.createGroup(); //model
+    groupID = IC.interaction.createGroup(); //model
     addGroupToView(ev, groupID); //view
 }
 
 function removeGroup(groupID) {
     let modelGroupID = groupID.replace(/\D/g, ''); //model stores group id as whole numbers
-    let deleted = interactionController.interaction.removeGroup(modelGroupID);//model (also removes transitions that are connected to it)
+    let deleted = IC.interaction.removeGroup(modelGroupID);//model (also removes transitions that are connected to it in model)
     if (deleted){
         removeGroupFromView(groupID); //view
-    }
-    
+    } 
 }
 
 function addTransition(firstGroup, secondGroup){
-    let id = interactionController.interaction.addTransition(firstGroup.getAttribute("group-num"), secondGroup.getAttribute("group-num"));//model
+    let id = IC.interaction.addTransition(firstGroup.getAttribute("group-num"), secondGroup.getAttribute("group-num"));//model
     drawTransition(id, firstGroup, secondGroup);//view
 }
 
 var allMicroTypes = [];
 
 function loadMicrointeractions(microTypes) {
-    let sidebar = document.getElementById("interaction-microinteraction-container");
+    let sidebar = $("#interaction-microinteraction-container");
     //load microinteractions from database, for now they are hard coded
     allMicroTypes = [];
     for(let i=0;i<microTypes.length;i++){
-        let newMicro = document.createElement("div");
-        newMicro.setAttribute("id", i);
-        newMicro.setAttribute("type", microTypes[i].type);
-        newMicro.classList.add("micro-box");
-        newMicro.classList.add("mt-2");
-        newMicro.innerText = microTypes[i].type;
-        allMicroTypes.push(newMicro);
+        let microTypeBox = $('<div class="micro-box mt-1 justify-content-center" data-type="micro-box" data-micro-type="' + microTypes[i].type + '">' + microTypes[i].type + '</div>');
+        microTypeBox.draggable({
+            start: dragStart
+        });
+        microTypeBox.addClass("row");
+       // microTypeBox.on('dragstart', dragStart);
+        sidebar.append(microTypeBox);
     }
+    /*
     for (let i = 0; i < allMicroTypes.length; i++) {
         allMicroTypes[i].setAttribute("id", ("microtype-" + i));
         allMicroTypes[i].setAttribute("draggable", true);
@@ -119,16 +123,10 @@ function loadMicrointeractions(microTypes) {
         let microTypeRow = document.createElement("div");
         microTypeRow.classList.add("row");
         microTypeRow.appendChild(allMicroTypes[i]);
-        sidebar.appendChild(microTypeRow);
+        
     }
-
-    
-
+ */
 }
-
-
-
-
 
 
 //-----------------------------------end of important controller functions ----------------------------------
@@ -168,29 +166,45 @@ function applyButtonColor(button){
 
 //-------------------------Moving and dragging functionality-------------------------------------------------------------------
 
-//this handles the drag and drop events for moving things around
-function drag_start(event) {
+//this handles the drag and drop events for moving things around (both groups and micros) (NOTE: this is jquery event so we use originalEvent)
+function dragStart(event) {
+
+    console.log("drag start");
+    console.log(event);
+    console.log(event.target);
     var style = window.getComputedStyle(event.target, null);
-    var str = (parseInt(style.getPropertyValue("left")) - event.clientX) + ',' + (parseInt(style.getPropertyValue("top")) - event.clientY) + ',' + event.target.id;
-    event.dataTransfer.setData("Text", str); //we are storing x , y , id   (where id is id of thing clicked on)
+    var objectData = { x: parseInt(style.getPropertyValue("left")) - event.clientX, y: (parseInt(style.getPropertyValue("top")) - event.clientY), target: event.target}
+   // var str = () + ',' +  + ',' + event.target.id;
+    event.originalEvent.dataTransfer.setData("obj", JSON.stringify(objectData)); //we are storing x , y , id   (where id is id of thing clicked on)
 }
 
-function drag_over(event) {
+function dragOver(event) {
     event.preventDefault();
     return false;
 }
 
-//used for moving groups only at the moment
-function dropOnInteractionCanvas(event) {
-    var list = document.getElementsByClassName('svg-arrow');
-    var offset = event.dataTransfer.getData("Text").split(',');//expects x , y , id
-    var dm = document.getElementById(offset[2]); //this is (hopefully) the group box element, we check this below
-
-    if (dm === null || !dm.classList.contains("group-box")) {
+function dropOnGroup(event) {
+    let dragge = JSON.parse(event.dataTransfer.getData("obj")); // {x: int, y: int, target: object}
+    let micro = dragge.target;
+    console.log(micro);
+    if (micro === null || micro.attr("data-type") == "micro-box") {
         return false;
     }
+    let groupBox = event.target;
+    let groupID = groupBox.getAttribute("group-num");
+    addMicroToGroup(groupID, micro.attr("data-micro-type"));
+}
+
+//used for moving groups only at the moment
+function dropOnInteractionCanvas(event) {
+    var offset = event.dataTransfer.getData("Text").split(',');//expects x , y , id
+    var dm = document.getElementById(offset[2]); //this is the group box element, we check this below
+
+    if (dm === null || !dm.classList.contains("group-box")) { //TODO find better way to check or do this
+        return false;
+    }
+
     //check bounds for canvas
-    var i = event.clientX + parseInt(offset[0], 10)
     if (event.clientX + parseInt(offset[0], 10) < 0) {
         dm.style.left = 1 + 'px';
     } else {
@@ -203,8 +217,7 @@ function dropOnInteractionCanvas(event) {
     }
 
     //TOOD stop from being placed on another group
-    var list = document.getElementsByClassName('svg-arrow');
-    //TODO refresh line if one is connected instead of remove and replace
+
     redrawConnectedLines(dm);
     event.preventDefault();
     return false;
@@ -254,17 +267,21 @@ function setupInteractionCanvas(){ //TODO redo this into clicking on groups
     return false;
 }
 
-//==================================creating/adding dom elements -------------------------------------------------------------------
+//==================================creating/adding dom elements //TODO separate into new file -------------------------------------------------------------------
 function newMicroBox(type) {
-    let microBox = document.createElement("div");
-    microBox.classList.add("micro-box");
-    microBox.oncontextmenu = rightClickMicro;
-    microBox.setAttribute("id", ("microbox" + numMicros));
-    microBox.setAttribute("type", "microbox");
-    microBox.setAttribute("micro-type:", type);
-    microBox.innerText = type;
-    microBox.addEventListener("click", leftCLickGroupMicro);
-    numMicros++;
+    let microBox = $('<div class="micro-box mt-1 justify-content-center" data-type="micro-box" data-micro-type="' + type + '">' + type + '</div>');
+    microBox.bind("contextmenu", rightClickMicro);
+    microBox.onclick = leftCLickGroupMicro;
+    // let microBox = document.createElement("div");
+    // microBox.classList.add("micro-box");
+    // microBox.classList.add("mt-1");
+    // microBox.oncontextmenu = rightClickMicro;
+    // microBox.setAttribute("id", ("microbox" + numMicros));
+    // microBox.setAttribute("type", "microbox");
+    // microBox.setAttribute("micro-type:", type);
+    // microBox.innerText = type;
+    // microBox.addEventListener("click", leftCLickGroupMicro);
+    //numMicros++;
     return microBox;
 }
 
@@ -276,22 +293,21 @@ function addMicroBoxToGroupView(groupID, microBox){
 
 function addGroupToView(ev, groupID){
     var canvas = document.getElementById('interaction-group-canvas');
-    var newGroup = document.createElement("div");
-                var title = document.createElement("div");
-                title.innerText = interactionController.interaction.getGroup(groupID).name;
-                newGroup.appendChild(title);
-                newGroup.classList.add("group-box");
+    var newGroup = $('<div class="group-box" data-type="group-box" data-groupid=' + groupID + ' ')
+                var title = $('<div>' + IC.interaction.getGroup(groupID).name + '</div>');
+                newGroup.append(title);
+
                 // newGroup.classList.add("d-flex");
                 // newGroup.classList.add("justify-content-center");
-                newGroup.setAttribute("style", "left: " + (ev.clientX-canvas.offsetLeft) + "px; top: " +  (ev.clientY-canvas.offsetTop) + "px;");       //
-                newGroup.setAttribute("id", ("group" + groupID));
-                newGroup.setAttribute("group-num",groupID);
-                newGroup.setAttribute("draggable", true);
-                newGroup.setAttribute("onDragStart","drag_start(event)");
-                newGroup.setAttribute("onDrop","dropOnGroup(event)");
+                newGroup.setAttribute("style", "left: " + (ev.clientX-canvas.offsetLeft) + "px; top: " +  (ev.clientY-canvas.offsetTop) + "px;");
+                newGroup.draggable({
+                    start: dragStart
+                });
+               // newGroup.on("dragstart",dragStart);
+                newGroup.setAttribute("ondrop","dropOnGroup(event)");
                 newGroup.setAttribute("type", "group");
                 newGroup.setAttribute("onClick", "clickedGroup()");
-                if(interactionController.interaction.getGroup(groupID).initialGroup){
+                if(IC.interaction.getGroup(groupID).initialGroup){
                     newGroup.classList.add('group-box-initial');
                 }
                 newGroup.oncontextmenu = rightClickGroup;
@@ -390,7 +406,7 @@ function drawTransition(id, firstGroup, secondGroup) {
     text.setAttribute("x", ((smallest.p2.x + smallest.p1.x) / 2).toString());
     text.setAttribute("y", (((smallest.p2.y + smallest.p1.y) / 2) + 15).toString());
     text.setAttribute("text-anchor", "middle");
-    let transState = interactionController.interaction.getTransitionState(id);
+    let transState = IC.interaction.getTransitionState(id);
     newLine.appendChild(text);
     let ttm = ""; //transition text message
     ttm += transState.ready ? "Ready " : "";
@@ -453,7 +469,8 @@ function leftCLickGroupMicro(){
 
     let selectedMicro = this;
     $('#no-micros-parameters').hide();
-    let parameters = interactionController.interaction.getMicroParameters(this.getAttribute("id").replace(/\D/g, ''));
+    console.log("here");
+    let parameters = IC.interaction.getMicroParameters(this.getAttribute("id").replace(/\D/g, ''));
 
     let parametersPanel = $('#parameters-panel');
     parametersPanel.empty();
@@ -536,7 +553,7 @@ function saveParameters(formId) {
         }
         results.push({paramID, curResult});
     }
-    interactionController.interaction.setMicroResults(microID, results);
+    IC.interaction.setMicroResults(microID, results);
 }
 
 /*
@@ -554,7 +571,7 @@ function leftCLickTransition(e) {
     $('#transition-states-panel').show();
     curTransitionText = e.srcElement;
     let modelTransitionID = e.srcElement.parentNode.getAttribute("transid");
-    let transitionState = interactionController.interaction.getTransitionState(modelTransitionID);
+    let transitionState = IC.interaction.getTransitionState(modelTransitionID);
     //set checkboxes to current state of this transition
     $('#context-ready').prop('checked', transitionState.ready );
     $('#context-busy').prop('checked', transitionState.busy);
@@ -572,12 +589,12 @@ function updateTransition(){
     let stateSuspended = $('#context-suspended').prop('checked');
     let transitionState = { ready: stateReady, busy: stateBusy, suspended: stateSuspended};
     let ttm = "" ; //transition text message
-    ttm += stateReady ? "Ready <br/>" : "<br/>";
+    ttm += stateReady ? "Ready " : "";
     ttm += stateBusy ? "Busy " : "";
     ttm += stateSuspended ? "Suspended" : "";
     console.log(ttm);
-    interactionController.interaction.setTransitionState(transitionModelID, transitionState);
-    transitionText.text("test \n test 2 <br/> test3");
+    IC.interaction.setTransitionState(transitionModelID, transitionState);
+    transitionText.text(ttm);
 
     // console.log(transitionText);
     // var width = transitionText.width();
