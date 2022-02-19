@@ -18,10 +18,11 @@ formalize difference between model id and view id
   <head>
     <title>Social Verification</title>
     <meta
-      name="Social Verification using drag and drop groups and micro-interactions"
+      name="Social Verification using drag and drop groups"
       content="TODO: DESCRIPTION OF WHAT THIS WEBSITE IS"
     />
     <meta charset="utf-8" />
+    <link rel="stylesheet" href="css/styles.css" />
     <script
       src="https://code.jquery.com/jquery-3.6.0.min.js"
       integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
@@ -35,8 +36,6 @@ formalize difference between model id and view id
       integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
       crossorigin="anonymous"
     />
-
-    <link rel="stylesheet" href="css/styles.css" />
     <script src="javascript/model.js"></script>
     <script src="javascript/dragdrophandler.js"></script>
     <script src="javascript/tabs.js"></script>
@@ -50,9 +49,9 @@ formalize difference between model id and view id
       <button class="btn btn-primary">navbar stuff</button>
     </nav>
 
-    <div class="container-fluid px-4">
+    <div class="container-fluid px-4 h-100">
       <div class="row">
-        <div class="col-8 h3">
+        <div class="col-6 h3">
           <label>Social Verification Designer</label>
         </div>
         <div class="col-4">
@@ -70,7 +69,7 @@ formalize difference between model id and view id
             value="newGroup"
             onclick="newGroupBtnPressed(this)"
           >
-            Add Group
+            + Group
           </button>
           <button
             id="drawLineBtn"
@@ -78,7 +77,7 @@ formalize difference between model id and view id
             value="drawLine"
             onclick="newLineBtnPressed(this)"
           >
-            Add Line
+            + Line
           </button>
           <button
             id="exportToXML"
@@ -88,10 +87,18 @@ formalize difference between model id and view id
           >
             Export
           </button>
+                    <button
+            id="exportToXML"
+            class="button-unpressed btn btn-primary"
+            value="export"
+            onclick="verifyModel()"
+          >
+            Test Verify
+          </button>
         </div>
       </div>
 
-      <div class="row interaction-container">
+      <div class=" row interaction-container ">
         <!-- this is the the micro interaction selector-->
         <div class="interaction-sidebar-left">
           <div
@@ -109,7 +116,7 @@ formalize difference between model id and view id
         <div
           id="interaction-group-canvas"
           class="interaction-canvas"
-          ondragover="drag_over(event)"
+          ondragover="dragOver(event)"
           ondrop="dropOnInteractionCanvas(event)"
         ></div>
 
@@ -159,7 +166,22 @@ formalize difference between model id and view id
 
      <!----------------->
      <!-- the context menus for handeling right click -->
-    </div>
+      </div>
+
+      <div class="row">
+        <div class = "col-9  interaction-output mt-2 mh-25">
+          <textarea id="area1" rows="5">Yes</textarea>
+        </div>
+        <div class = "col-3  robot-viewer mt-2 mh-25">
+           
+        </div>
+
+      </div>
+
+
+
+
+      <!-- context menues and other hidden elements -->
       <div
         id="contextMenuGroup"
         class="context-menu context-box"

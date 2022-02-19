@@ -1,21 +1,9 @@
 
-//transition states enums   //human ready is hReady
-//note, human states are ready, busy and suspended, a transition can have one or all of these states as a condition to switch
-const hReady = Symbol("hready");
-const hReadyBusy = Symbol("hreadybusy");
-const hReadyBusySusp = Symbol("hreadybusysuspended");
-const hReadySusp = Symbol("hreadysuspended");
-const hBusy = Symbol("hbusy");
-const hBusySusp = Symbol("hbusysuspended");
-const hSusp = Symbol("hsuspended");
 
-
-
-
+//TODO split into many separate classes
 
 
 // model classes
-
 class Interaction {
     /*
     errors;
@@ -282,7 +270,6 @@ class MicroType{
         this.type = type;
         this.parameters = parameters;
     }
-    
 }
 
 

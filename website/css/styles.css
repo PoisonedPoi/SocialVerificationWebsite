@@ -1,7 +1,11 @@
+body {
+  height: 100vh;
+}
+
 /*css for interaction design*/
 .interaction-container {
   display: flex;
-  flex: 0px;
+  height: 50%;
 }
 
 .interaction-sidebar-left {
@@ -27,14 +31,22 @@
 
 /*css for main interaction canvas where DND(drag and drop) boxes are placed*/
 .interaction-canvas {
-  min-height: 400px;
-  height: auto;
+  min-height: 200px;
   flex: 1;
-
   border: 5px solid #cccccc;
   position: relative;
   overflow-y: scroll;
   overflow-x: scroll;
+}
+
+.robot-viewer {
+  background-color: rgb(85, 125, 131);
+}
+
+.interaction-output {
+  min-height: 150px;
+  border: 2px solid black;
+  background-color: rgb(240, 217, 208);
 }
 
 .micro-box {
