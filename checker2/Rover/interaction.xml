@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<nta>
+	<name>interaction</name>
+
+	<group id="0" init="true" x="56.0" y="63.0">
+		<name>init</name>
+		<micro>
+			<name>Greeter</name>
+			<parameter type="bool" val="true">Greet_with_speech</parameter>
+			<parameter type="bool" val="true">Greet_with_handshake</parameter>
+			<parameter type="bool" val="true">Wait_for_response</parameter>
+		</micro>
+	</group>
+
+	<group id="1" init="false" x="265.0" y="73.0">
+		<name>untitled0</name>
+		<micro>
+			<name>Ask</name>
+			<parameter type="array">
+				<name>answers robot can recognize</name>
+				<item type="string" val="yes" link="human_ready"/>
+				<item type="string" val="no" link="human_ignore"/>
+			</parameter>
+			<parameter type="str" val="is the sun blue">question</parameter>
+		</micro>
+	</group>
+
+	<group id="2" init="false" x="383.0" y="278.0">
+		<name>untitled1</name>
+		<micro>
+			<name>Remark</name>
+			<parameter type="str" val="how is this related">content</parameter>
+			<parameter type="bool" val="false">use_gesture</parameter>
+			<parameter type="bool" val="false">Allow_human_to_respond</parameter>
+		</micro>
+	</group>
+
+	<group id="3" init="false" x="210.0" y="531.0">
+		<name>untitled2</name>
+		<micro>
+			<name>Farewell</name>
+		</micro>
+	</group>
+
+	<transition>
+		<source ref="0"/>
+		<target ref="1"/>
+		<guard condition="human_ready"/>
+		<guard condition="human_busy"/>
+		<guard condition="human_ignore"/>
+	</transition>
+
+	<transition>
+		<source ref="1"/>
+		<target ref="2"/>
+		<guard condition="human_ready"/>
+		<guard condition="human_busy"/>
+		<guard condition="human_ignore"/>
+	</transition>
+
+	<transition>
+		<source ref="2"/>
+		<target ref="3"/>
+		<guard condition="human_ready"/>
+		<guard condition="human_busy"/>
+		<guard condition="human_ignore"/>
+	</transition>
+	<design>copy</design>
+</nta>
