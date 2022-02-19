@@ -270,7 +270,6 @@ class MicroType{
         this.type = type;
         this.parameters = parameters;
     }
-    
 }
 
 
