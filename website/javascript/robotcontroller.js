@@ -13,7 +13,7 @@ function doArmUp(){
 }
 
 function doArmDown(){
-
+    robot.moveArmDown();
 }
 
 
