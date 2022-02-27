@@ -120,7 +120,7 @@ public class ModelFileChecker{
     private final int BUTTON_ADDTRANS = 'T';
 
     public ModelFileChecker(){
-        
+        /*
         System.out.println("Starting ModelFileChecker");
         initialize();
         System.out.println("Done Initializing");
@@ -136,6 +136,7 @@ public class ModelFileChecker{
         loadViolations();
 
         interaction.printViolations();
+        */
     }
 
 
