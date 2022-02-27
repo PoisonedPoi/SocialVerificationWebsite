@@ -16,7 +16,7 @@ class robotInterface {
     constructor() {
         this.robotdiv = document.getElementById("robot-view");
         //this is now a global variable in the class, whenever we use this. it tries to refer to a global variable in the class, local variables are just normal varName and must be declared in scope
-        this.armStates = [{ name: "armup", pictureID: 1 }, { name: "armdown", pictureID: 2 }, { name: "armneutral", pictureID: 3 }];
+        this.armStates = [{ name: "armup", pictureID: "img/armneutral.png" }, { name: "armdown", pictureID: "img/armup.png" }, { name: "armneutral", pictureID: 3 }];
         this.headStates = [{ name: "... ", pictureID: 0 }];// and similar pattern for next
         this.currentArmState = "armneutral";
         this.currentHeadState = "headneutral";
@@ -24,7 +24,17 @@ class robotInterface {
 
 
     repaint() {
-        let armPicID = this.getArmPictureID();
+        //robot faces left
+        
+        //body
+        //arms
+        //head
+        
+
+
+
+        let armPic = this.getArmPictureID();
+        this.displayArm(armPic);
         //display armPicture with correlating picture id in the div
 
         //let headPicID = this.getHeadPicID();
@@ -40,6 +50,34 @@ class robotInterface {
         //like var rI = new robotInterface() ;  (then)  rI.repaint();
 
         console.log("did arm up");
+    }
+
+    moveArmDown() {
+        //TODO refresh arm state to be arm up
+        this.currentArmState = "armdown";
+        this.repaint(); //its this.repaint() becuase we define repaint in this class, to call it outside this class we would make an object of it like we would in java
+        //like var rI = new robotInterface() ;  (then)  rI.repaint();
+
+        console.log("did arm up");
+    }
+
+
+    displayArm(imgsrc){
+        var canvas = document.getElementById('robot-view');
+
+  
+
+        let container = document.createElement("div");
+        container.classList.add("robot-arm-left");
+        canvas.appendChild(container);
+
+        
+        var newGroup = document.createElement("img");
+        newGroup.setAttribute("src", imgsrc);
+
+        container.appendChild(newGroup)
+
+
     }
 
 
