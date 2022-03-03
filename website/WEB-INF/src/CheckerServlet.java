@@ -1,4 +1,7 @@
 
+import aCheck.ModelFileChecker;
+import package1.*;
+
 import jakarta.servlet.*;
 import jakarta.servlet.http.*;
 import java.io.*;
@@ -17,89 +20,41 @@ public class CheckerServlet extends HttpServlet {
       
         String testXML = "<xml> <servlet> <servlet-name>Checker</servlet-name></servlet></xml>";
             try{
-                endString += "check1 ";
          // 1. Create XML doc from input         
            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
            DocumentBuilder documentBuilder = factory.newDocumentBuilder();
-           Document xmlDocument = documentBuilder.parse(request.getInputStream());     //new InputSource(new StringReader(testXML)));
+           Document xmlDocument = documentBuilder.parse(request.getInputStream());
+
 
         
-            
+       // ModelFileChecker model = new ModelFileChecker();
+       // model.initialize(); //if we can get it to initialize that is all that needs to be done for now, 
 
+        Tester test = new Tester();
+        String retStr = test.test();
+
+        //note model will eventually return an xml doc which will then be parsed and returned
 
             TransformerFactory tf = TransformerFactory.newInstance();
             Transformer transformer = tf.newTransformer();
             StringWriter writer = new StringWriter();
             transformer.transform(new DOMSource(xmlDocument), new StreamResult(writer));
             String xmlString = writer.getBuffer().toString();
-          
-          
-
-            // 2. Do your stuff with the Doc e.g. use doc.getDocumentElement()));
+                      
             response.setContentType("text/xml");
             PrintWriter out = response.getWriter();
-              out.println(xmlString);
+            //  out.println(xmlString);
+            out.println(retStr);
 
             }catch(Exception e){
                 try{
-        PrintWriter out = response.getWriter();
-              out.println(e.toString());
-              out.println("00000000");
-              out.println(endString);
-   
+                     PrintWriter out = response.getWriter();
+                     out.println(e.toString());
                 }catch(Exception f){
                     f.printStackTrace();
                 }
     
             }
-      
-      
-      /*
-      
-      
-      
-        response.setContentType("text/html");
-        try{
-      PrintWriter out =  response.getWriter();
-        out.println("<html><body>");
-        out.println("<h1>Hello World!!!</h1>");
-        out.println("</body></html>");
-        }catch(Exception e){
-            e.printStackTrace();
-        }
-    */
     }
 }
 
-
-/*
-
-
-@Override
-public void service(ServletRequest request, ServletResponse response)
-        throws ServletException, IOException {
-    try{
-        HttpServletRequest hReq = (HttpServletRequest) request;
-        if (hReq.getMethod().equalsIgnoreCase("POST") && hReq.getContentType().equals("text/xml")){
-            // 1. Create XML doc from input         
-           DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-           DocumentBuilder documentBuilder = factory.newDocumentBuilder();
-           Document doc = documentBuilder.parse(hReq.getInputStream());
-            // 2. Do your stuff with the Doc e.g. use doc.getDocumentElement()));
-
-            //response.setContentType("text/xml");
-            PrintWriter out = response.getWriter();
-              out.println("TEST RESPONSE SUCCESS");
-
-        } else {
-            HttpServletResponse hResponse = (HttpServletResponse) response;
-            // Only HTTP POST is supported
-            hResponse.sendError(500, "Unsupported");
-        }
-    } catch (Exception e) {
-       // logger.fatal(e,e);
-        throw new ServletException(e);
-    }
-    
-}
-*/
