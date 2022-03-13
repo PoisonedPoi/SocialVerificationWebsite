@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import controller.ConsoleCT;
+import aCheck.Globals;
 import model.*;
 import model.Group;
 import model_ctrl.MicroEncoder;
@@ -15,6 +16,7 @@ import prism.PrismException;
 import prism.PrismFileLog;
 import prism.PrismLog;
 import study.BugTracker;
+import aCheck.Globals;
 
 public class Checker {
 	
@@ -73,7 +75,7 @@ public class Checker {
 	 */
 	public void startPrism() {
 		// Init
-		mainLog = new PrismFileLog("tempout.txt");
+		mainLog = new PrismFileLog(Globals.USERPATH + "tempout.txt");
 		prism = new Prism(mainLog, mainLog);
 		
 		try {
@@ -101,7 +103,7 @@ public class Checker {
 	}
 	
 	private void generatePrismFilesHelper(Microinteraction m) {
-		String filename = "prism" + File.separator + m.getName() + ".pm";
+		String filename = Globals.ROOT_FP + File.separator + "users" + File.separator + "user"+Globals.SID + File.separator + "prism" + File.separator + m.getName() + ".pm";
 		Micro2File.put(m, filename);
 		MicroEncoder enc = new MicroEncoder(m, filename);
 		HashMap<State,ModuleStatePair> states = enc.encode();

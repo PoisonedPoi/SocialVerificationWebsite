@@ -17,6 +17,7 @@ import prism.Prism;
 import prism.PrismException;
 import prism.PrismLangException;
 import prism.PrismLog;
+import aCheck.Globals;
 
 public class TMExporter {
 	
@@ -35,8 +36,7 @@ public class TMExporter {
 		try {
 			modulesFile = prism.parseModelFile(new File(Micro2File.get(m)));
 			prism.loadPRISMModel(modulesFile);
-			
-			File f = new File(m.getName()+".txt");
+			File f = new File(Globals.USERPATH + m.getName()+".txt");
 			prism.exportTransToFile(true, Prism.EXPORT_PLAIN, f);
 			tmFile = f;
 			

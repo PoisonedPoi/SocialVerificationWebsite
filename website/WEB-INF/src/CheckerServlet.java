@@ -27,8 +27,8 @@ public class CheckerServlet extends HttpServlet {
 
 
         
-       // ModelFileChecker model = new ModelFileChecker();
-       // model.initialize(); //if we can get it to initialize that is all that needs to be done for now, 
+        ModelFileChecker model = new ModelFileChecker();
+        model.initialize(); //if we can get it to initialize that is all that needs to be done for now, 
 
         Tester test = new Tester();
         String retStr = test.test();

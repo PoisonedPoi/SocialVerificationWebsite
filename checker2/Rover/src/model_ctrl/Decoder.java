@@ -3,6 +3,7 @@ import java.util.ArrayList;
 
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polygon;
+import aCheck.Globals;
 import model.*;
 import model.Group;
 import study.BugTracker;
@@ -21,7 +22,7 @@ import controller.Annotation;
 import aCheck.ModelFileChecker;
 import enums.StateClass;
 import enums.String2StateClass;
-
+import aCheck.*;
 /*
 * Decodes xml file into states and transitions
 */
@@ -373,7 +374,7 @@ public class Decoder {
 				
 				Microinteraction micro = new Microinteraction();
 				// search Lib for the correct microinteraction
-				File dir = new File("Lib");
+				File dir = new File(Globals.ROOT_FP + File.separator + "resources" + File.separator + "Lib");
 				for (File dirFile : dir.listFiles()) {
 					if (dirFile.isDirectory() && !dirFile.getName().equals("Supreme"))
 					for (File file : dirFile.listFiles()) {
@@ -488,7 +489,7 @@ public class Decoder {
 			
 			return doc;
 		} catch (Exception e) {
-			System.out.println("problem in initDoc" + e.getMessage());
+			System.out.println("MODEL_CTL:DECODER:problem in initDoc" + e.getMessage());
 			System.out.println(filename);
 			System.exit(0);
 			return null;

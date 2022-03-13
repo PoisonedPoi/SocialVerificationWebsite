@@ -3,7 +3,15 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 import aCheck.*;
 import checkers.Checker;
@@ -144,6 +152,69 @@ public class Interaction {
 			}
 		}
 	}
+
+	public Document getXMLViolationDocument(){
+		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
+		DocumentBuilder dBuilder;
+		try{
+			dBuilder = dbFactory.newDocumentBuilder();
+			Document document = dBuilder.newDocument();
+			Element rootElement = document.createElement("violation_list");
+			document.appendChild(rootElement);
+			
+			for(Property prop : graphProperties){
+				if(prop.getTies().equals("group") || prop.getTies().equals("init")){
+					if(violations.get(prop) != null){
+						Element violationElement = document.createElement("violation");
+
+						Element category = document.createElement("category");
+						category.appendChild(document.createTextNode("group"));
+						violationElement.appendChild(category);
+
+						Element type = document.createElement("type");
+						
+						type.appendChild(document.createTextNode(violations.get(prop).getType()));
+						violationElement.appendChild(type);
+
+						Element description = document.createElement("description");
+						description.appendChild(document.createTextNode(violations.get(prop).propDesc()));
+						violationElement.appendChild(description);
+
+						Element violationGroupsElement = document.createElement("violator_groups");
+						ArrayList<Group> violatorGroups = violations.get(prop).getGroupsViolating();
+						for(int i=0;i<violatorGroups.size();i++){
+							Element curGroupElement = document.createElement("group");
+							curGroupElement.appendChild(document.createTextNode(violatorGroups.get(i).getName()));
+							violationGroupsElement.appendChild(curGroupElement);
+						}
+						violationElement.appendChild(violationGroupsElement);
+						rootElement.appendChild(violationElement);
+					}
+				}else if(prop.getTies().equals("interaction")){
+					if(violations.get(prop) != null){
+						Element violationElement = document.createElement("violation");
+
+						Element category = document.createElement("category");
+						category.appendChild(document.createTextNode("group"));
+						violationElement.appendChild(category);
+
+						Element type = document.createElement("type");
+						type.appendChild(document.createTextNode(violations.get(prop).getType()));
+						violationElement.appendChild(type);
+
+						Element description = document.createElement("description");
+						description.appendChild(document.createTextNode(violations.get(prop).propDesc()));
+						violationElement.appendChild(description);
+						rootElement.appendChild(violationElement);
+					}
+				}
+			}
+			return document;
+		}catch(Exception e){
+			e.printStackTrace();
+		}
+		return null;
+	}
 	
 	public Checker getChecker() {
 		return c;
@@ -175,7 +246,6 @@ public class Interaction {
 
 		isNonAssisted = mc.getNonAssistedSwitch();
 		//HashMap<String, TooltipViz> staticTooltips = mc.getStaticTooltips();
-		
 		// if isNonAssisted, get static images of the start and end states 
 		if (true ) {
 			
@@ -184,36 +254,39 @@ public class Interaction {
 			ArrayList<Microinteraction> micros = new ArrayList<Microinteraction>();
 			Microinteraction m;
 			// greeter
-			m = new Microinteraction();
-			d.readMicrointeraction(new File("Lib/Initiate/Greeter.xml"), "Lib/Initiate/Greeter.xml", m);
+
+			m = new Microinteraction(); //
+			d.readMicrointeraction(new File(Globals.ROOT_FP + "/resources/" +"Lib/Initiate/Greeter.xml"), Globals.ROOT_FP + "/resources/"+"Lib/Initiate/Greeter.xml", m);
 			micros.add(m);
+
+
 			// farewell
 			m = new Microinteraction();
-			d.readMicrointeraction(new File("Lib/End/Farewell.xml"), "Lib/End/Farewell.xml", m);
+			d.readMicrointeraction(new File(Globals.ROOT_FP + "/resources/" +"Lib/End/Farewell.xml"), Globals.ROOT_FP + "/resources/" +"Lib/End/Farewell.xml", m);
 			micros.add(m);
 			// inst_action
 			m = new Microinteraction();
-			d.readMicrointeraction(new File("Lib/Task_Instruction/Instruction.xml"), "Lib/Task_Instruction/Instruction.xml", m);
+			d.readMicrointeraction(new File(Globals.ROOT_FP + "/resources/" +"Lib/Task_Instruction/Instruction.xml"), Globals.ROOT_FP + "/resources/" +"Lib/Task_Instruction/Instruction.xml", m);
 			micros.add(m);
 			// handoff
 			m = new Microinteraction();
-			d.readMicrointeraction(new File("Lib/Joint_Action/Handoff.xml"), "Lib/Joint_Action/Handoff.xml", m);
+			d.readMicrointeraction(new File(Globals.ROOT_FP + "/resources/" +"Lib/Joint_Action/Handoff.xml"), Globals.ROOT_FP + "/resources/" + "Lib/Joint_Action/Handoff.xml", m);
 			micros.add(m);
 			// comment
 			m = new Microinteraction();
-			d.readMicrointeraction(new File("Lib/Remark/Remark.xml"), "Lib/Remark/Remark.xml", m);
+			d.readMicrointeraction(new File(Globals.ROOT_FP + "/resources/" +"Lib/Remark/Remark.xml"), Globals.ROOT_FP + "/resources/" +"Lib/Remark/Remark.xml", m);
 			micros.add(m);
 			// wait
 			m = new Microinteraction();
-			d.readMicrointeraction(new File("Lib/Wait/Wait.xml"), "Lib/Wait/Wait.xml", m);
+			d.readMicrointeraction(new File(Globals.ROOT_FP + "/resources/" +"Lib/Wait/Wait.xml"), Globals.ROOT_FP + "/resources/" +"Lib/Wait/Wait.xml", m);
 			micros.add(m);
 			// question
 			m = new Microinteraction();
-			d.readMicrointeraction(new File("Lib/Ask/Ask.xml"), "Lib/Ask/Ask.xml", m);
+			d.readMicrointeraction(new File(Globals.ROOT_FP + "/resources/" +"Lib/Ask/Ask.xml"),Globals.ROOT_FP + "/resources/" + "Lib/Ask/Ask.xml", m);
 			micros.add(m);
 			// answer
 			m = new Microinteraction();
-			d.readMicrointeraction(new File("Lib/Answer/Answer.xml"), "Lib/Answer/Answer.xml", m);
+			d.readMicrointeraction(new File(Globals.ROOT_FP + "/resources/" +"Lib/Answer/Answer.xml"),Globals.ROOT_FP + "/resources/" + "Lib/Answer/Answer.xml", m);
 			micros.add(m);
 			
 			for (Microinteraction micro : micros) {

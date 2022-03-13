@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
+import aCheck.Globals;
 import aCheck.ModelFileChecker;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
@@ -31,7 +32,7 @@ public class Conflict extends TreeItem<HBox> {
 	TextFlow description;
 	ComboBox choice;
 	
-	// images for property violations
+	// images for property violations  TODO REMOVE
 	private Image violation;
 	private Image warning;
 	private Image good;
@@ -153,7 +154,7 @@ public class Conflict extends TreeItem<HBox> {
 				//fixBox.getChildren().add(fixer);
 			}
 		}
-				
+		/*
 		String path = "Icons" + File.separator;
 		this.helperImage = helperImage;
 		try {
@@ -175,8 +176,9 @@ public class Conflict extends TreeItem<HBox> {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		*/
 		
-		components.setSpacing(10);
+		//components.setSpacing(10);
 		
 		String[] describeComponents = describe.split("FIX:");
 		if (describeComponents.length > 1) {

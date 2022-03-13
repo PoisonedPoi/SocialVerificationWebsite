@@ -16,6 +16,7 @@ import prism.Prism;
 import prism.PrismException;
 import prism.PrismLangException;
 import prism.PrismLog;
+import aCheck.Globals;
 import prism.Result;
 
 public class GraphChecker {
@@ -137,7 +138,7 @@ private Interaction ia;
 	private void clearPrismOutputFile() {
 		PrintWriter writer = null;
 		try {
-			writer = new PrintWriter(new File("tempout.txt"));
+			writer = new PrintWriter(new File(Globals.USERPATH+"tempout.txt"));
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

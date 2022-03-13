@@ -1,9 +1,11 @@
 package model_ctrl;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import aCheck.*;
 import model.Guard;
 import model.Microinteraction;
 import model.Module;

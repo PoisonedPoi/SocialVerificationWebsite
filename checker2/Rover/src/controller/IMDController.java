@@ -12,6 +12,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Callback;
+import aCheck.Globals;
 
 /*
  * Import Microinteraction Dialogue Controller class
@@ -53,7 +54,7 @@ public class IMDController {
 			cancel = (Button) scene.lookup("#cancelButton");
 			treeView = (TreeView<File>) scene.lookup("#treeView");
 			
-			File dir = new File(System.getProperty("user.dir") + File.separator + "Lib");
+			File dir = new File(Globals.RESOURCEPATH + "Lib");
 			
 			treeView.setRoot(buildFileSys(dir, null));
 			treeView.setShowRoot(false);

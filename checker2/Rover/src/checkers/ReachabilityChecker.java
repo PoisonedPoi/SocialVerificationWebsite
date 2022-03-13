@@ -119,7 +119,6 @@ public class ReachabilityChecker {
 		try {
 			modulesFile = prism.parseModelFile(new File(Micro2File.get(group.getMacrointeraction())));
 			prism.loadPRISMModel(modulesFile);
-			
 			for (String property : properties) {
 				propertiesFile = prism.parsePropertiesString(modulesFile, property);
 				result = prism.modelCheck(propertiesFile, propertiesFile.getPropertyObject(0));

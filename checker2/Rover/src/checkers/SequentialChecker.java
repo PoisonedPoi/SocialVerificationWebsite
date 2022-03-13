@@ -18,7 +18,7 @@ import prism.*;
 import study.BugTracker;
 import javafx.scene.control.Tooltip;
 import javafx.scene.paint.Color;
-
+import aCheck.Globals;
 public class SequentialChecker {
 	
 	private Interaction ia;
@@ -365,6 +365,8 @@ public class SequentialChecker {
 			//}
 			System.out.println("Engine (Explicit is " + Prism.EXPLICIT + "): " + prism.getEngine());
 			System.out.println("Fairness is " + prism.getFairness());
+			System.out.println("properties File is " + propertiesFile);
+
 			prism.modelCheck(propertiesFile, propertiesFile.getPropertyObject(0));
 			//try {
 			//	prism.setEngine(prism.EXPLICIT);
@@ -372,7 +374,7 @@ public class SequentialChecker {
 				// TODO Auto-generated catch block
 			//	e.printStackTrace();
 			//}
-			PrintWriter writer = new PrintWriter(new File("tempout.txt"));
+			PrintWriter writer = new PrintWriter(new File(Globals.USERPATH + "tempout.txt"));
 			writer.print("");
 			writer.close();// wipe the log file
 			mainLog.flush();
@@ -390,6 +392,7 @@ public class SequentialChecker {
 						// find the module state pair associated with index i
 						ModuleStatePair temp = null;
 						for (ModuleStatePair msp : labels) {
+						//	System.out.println(" test " + strs[i]);
 							if (msp.mod.equals(lab) && msp.state == Integer.parseInt(strs[i])) {
 								temp = msp;
 								break;

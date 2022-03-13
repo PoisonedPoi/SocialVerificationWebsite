@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import aCheck.Globals;
 import model.Microinteraction;
 import model.State;
 import model_ctrl.ModuleStatePair;
@@ -48,7 +49,7 @@ public class DotExporter {
 			System.out.println("Loaded prism model");
 			System.out.println(prism.getExplicit());
 			
-			File f = new File("temp.dot");
+			File f = new File(Globals.USERPATH + "temp.dot");
 			prism.exportTransToFile(true, Prism.EXPORT_DOT_STATES, f);
 			System.out.println("Called prism to export to dot file");
 			
@@ -94,7 +95,7 @@ public class DotExporter {
 			HashMap<Integer, ArrayList<State>> idx2states = new HashMap<Integer, ArrayList<State>>();
 			
 			// read and rewrite the dot file
-			File fNew = new File("dot_files" + File.separator + m.getName() + ".dot");
+			File fNew = new File(Globals.ROOT_FP + File.separator + "users" + File.separator + "user"+Globals.SID + File.separator + "dot_files" + File.separator + m.getName() + ".dot");
 			PrintWriter writer = new PrintWriter(fNew);
 			try (BufferedReader br = new BufferedReader(new FileReader(f))) {
 			    String line;

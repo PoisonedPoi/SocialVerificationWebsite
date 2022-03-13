@@ -8,6 +8,8 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import aCheck.Globals;
+
 public class StateCompatabilityLookup {
 	
 	HashMap<StateClass,HashMap<StateClass,Boolean>> lookup;
@@ -23,7 +25,7 @@ public class StateCompatabilityLookup {
 		HashMap<Integer,StateClass> scIndex = new HashMap<Integer,StateClass>();
 		try {
 
-            BufferedReader br = new BufferedReader(new FileReader("data" + File.separator + "StateClassLookup.csv"));
+            BufferedReader br = new BufferedReader(new FileReader(Globals.ROOT_FP + File.separator + "resources" + File.separator +"data" + File.separator + "StateClassLookup.csv"));
             // read the first line and get the StateClasses
             String line = br.readLine();
             String[] data = line.split(",");

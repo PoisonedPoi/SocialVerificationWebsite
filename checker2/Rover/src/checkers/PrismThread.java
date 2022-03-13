@@ -81,9 +81,12 @@ public class PrismThread implements Runnable {
 	
 	public void run() {
 		if (!disablePrism) {
+			System.out.println("didnt disable prism");
 			if (c == null)
 				this.startPrism();
 			
+			System.out.println("started prism");
+			System.out.println(type);
 			if (type.equals("concurrent")) {
 				c.generatePrismFile(group.getMacrointeraction());
 				c.checkConcurrent(group);
@@ -152,6 +155,7 @@ public class PrismThread implements Runnable {
 				c.generatePrismFile(micro);
 			}
 		}
+		System.out.println("done");
 	}
 	
 	@SuppressWarnings("restriction")
@@ -167,13 +171,14 @@ public class PrismThread implements Runnable {
 		
 		c.generatePrismFiles();
 		c.startPrism();
-		
+
 		if (ia.getIsCopy()) {
 			ia.setChecker(c, mc);
 		}
 		else {
 			ia.setChecker(c,mc);
 		}
+		System.out.println("about to start design");
 		mc.startDesign();
 	}
 	

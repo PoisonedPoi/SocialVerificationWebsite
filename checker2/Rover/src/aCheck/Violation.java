@@ -22,6 +22,18 @@ public class Violation{
         }
     }
 
+        public String getType(){
+        return type;
+    }
+
+    public String getPropType(){
+        return prop.toString();
+    }
+
+    public String propDesc(){
+        return prop.getDescription();
+    }
+
     public String toString(){
         String returnString = "";
         returnString += "TYPE: " + type + "\n" + prop.toString() + " \nDesc: " + prop.getDescription() ;

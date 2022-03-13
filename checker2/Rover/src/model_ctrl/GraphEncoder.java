@@ -9,7 +9,7 @@ import java.util.Iterator;
 
 import model.*;
 import model.Group;
-
+import aCheck.Globals;
 public class GraphEncoder {
 	
 	private Interaction ia;
@@ -25,7 +25,7 @@ public class GraphEncoder {
 	}
 	
 	public File encode() {
-		File pfile = new File("graph.pm");
+		File pfile = new File(Globals.USERPATH+"graph.pm");
 		PrintWriter writer = null;
 		try {
 			writer = new PrintWriter(pfile);

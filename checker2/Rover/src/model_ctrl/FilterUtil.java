@@ -5,12 +5,12 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
-
+import aCheck.Globals;
 public class FilterUtil {
 	
 	public static ArrayList<String[]> extractRawResults() {
 		ArrayList<String[]> rawResults = new ArrayList<String[]>();
-		try (BufferedReader br = new BufferedReader(new FileReader(new File("tempout.txt")))) {
+		try (BufferedReader br = new BufferedReader(new FileReader(new File(Globals.USERPATH + "tempout.txt")))) {
 		    String line;
 		    while ((line = br.readLine()) != null) {
 		    	//System.out.println(line);

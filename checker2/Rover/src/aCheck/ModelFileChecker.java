@@ -72,8 +72,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
-
-
+import org.w3c.dom.Node;
+//NOTE ALL MICRO-INTERACTION FILE PATHS ARE CURRENTLY HARD CODED IN INTERACTION'S SET CHECKER METHOD THIS MUST BE CHANGED TO ADD NEW MICRO-INTERACTIONS
 
 public class ModelFileChecker{
     //background thread, does the prism tasks
@@ -119,8 +119,10 @@ public class ModelFileChecker{
     private final int BUTTON_ADDGROUP = 'G';
     private final int BUTTON_ADDTRANS = 'T';
 
-    public ModelFileChecker(){
-        /*
+    public ModelFileChecker(String sid){
+        Globals.SID = sid;
+        Globals.USERPATH = "/home/new/rover/users/user"+sid+"/";
+
         System.out.println("Starting ModelFileChecker");
         initialize();
         System.out.println("Done Initializing");
@@ -135,8 +137,26 @@ public class ModelFileChecker{
 
         loadViolations();
 
+        
+        System.out.println(" printing all violations now 9594839r820483928r9e===!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
         interaction.printViolations();
-        */
+
+        System.out.println("getting xml xoc");
+        Document doc = getXMLViolationDocument();
+        System.out.println("Root element" + doc.getDocumentElement().getNodeName());
+        NodeList nList = doc.getElementsByTagName("violation");
+        for(int temp = 0;temp<nList.getLength(); temp++){
+            Node nNode = nList.item(temp);
+            System.out.println(" Current Element " + nNode.getNodeName());
+            Element elem = (Element) nNode;
+            System.out.println("Type " + elem.getElementsByTagName("type").item(0).getTextContent());
+        }
+        
+
+    }
+
+    public Document getXMLViolationDocument(){
+        return interaction.getXMLViolationDocument();
     }
 
 
@@ -176,6 +196,13 @@ public class ModelFileChecker{
     }
 
     public void loadViolations(){
+                if (backgroundThread != null && backgroundThread.getThread().isAlive())
+            try {
+                backgroundThread.getThread().join();
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
      ViolationParser v = new ViolationParser(interaction,  propertyCategories,  mainController);
         v.update();
     }
@@ -214,12 +241,12 @@ public class ModelFileChecker{
     }
 
 
-    private void initialize() {
+    public void initialize() {
         // most importantly, set self
         mainController = this;
 
         //Set the current working directory
-        absFilePath = System.getProperty("user.dir") + File.separator + "Interaction" + File.separator;
+        absFilePath = Globals.ROOT_FP + File.separator + "resources" + File.separator + "Interaction" + File.separator; //System.getProperty("user.dir") + File.separator + "Interaction" + File.separator;
 
         // properties file
         propsFile = new File(absFilePath + "GraphProperties.xml");
@@ -234,11 +261,9 @@ public class ModelFileChecker{
         interaction = new Interaction(graphProperties);
         currGroupTransition = null;
 
-
         //TODO figure out way to safely remove
         interaction.setTutorial(false);
         interaction.setNonAssistedSwitch(isNonAssisted);
-
 
 
         buttonFlag = 0;
@@ -247,7 +272,6 @@ public class ModelFileChecker{
 
         readInteraction();
         staticTooltips = new HashMap<>(); //probably could be removed
-
        // initialize the booleans that control starting, stopping, and clearing the designs
         canStartExp = true;
         canStopExp = false;
@@ -261,13 +285,14 @@ public class ModelFileChecker{
         Thread t = pt.getThread();
         t.setPriority(Thread.MAX_PRIORITY);  // I think this is completely unnecessary and doesn't result in a change of speed
         pt.start("");
-
+        System.out.println(" thread started");
         //wait for initialize to be done
         try{
             t.join();
         }catch(InterruptedException e){
             e.printStackTrace();
         }
+
        
 
     }   
