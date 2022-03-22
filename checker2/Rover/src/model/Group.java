@@ -2,7 +2,6 @@ package model;
 
 import java.awt.Point;
 import java.awt.geom.Point2D;
-import javafx.scene.shape.Rectangle;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -20,56 +19,26 @@ import checkers.Property;
 import controller.ConsoleCT;
 import aCheck.ModelFileChecker;
 import enums.StateClass;
-import image.EndIndicators;
-import image.StartIndicators;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.StackPane;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
-import javafx.scene.text.Text;
-import javafx.util.Duration;
+
 import study.BugTracker;
-import javafx.scene.paint.Color;
-import javafx.scene.image.Image;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.text.FontWeight;
-import javafx.scene.control.Tooltip;
+
 
 
 /*
  * Holds a list of microinteractions. 
  */
 
-public class Group extends VBox {
+public class Group  {
 
 	private String name;
 
 	//@FXML
 	//public Text name;
-	@FXML
-	private GridPane microList;
-	@FXML
-	private ScrollPane sp;
-	
+
+
 	private int pos = 0;
 	
-	// branching/end state stuff
-	private Canvas canvas;
-	private GraphicsContext gc;
-	
-	private StartIndicators starters  = new StartIndicators(42, 25);;
-	private EndIndicators enders  = new EndIndicators(55,25); ///todo find way to safely remove
 
-	
-	private Text start;
-	private Text end;
-	
 	private HashMap<String,Boolean> bugsFixed;
 	
 	// interaction
@@ -121,14 +90,7 @@ public class Group extends VBox {
 	private boolean hspeaksFirst;
 	private boolean speaksFirst;
 	
-	// tooltip for conveying what properties have been violated!
-	private Tooltip violationInfo;
-	
-	@FXML
-	private StackPane titlebox;
-	@FXML
-	private Rectangle titlerect;
-	
+
 	private ArrayList<ModBehPair> fixedBehaviorConflicts;
 	private ArrayList<ModBehPair> unresolvedBehaviorConflicts;
 	
@@ -148,8 +110,6 @@ public class Group extends VBox {
 	}
 
 	public Group(boolean isInit, BugTracker bt) {
-		this.setStyle("-fx-background-radius: 5;" +
-                      "-fx-border-radius: 5;");
 		init = isInit;
 		initialize();
 		name = "untitled";
@@ -245,26 +205,6 @@ public class Group extends VBox {
 	public void addBugTracker(BugTracker bt) {
 		this.bt = bt;
 	}
-	
-	public Tooltip getTooltip() {
-		return violationInfo;
-	}
-	
-	public GridPane getGp() {
-		return microList;
-	}
-	
-	public GridPane getMicroList() {
-		return microList;
-	}
-	
-	public ScrollPane getScrollPane() {
-		return sp;
-	}
-
-	public StackPane getTitlebox() { return titlebox; }
-
-	public Rectangle getTitlerect() { return titlerect; }
 	
 	public void setGraphProp(Property prop, boolean val) {
 				System.out.println("set GraphPropertyValues						Set graph prop for group " + getName() + " with propID " + prop.getID() + " and val " + val);
@@ -507,23 +447,16 @@ public class Group extends VBox {
 		*/
 	}
 	
-	public Canvas getStarterIndicatorLights() {
-		return starters;
-	}
-	
-	public Canvas getEnderIndicatorLights() {
-		return enders;
-	}
 
 	public void addMicro(Microinteraction m) {
 		microinteractions.add(m);
 		//addMicroBox(m.getMicroBox());
 	}
 	
-	public void addMicroBoxShell(MicroBox mb) {
-		addMicroBox(mb);
-	}
+
 	
+
+	/*
 	//TODO URGENT: once microbox code is integrated into microinteractions, add this code into the addMicro method
 	private void addMicroBox(MicroBox mb) {
 		//mb.makeSmaller();
@@ -533,17 +466,12 @@ public class Group extends VBox {
 		pos++;
 	}
 	
-	public void updateStartIndicators(boolean[] startingLights) {
-		starters.update(startingLights[0], startingLights[1], startingLights[2], startingLights[3], startingLights[4], startingLights[5]);
-	}
-	
-	public void updateEndIndicators(boolean[] endingLights) {
-		enders.update(endingLights[0], endingLights[1], endingLights[2]);
-	}
 
 
+*/
 	public void removeMicro(Microinteraction m) {
 		// remove all, and then add all excluding the old one
+		/*
 		ArrayList<MicroBox> mbs = new ArrayList<MicroBox>();
 		for (int i = 0; i < microList.getChildren().size(); i++) {
 			if ( !((MicroBox) microList.getChildren().get(i)).getMicrointeraction().equals(m))
@@ -560,6 +488,7 @@ public class Group extends VBox {
 		
 		MicroBox mb = m.getMicroBox();
 		//microList.getChildren().remove(mb);
+		*/
 		microinteractions.remove(m);
 		micro2idx2states.remove(m);
 		endStateIdxs.remove(m);
@@ -779,7 +708,7 @@ public class Group extends VBox {
 			// create ArrayList of new states
 			ArrayList<State> states = new ArrayList<State>();
 			for (int i = 0; i < idx2states.size(); i++) {
-				State st = new State(i+"", 0, 0, Color.BLUE, true, false, false, "", null, i);
+				State st = new State(i+"", 0, 0,  true, false, false, "", null, i);
 				states.add(st);
 				mod.addState(st);
 				
@@ -1133,12 +1062,7 @@ public class Group extends VBox {
 		return macrointeraction;
 	}
 
-	// refresh the location of the object and macrotransitions
-	public void refresh() {
-		double x = getLayoutX();
-		double y = getLayoutY();
-		relocate(x,y);
-	}
+
 	
 	//Relocate the object. This code has been take from the node class in the javafx package
 	
@@ -1154,8 +1078,8 @@ public class Group extends VBox {
 	
 	public void setNotInit() {
 		init = false;
-		titlebox.setStyle("-fx-background-color: white;");
-		titlerect.setFill(Color.WHITE);
+		//titlebox.setStyle("-fx-background-color: white;");
+	///	titlerect.setFill(Color.WHITE);
 		setGreetingProp(true);
 	}
 	
@@ -1270,29 +1194,7 @@ public class Group extends VBox {
 		return str;
 	}
 	
-	public static void hackTooltipStartTiming(Tooltip tooltip) {
-	    try {
-	        Field fieldBehavior = tooltip.getClass().getDeclaredField("BEHAVIOR");
-	        fieldBehavior.setAccessible(true);
-	        Object objBehavior = fieldBehavior.get(tooltip);
-
-	        Field fieldTimer = objBehavior.getClass().getDeclaredField("activationTimer");
-	        fieldTimer.setAccessible(true);
-	        Timeline objTimer = (Timeline) fieldTimer.get(objBehavior);
-
-	        objTimer.getKeyFrames().clear();
-	        objTimer.getKeyFrames().add(new KeyFrame(new Duration(250)));
-	        
-	        fieldTimer = objBehavior.getClass().getDeclaredField("hideTimer");
-	        fieldTimer.setAccessible(true);
-	        objTimer = (Timeline) fieldTimer.get(objBehavior);
-
-	        objTimer.getKeyFrames().clear();
-	        objTimer.getKeyFrames().add(new KeyFrame(new Duration(20000)));
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
-	}
+	
 	
 	public boolean getWasGoodPartition() {
 		return wasGoodPartition;

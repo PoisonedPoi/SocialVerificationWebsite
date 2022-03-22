@@ -227,8 +227,8 @@ public class NetworkPropagator {
 			/*
 			 * figure out the available start states!
 			 */
-			boolean[] aggregateStartStates = ia.obtainStarters(group);
-			group.updateStartIndicators(aggregateStartStates);
+			//boolean[] aggregateStartStates = ia.obtainStarters(group);
+			//group.updateStartIndicators(aggregateStartStates);
 			
 			/*
 			 * compare the new end states to the old end states. If they differ, and the branching conditions allow for it, then add target microcollection to arraylist!

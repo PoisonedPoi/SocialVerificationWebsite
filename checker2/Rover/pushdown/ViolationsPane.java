@@ -43,13 +43,13 @@ public class ViolationsPane {
 		this.ia = ia;
 		this.mc = mc;
 		System.out.println("**********violation pane** created *******");
-		noMicrosInInit = new Conflict(null, "Initial state contains no microinteractions.", "nofix", null, null, null, null, null, null);
+		noMicrosInInit = new Conflict(null, "Initial state contains no microinteractions.", "nofix", null, null, null, null);
 		graphPropIAConflictLookup = new HashMap<Integer,Conflict>();
 		System.out.println("graphProperties");
 		for (Property prop : ia.getGraphProperties()) {
 			System.out.println("ties is " + prop.getTies() + " and " + prop.getContext());
 			if (prop.getTies().equals("interaction")) {
-				Conflict conf = new Conflict(prop, ((prop.getContext() != null)?(prop.getContext() + ", "):"") + prop.getDescription(), "nofix", null, null, null, null, null, null);
+				Conflict conf = new Conflict(prop, ((prop.getContext() != null)?(prop.getContext() + ", "):"") + prop.getDescription(), "nofix", null, null, null, null);
 				graphPropIAConflictLookup.put(prop.getID(),conf);
 			}
 		}

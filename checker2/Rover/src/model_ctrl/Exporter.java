@@ -77,7 +77,7 @@ public class Exporter {
 			
 			// identifier
 			writer.print("\n\t<group ");
-			writer.println("id=\"" + group2id.get(group) + "\" init=\"" + group.isInit() + "\" x=\"" + group.getLayoutX() + "\" y=\"" + group.getLayoutY() +  "\">");
+			writer.println("id=\"" + group2id.get(group) + "\" init=\"" + group.isInit() + "\" x=\"" + 0  + "\" y=\"" + 0  +  "\">");//group.getLayoutX()     group.getLayoutY()
 			
 			// name
 			writer.println("\t\t<name>" + group.getName() + "</name>");
@@ -176,7 +176,7 @@ public class Exporter {
 			
 			// identifier
 			writer.print("\n\t<group ");
-			writer.println("id=\"" + (group2id.get(group) + inst*ia.getGroups().size()) + "\" init=\"false\" x=\"" + group.getLayoutX() + "\" y=\"" + group.getLayoutY() +  "\">");
+			writer.println("id=\"" + (group2id.get(group) + inst*ia.getGroups().size()) + "\" init=\"false\" x=\"" + 0 + "\" y=\"" + 0 +  "\">");// group.getLayoutX() 	group.getLayoutY()
 			
 			// name
 			writer.println("\t\t<name>" + group.getName() + "</name>");

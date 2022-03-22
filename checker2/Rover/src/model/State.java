@@ -1,6 +1,4 @@
 package model;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import java.util.ArrayList;
 
 import controller.Annotation;
@@ -15,7 +13,7 @@ import enums.StateClass;
  * 
  * Should hold all all the logical statements of the state
  */
-public class State extends Circle {
+public class State  {
 	private String name;
 	private StateClass stateClass;
 	private String gestureType;
@@ -23,7 +21,6 @@ public class State extends Circle {
 	private Annotation annotation;
 	private double X, Y;
 	private boolean isInit = false;
-	private Color color;
 	private boolean visible;
 	public static int RADIUS;
 	private String type; 
@@ -35,16 +32,14 @@ public class State extends Circle {
 	private ArrayList<Transition> outputTrans;
 	private ArrayList<Transition> inputTrans;
 
-	public State(String name, double X, double Y, Color color, boolean visible, boolean isInitialState,
+	public State(String name, double X, double Y,  boolean visible, boolean isInitialState,
 			boolean isCommitted, String type, StateClass sc, int ID) {
-		super(X, Y, RADIUS, color);
 		this.name = name;
 		this.stateClass = sc;
 		this.isInit = isInitialState;
 		this.X = X;
 		this.Y = Y;
 		this.visible = visible;
-		this.color = color;
 		this.isCommitted = isCommitted;
 		this.type = type;
 		this.ID = ID;
@@ -57,27 +52,7 @@ public class State extends Circle {
 		inputTrans = new ArrayList<Transition>();
 	}
 
-	public void relocate(double X, double Y) {
-		setLayoutX(X - getLayoutBounds().getMinX());
-		setLayoutY(Y - getLayoutBounds().getMinY());
-
-		if (annotation != null) {
-			annotation.relocate(X - this.X, Y - this.Y, 1);
-		}
-
-		for (Transition transition : inputTrans) {
-			transition.getPoints().set(transition.getPoints().size() - 2, (X + RADIUS));
-			transition.getPoints().set(transition.getPoints().size() - 1, (Y + RADIUS));
-		}
-
-		for (Transition transition : outputTrans) {
-			transition.getPoints().set(0, (X + RADIUS));
-			transition.getPoints().set(1, (Y + RADIUS));
-		}
-		this.X = X;
-		this.Y = Y;
-		;
-	}
+ 
 	
 	/*
 	private String name;
@@ -97,7 +72,7 @@ public class State extends Circle {
 	*/
 
 	public State copyWithoutTrans() {
-		State newState = new State(name, X, Y, color, visible, isInit, isCommitted, type, stateClass, ID);
+		State newState = new State(name, X, Y,visible, isInit, isCommitted, type, stateClass, ID);
 		newState.setAgent(this.agent);
 		return newState;
 	}
@@ -125,10 +100,7 @@ public class State extends Circle {
 		this.agent = agent;
 	}
 	
-	public void setColor(Color color) {
-		setFill(color);
-		this.color = color;
-	}
+
 
 	public void setName(String name) {
 		this.name = name;
@@ -189,9 +161,7 @@ public class State extends Circle {
 		return agent;
 	}
 
-	public Color getColor() {
-		return color;
-	}
+
 
 	public double getX() {
 		return X;

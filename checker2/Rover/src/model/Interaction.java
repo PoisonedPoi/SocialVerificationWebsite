@@ -20,7 +20,6 @@ import checkers.Property;
 import controller.ConsoleCT;
 import aCheck.ModelFileChecker;
 import controller.NetworkPropagator;
-import javafx.scene.paint.Color;
 import model_ctrl.Decoder;
 import model_ctrl.MicroParameterizer;
 import model_ctrl.TooltipViz;
@@ -72,7 +71,6 @@ public class Interaction {
 	
 	// color picking
 	private int colorPickerIdx;
-	private ArrayList<Color> colors;
 	
 	// is copy
 	private boolean isCopy;
@@ -626,23 +624,7 @@ public class Interaction {
 		return aggregate;
 	}
 	
-	public Group isWithinMicroCollection(double X, double Y) {
-		Group within = null;
-		for (Group group : groups) {
-			double groupX = group.getLayoutX();
-			double groupY = group.getLayoutY();
-			
-			double xDim = group.getWidth();
-			double yDim = group.getHeight();
 
-			if (X >= groupX && X <= groupX + xDim && Y >= groupY && Y <= groupY + yDim) {
-				within = group;
-				break;
-			}
-		}
-		
-		return within;
-	}
 	
 	public boolean testIsCyclic() {
 		ArrayList<Group> groupsToTraverse = new ArrayList<Group>();
@@ -671,33 +653,7 @@ public class Interaction {
 	
 	
 	
-	public Color colorPick(Microinteraction m) {
-
-		switch (m.getName()) {
-		case "Farewell":
-			return Color.PALEVIOLETRED;
-		case "Greeter":
-			return Color.LIGHTGRAY;
-		case "Instruction":
-			return Color.LIGHTPINK;
-		case "Handoff":
-			return Color.AQUAMARINE;
-		case "Answer":
-			return Color.LIGHTYELLOW;
-		case "Remark":
-			return Color.LIGHTBLUE;
-		case "Ask":
-			return Color.ANTIQUEWHITE;
-		case "Wait":
-			return Color.LIGHTSEAGREEN;
-		case "Start":
-			return Color.WHITE;
-		case "End":
-			return Color.WHITE;
-		default:
-			return Color.AQUAMARINE;
-		}
-	}
+	
 	
 	public String toString() {
 		String str = "INTERACTION: " + this.name + "\n";

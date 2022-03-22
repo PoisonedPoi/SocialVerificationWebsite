@@ -43,13 +43,14 @@ public class ViolationParser{ //this class parses the interaction and the groups
 		this.ia = ia;
 		this.mc = mc;
 		System.out.println("**********violation class created *******");
-		noMicrosInInit = new Conflict(null, "Initial state contains no microinteractions.", "nofix", null, null, null, null, null, null);
+		//test
+		noMicrosInInit = new Conflict(null, "Initial state contains no microinteractions.", "nofix", null, null,null,null);
 		graphPropIAConflictLookup = new HashMap<Integer,Conflict>();
 		System.out.println("graphProperties");
 		for (Property prop : ia.getGraphProperties()) {
 			System.out.println("ties is " + prop.getTies() + " and " + prop.getContext());
 			if (prop.getTies().equals("interaction")) {
-				Conflict conf = new Conflict(prop, ((prop.getContext() != null)?(prop.getContext() + ", "):"") + prop.getDescription(), "nofix", null, null, null, null, null, null);
+				Conflict conf = new Conflict(prop, ((prop.getContext() != null)?(prop.getContext() + ", "):"") + prop.getDescription(), "nofix", null, null, null, null);
 				graphPropIAConflictLookup.put(prop.getID(),conf);
 			}
 		}
@@ -60,7 +61,7 @@ public class ViolationParser{ //this class parses the interaction and the groups
 		System.out.println(" printing property categories");
 		for (String str : propertyCategories) {
 			System.out.println("read " + str + " in propertyCategories violation pane");
-			this.propertyCategories.put(str, new Conflict(null, str, "nofix", null, null, null, null, null, null));
+			this.propertyCategories.put(str, new Conflict(null, str, "nofix", null, null, null, null));
 		}
 		root = new TreeItem("Property Violations");
        
@@ -71,11 +72,11 @@ public class ViolationParser{ //this class parses the interaction and the groups
 		System.out.println("*************** doing update (or check as we are using it)s *** *************");
 		Iterator it = propertyCategories.entrySet().iterator();
 
-		while (it.hasNext()) {
-			HashMap.Entry pair = (HashMap.Entry)it.next();
-			((Conflict) pair.getValue()).getChildren().clear();
-		}
-		root.getChildren().clear();
+		// while (it.hasNext()) {
+		// 	HashMap.Entry pair = (HashMap.Entry)it.next();
+		// 	((Conflict) pair.getValue()).getChildren().clear();
+		// }
+		// root.getChildren().clear();
 		addedPropertyCategories.clear();
 		if (mc.getNonAssistedSwitch()) {
 			for (Group group : ia.getGroups())
@@ -95,7 +96,7 @@ public class ViolationParser{ //this class parses the interaction and the groups
 			//tv.remove(noMicrosInInit);
             System.out.println("checking interaction properties");
 			if (!ia.getAuthProp() && ia.getCurrDesign().equals("Delivery")) {
-				root.getChildren().add(new Conflict(null,"Delivery interaction must ALWAYS reach a group named \"Auth\" that verifies the human's identity. Either this group does not exist, or it is not guaranteed reachable!", "nofix", null, null, null, null, null, null));
+				root.getChildren().add(new Conflict(null,"Delivery interaction must ALWAYS reach a group named \"Auth\" that verifies the human's identity. Either this group does not exist, or it is not guaranteed reachable!", "nofix", null, null, null, null));
 				System.out.println("Interaction violating delivery");
 			}
 			
@@ -105,7 +106,7 @@ public class ViolationParser{ //this class parses the interaction and the groups
 					addedPropertyCategories.add("Branching Errors");
 					root.getChildren().add(propertyCategories.get("Branching Errors"));
 				}
-				propertyCategories.get("Branching Errors").getChildren().add(new Conflict(null, "Branch conditions insufficient (See grayed-out transitions. Are you using else statements appropriately?).", "ia", null, null, null, null, null, null));
+				// POSSIBLY NEEDED    propertyCategories.get("Branching Errors").getChildren().add(new Conflict(null, "Branch conditions insufficient (See grayed-out transitions. Are you using else statements appropriately?).", "ia", null, null, null, null));
 			}
 			if (ia.isViolatingSequential()) {
 				System.out.println("Interaction violating sequential");
@@ -113,7 +114,7 @@ public class ViolationParser{ //this class parses the interaction and the groups
 					addedPropertyCategories.add("Jams");
 					root.getChildren().add(propertyCategories.get("Jams"));
 				}
-				propertyCategories.get("Jams").getChildren().add(new Conflict(null, "Sequential composition of groups insufficient (see transitions with red or yellow indicators).", "ia", null, null, null, null, null, null));
+				// POSSIBLY NEEDED propertyCategories.get("Jams").getChildren().add(new Conflict(null, "Sequential composition of groups insufficient (see transitions with red or yellow indicators).", "ia", null, null, null, null, null, null));
 			}
 			System.out.println("finished checking interaction properties");
 			HashMap<Integer,Boolean> graphPropertyValues;
@@ -132,7 +133,7 @@ public class ViolationParser{ //this class parses the interaction and the groups
 						addedPropertyCategories.add("Speech Flubs");
 						root.getChildren().add(propertyCategories.get("Speech Flubs"));
 					}
-					propertyCategories.get("Speech Flubs").getChildren().add(new Conflict(null, "In " + group.getName() + ", robot may interrupt the human's speech.", "nofix", null, null, group, mc, null, null));
+					//POSSIBLY NEEDED  propertyCategories.get("Speech Flubs").getChildren().add(new Conflict(null, "In " + group.getName() + ", robot may interrupt the human's speech.", "nofix", null, null, group, mc, null, null));
 				}
 				
 				// initialize the group lookup if not already initialized
@@ -164,13 +165,13 @@ public class ViolationParser{ //this class parses the interaction and the groups
 
 							// if the list of group conflicts does not already contain this one, add it
 							if (!graphPropGroupConflictLookup.get(group).containsKey(prop.getID())) {
-								graphPropGroupConflictLookup.get(group).put(prop.getID(), new Conflict(prop, ((prop.getContext() != null)?(prop.getContext() + " " + group.getName() + ", "):"") + prop.getDescription(), "nofix", null, null, group, mc, null, null));
+								graphPropGroupConflictLookup.get(group).put(prop.getID(), new Conflict(prop, ((prop.getContext() != null)?(prop.getContext() + " " + group.getName() + ", "):"") + prop.getDescription(), "nofix", null, null, group, mc));
 							}
 							if (!addedPropertyCategories.contains(prop.getCategory())) {
 								addedPropertyCategories.add(prop.getCategory());
 								root.getChildren().add(propertyCategories.get(prop.getCategory()));
 							}
-							propertyCategories.get(prop.getCategory()).getChildren().add(graphPropGroupConflictLookup.get(group).get(prop.getID()));
+							//POSSIBLY NEEDED propertyCategories.get(prop.getCategory()).getChildren().add(graphPropGroupConflictLookup.get(group).get(prop.getID()));
 						}
 					}
 				}
@@ -200,7 +201,7 @@ public class ViolationParser{ //this class parses the interaction and the groups
 							addedPropertyCategories.add(prop.getCategory());
 							root.getChildren().add(propertyCategories.get(prop.getCategory()));
 						}
-						propertyCategories.get(prop.getCategory()).getChildren().add(graphPropIAConflictLookup.get(prop.getID()));
+						//POSSIBLY NEEDED propertyCategories.get(prop.getCategory()).getChildren().add(graphPropIAConflictLookup.get(prop.getID()));
 					}
 				}
 			}
@@ -233,10 +234,10 @@ public class ViolationParser{ //this class parses the interaction and the groups
 			
 			desc += " at the same time.";
 			
-			root.getChildren().add(new Conflict(null, desc, (mbp.getFix() == null)?"canfix":"fix", behaviors, mbp, group, mc, null, null));
+			root.getChildren().add(new Conflict(null, desc, (mbp.getFix() == null)?"canfix":"fix", behaviors, mbp, group, mc));
 		}
 	}
-
+/*
 	private final class AlertTreeCell extends TreeCell<HBox> {
 
         private final AnchorPane anchorPane;
@@ -270,7 +271,7 @@ public class ViolationParser{ //this class parses the interaction and the groups
                 			else
                 				group.activateBlinker();
                 		}
-                   		/* need to redo this asap */
+                   		
                 		else if (group == null && ((Conflict) ti).getDescription().contains("Sequential composition")) {
                 			for (GroupTransition macro : ia.getMacroTransitions()) {
                 				if (!macro.getBadConnections().isEmpty()) {
@@ -310,7 +311,7 @@ public class ViolationParser{ //this class parses the interaction and the groups
                 				group.deactivateBlinker();
                 		}
                 		
-                		/* need to redo this asap */
+                		\
                 		else if (group == null && ((Conflict) ti).getDescription().contains("Sequential composition")) {
                 			for (GroupTransition macro : ia.getMacroTransitions()) {
                 				if (!macro.getBadConnections().isEmpty()) {
@@ -408,6 +409,7 @@ public class ViolationParser{ //this class parses the interaction and the groups
             }
         }
     }
+	*/
 }
 
 

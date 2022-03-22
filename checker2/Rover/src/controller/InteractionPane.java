@@ -82,23 +82,23 @@ public class InteractionPane extends Pane{
 	public void addCollection(Group collection, double x, double y){
 		collections.add(collection);
 		
-		collection.setLayoutX(x);
-		collection.setLayoutY(y);
-		getChildren().add(collection);
-		getChildren().add(collection.getEnderIndicatorLights());
-		getChildren().add(collection.getStarterIndicatorLights());
-		collection.refresh();
+		// //collection.setLayoutX(x);
+		// //collection.setLayoutY(y);
+		// getChildren().add(collection);
+		// getChildren().add(collection.getEnderIndicatorLights());
+		// getChildren().add(collection.getStarterIndicatorLights());
+		// collection.refresh();
 	}
 	
-	public void removeIndicators(Group collection) {
-		getChildren().remove(collection.getEnderIndicatorLights());
-		getChildren().remove(collection.getStarterIndicatorLights());
-	}
+	// public void removeIndicators(Group collection) {
+	// 	getChildren().remove(collection.getEnderIndicatorLights());
+	// 	getChildren().remove(collection.getStarterIndicatorLights());
+	// }
 	
-	public void addIndicators(Group collection) {
-		getChildren().add(collection.getEnderIndicatorLights());
-		getChildren().add(collection.getStarterIndicatorLights());
-	}
+	// public void addIndicators(Group collection) {
+	// 	getChildren().add(collection.getEnderIndicatorLights());
+	// 	getChildren().add(collection.getStarterIndicatorLights());
+	// }
 	
 	public void removeCollection(Group collection){
 		collections.remove(collection);

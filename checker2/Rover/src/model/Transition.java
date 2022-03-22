@@ -1,19 +1,7 @@
 package model;
 import java.awt.Point;
 import java.util.ArrayList;
-import controller.Annotation;
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.CycleMethod;
-import javafx.scene.paint.LinearGradient;
-import javafx.scene.paint.Stop;
-import javafx.scene.shape.Polyline;
-
+//import controller.Annotation; 
 /*
  * Class to store each instance of a line between two states in the model
  * 
@@ -21,41 +9,41 @@ import javafx.scene.shape.Polyline;
  * 
  * Contains an arrayList that holds each of the nails in the line
  */
-public class Transition extends Polyline {
+public class Transition  {
 	private State source, target;
-	private ObservableList<Nail> nail;
+	//private ObservableList<Nail> nail;
 	private ArrayList<Update> updates;
 	private ArrayList<Guard> guards;
 	private ArrayList<Sync> syncs;
 	//private Annotation annotation;
-	private Annotation guardAnnot;
-	private Annotation syncAnnot;
-	private Annotation updateAnnot;
+	// private Annotation guardAnnot;
+	// private Annotation syncAnnot;
+	// private Annotation updateAnnot;
 
 	public Transition(State source, State target, ArrayList<Point> points) {
 
-		super(source.getX(), source.getY());
+		//super(source.getX(), source.getY());
 		
-		if(points!=null){
-			for(Point point: points){
-				getPoints().addAll(point.getX(), point.getY());
-			}
-			nail = createControlAnchorsFor(getPoints());
-		}
+		// if(points!=null){
+		// 	for(Point point: points){
+		// 		getPoints().addAll(point.getX(), point.getY());
+		// 	}
+		// 	nail = createControlAnchorsFor(getPoints());
+		// }
 		
-		getPoints().addAll(target.getX(), target.getY());
+		//getPoints().addAll(target.getX(), target.getY());
 		
 		
 		this.source = source;
 		this.target = target;
-		setStrokeWidth(3);
+		//setStrokeWidth(3);
 		//setStroke(Color.BLACK);
-		LinearGradient linearGradient = new LinearGradient(source.getX(), source.getY(),
-				target.getX(), target.getY(), false,
-				CycleMethod.NO_CYCLE, new Stop(0,Color.RED),new Stop(1,Color.BLUE));
-		setStroke(linearGradient);
+		// LinearGradient linearGradient = new LinearGradient(source.getX(), source.getY(),
+		// 		target.getX(), target.getY(), false,
+		// 		CycleMethod.NO_CYCLE, new Stop(0,Color.RED),new Stop(1,Color.BLUE));
+		// setStroke(linearGradient);
 		
-		initializeAnnotations();
+		 initializeAnnotations();
 	}
 	
 	public Transition() {
@@ -120,9 +108,7 @@ public class Transition extends Polyline {
 		this.target = target;
 	}
 
-	public void setColor(Color color) {
-		setStroke(color);
-	}
+
 
 	public State getSource() {
 		return source;
@@ -298,49 +284,46 @@ public class Transition extends Polyline {
 		this.syncs.remove(sync);
 	}
 
-	public ObservableList<Nail> getNails() {
-		return nail;
-	}
 
-	public void addNail(Nail nail) {
-		this.nail.add(nail);
-	}
+	// public void addNail(Nail nail) {
+	// 	this.nail.add(nail);
+	// }
 
-	public void removeNail(int index) {
-		nail.remove(index);
-	}
+	// public void removeNail(int index) {
+	// 	nail.remove(index);
+	// }
 
 	//public void setAnnotation(Annotation ann) {
 	//	annotation = ann;
 	//}
 	
-	public void setGuardAnnot(Annotation ann) {
-		guardAnnot = ann;
-	}
+	// public void setGuardAnnot(Annotation ann) {
+	// 	guardAnnot = ann;
+	// }
 	
-	public void setUpdateAnnot(Annotation ann) {
-		updateAnnot = ann;
-	}
+	// public void setUpdateAnnot(Annotation ann) {
+	// 	updateAnnot = ann;
+	// }
 	
-	public void setSyncAnnot(Annotation ann) {
-		syncAnnot = ann;
-	}
+	// public void setSyncAnnot(Annotation ann) {
+	// 	syncAnnot = ann;
+	// }
 
 	//public Annotation getAnnotation() {
 	//	return annotation;
 	//}
 	
-	public Annotation getGuardAnnot() {
-		return guardAnnot;
-	}
+	// public Annotation getGuardAnnot() {
+	// 	return guardAnnot;
+	// }
 	
-	public Annotation getUpdateAnnot() {
-		return updateAnnot;
-	}
+	// public Annotation getUpdateAnnot() {
+	// 	return updateAnnot;
+	// }
 	
-	public Annotation getSyncAnnot() {
-		return syncAnnot;
-	}
+	// public Annotation getSyncAnnot() {
+	// 	return syncAnnot;
+	// }
 	
 	public String toString() {
 		String str = "Transition: \n";
@@ -354,7 +337,7 @@ public class Transition extends Polyline {
 
 		return str;
 	}
-	
+	/*
 	private ObservableList<Nail> createControlAnchorsFor(final ObservableList<Double> points) {
 	    ObservableList<Nail> anchors = FXCollections.observableArrayList();
 
@@ -381,4 +364,5 @@ public class Transition extends Polyline {
 
 	    return anchors;
 	  }
+*/
 }

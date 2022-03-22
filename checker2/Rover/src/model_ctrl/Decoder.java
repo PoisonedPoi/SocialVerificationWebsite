@@ -1,8 +1,6 @@
 package model_ctrl;
 import java.util.ArrayList;
 
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Polygon;
 import aCheck.Globals;
 import model.*;
 import model.Group;
@@ -18,7 +16,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import controller.Annotation;
+
 import aCheck.ModelFileChecker;
 import enums.StateClass;
 import enums.String2StateClass;
@@ -126,10 +124,10 @@ public class Decoder {
 						gazeClassStr = gazeClass.getTextContent();
 					}
 					
-					State temp = new State(stateNameStr, X, Y, Color.BLUE, false, false, false, "state", sc, ID);
+					State temp = new State(stateNameStr, X, Y,  false, false, false, "state", sc, ID);
 					temp.setStateClass(stateClassValue);
 					//temp.setAgent(agentstr);
-					State st = new State(stateNameStr, X, Y, Color.BLUE, false, false, false, "state", sc, ID);
+					State st = new State(stateNameStr, X, Y,  false, false, false, "state", sc, ID);
 					st.setAgent(agentstr);
 					statesArray.add(st);
 					st.setGaze(gazeClassStr);
@@ -185,9 +183,9 @@ public class Decoder {
 					int targetID = Integer.parseInt(target.getAttribute("ref"));
 					
 					// declare the annotations
-					Annotation syncAnnot = null;
-					Annotation guardAnnot = null;
-					Annotation updateAnnot = null;
+					// Annotation syncAnnot = nul  -these are gui elementsl;
+					// Annotation guardAnnot = null;
+					// Annotation updateAnnot = null;
 					
 					// search for states with the appropriate IDs
 					State sourceState = null;
@@ -228,8 +226,8 @@ public class Decoder {
 					}
 					
 					// create the sync annotation
-					if (syncsToAdd.size() > 0)
-						syncAnnot = new Annotation(syncsToAdd, "Sync", annotCoords, null, null);
+					//if (syncsToAdd.size() > 0)
+						//syncAnnot = new Annotation(syncsToAdd, "Sync", annotCoords, null, null);
 						
 					// obtain any updates
 					ArrayList<Object> updatesToAdd = new ArrayList<Object>();
@@ -270,8 +268,8 @@ public class Decoder {
 					}
 					
 					// create the update annotation
-					if (updatesToAdd.size() > 0)
-						updateAnnot = new Annotation(updatesToAdd, "Update", annotCoords, null, null);
+					//if (updatesToAdd.size() > 0)
+						//updateAnnot = new Annotation(updatesToAdd, "Update", annotCoords, null, null);
 					
 					// obtain any guards
 					ArrayList<Object> guardsToAdd = new ArrayList<Object>();
@@ -294,8 +292,8 @@ public class Decoder {
 					}
 					
 					// create the guard annotation
-					if (guardsToAdd.size() > 0)
-						guardAnnot = new Annotation(guardsToAdd, "Guard", annotCoords, null, null);
+					//if (guardsToAdd.size() > 0)
+					//	guardAnnot = new Annotation(guardsToAdd, "Guard", annotCoords, null, null);
 					
 					// obtain any nails
 					ArrayList<Point> nailsToAdd  = new ArrayList<Point>();
@@ -318,9 +316,9 @@ public class Decoder {
 					temp.addUpdates((ArrayList<Update>)(ArrayList<?>) updatesToAdd);
 					temp.addSyncs((ArrayList<Sync>)(ArrayList<?>) syncsToAdd);
 					
-					temp.setGuardAnnot(guardAnnot);
-					temp.setUpdateAnnot(updateAnnot);
-					temp.setSyncAnnot(syncAnnot);
+				//	temp.setGuardAnnot(guardAnnot);
+				//	temp.setUpdateAnnot(updateAnnot);
+				//	temp.setSyncAnnot(syncAnnot);
 					
 					transitionsArray.add(temp);
 				}
@@ -338,11 +336,12 @@ public class Decoder {
 			//System.exit(0);
 
 	}
-	
-	public void readSupreme(String supreme, Interaction ia) {
+	//-----------------------------------------------------------------------------------
+	//------------------------------------where are xml docc is parsed ------------------
+	public void readSupreme(Document xmlDoc, Interaction ia) {
 		ia.initializeInteraction();
 		//ia.setNonAssistedSwitch(this.isNonAssisted);
-		Document doc = initDoc(supreme);
+		Document doc = xmlDoc;
 		
 		// get name
 		ia.setName(getDocName(doc));
@@ -360,10 +359,14 @@ public class Decoder {
 			String namestr = name.getTextContent();
 			//System.out.println("GROUP NAME: " + namestr);
 			
+
+
+//test
+
 			Group mc = new Group(namestr, isInit);
 			mc.setID(ID);
-			mc.setLayoutX(Double.parseDouble(e.getAttribute("x")));
-			mc.setLayoutY(Double.parseDouble(e.getAttribute("y")));
+			//mc.setLayoutX(Double.parseDouble(e.getAttribute("x")));
+			//mc.setLayoutY(Double.parseDouble(e.getAttribute("y")));
 			
 			// get all of the microinteractions within the group
 			NodeList micros = e.getElementsByTagName("micro");
@@ -438,8 +441,130 @@ public class Decoder {
 			
 			BugTracker bt = ia.getBugTracker();
 			GroupTransition mt = new GroupTransition(sourceGroup, targetGroup, bt);
-			Polygon poly = new Polygon();
-			mt.setPoly(poly);
+			mt.setAllHumanBranching(false);
+			mt.setTarget(targetGroup);
+			
+			NodeList guards = e.getElementsByTagName("guard");
+			for (int j = 0; j < guards.getLength(); j++) {
+				Element g = (Element) guards.item(j);
+				String condition = g.getAttribute("condition");
+				
+				boolean[] branching = mt.getHumanBranching();
+				if (condition.equals("human_ready"))
+					branching[0] = true;
+				if (condition.equals("human_busy"))
+					branching[1] = true;
+				if (condition.equals("human_ignore"))
+					branching[2] = true;
+			}
+			
+			ia.addTransition(mt);
+		}
+		
+		ia.setBuilt(true);
+		//System.out.println("Done reading supreme");
+		//System.out.println(ia);
+	}
+
+	public void readSupreme(String supreme, Interaction ia) {
+		ia.initializeInteraction();
+		//ia.setNonAssistedSwitch(this.isNonAssisted);
+		Document doc = initDoc(supreme);
+		
+		// get name
+		ia.setName(getDocName(doc));
+		//System.out.println("Reading an interaction with the name " + ia.getName());
+			
+		// get micro start/end times, confirm name matches with ID
+		NodeList groups = doc.getElementsByTagName("group");
+		for (int i = 0; i < groups.getLength(); i++) {
+			//System.out.println("Reading a group");
+			Element e = (Element) groups.item(i);
+			int ID = Integer.parseInt(e.getAttribute("id"));
+			boolean isInit = (e.getAttribute("init").equals("true"))?true:false;
+			
+			Element name = (Element) e.getElementsByTagName("name").item(0);
+			String namestr = name.getTextContent();
+			//System.out.println("GROUP NAME: " + namestr);
+			
+			Group mc = new Group(namestr, isInit);
+			mc.setID(ID);
+			//mc.setLayoutX(Double.parseDouble(e.getAttribute("x")));
+			//mc.setLayoutY(Double.parseDouble(e.getAttribute("y")));
+			
+			// get all of the microinteractions within the group
+			NodeList micros = e.getElementsByTagName("micro");
+			for (int j = 0; j < micros.getLength(); j++) {
+				Element m = (Element) micros.item(j);
+				name = (Element) m.getElementsByTagName("name").item(0);
+				namestr = name.getTextContent();
+				
+				Microinteraction micro = new Microinteraction();
+				// search Lib for the correct microinteraction
+				File dir = new File(Globals.ROOT_FP + File.separator + "resources" + File.separator + "Lib");
+				for (File dirFile : dir.listFiles()) {
+					if (dirFile.isDirectory() && !dirFile.getName().equals("Supreme"))
+					for (File file : dirFile.listFiles()) {
+						//System.out.println(file.getName() + " --- " + namestr);
+						if (file.getName().equals(namestr + ".xml")) {
+							//System.out.println(file);
+							readMicrointeraction(file, file.getAbsolutePath(), micro);
+						}
+					}
+				}
+								
+				NodeList params = m.getElementsByTagName("parameter");
+				for (int k = 0; k < params.getLength(); k++) {
+					Element p = (Element) params.item(k);
+					String type = p.getAttribute("type");
+					String paramName;
+					if (type.equals("array")) {
+						Element paramElementName = (Element) p.getElementsByTagName("name").item(0);
+						paramName = paramElementName.getTextContent();
+						
+						Variable var = matchNameWithVar(paramName, micro.getGlobalVars());
+						
+						NodeList items = p.getElementsByTagName("item");
+						for (int l = 0; l < items.getLength(); l++) {
+							Element item = (Element) items.item(l);
+							String val = item.getAttribute("val");
+							String link = item.getAttribute("link");
+							var.addItemToArray(val, link);
+						}
+					}
+					else {
+						paramName = p.getTextContent();
+						
+						// match up name with variable
+						Variable var = matchNameWithVar(paramName, micro.getGlobalVars());
+						var.setValue(p.getAttribute("val"));
+					}
+				}
+				
+				mc.addMicro(micro);
+			}
+			ia.addGroup(mc);
+			if(mc.isInit())
+				ia.setInit(mc);
+			ia.updateGroupID(mc);
+		}
+			
+		// get transitions
+		NodeList trans = doc.getElementsByTagName("transition");
+		for (int i = 0; i < trans.getLength(); i++) {
+			//System.out.println("reading a macrotransition");
+			Element e = (Element) trans.item(i);
+			
+			Element source = (Element) e.getElementsByTagName("source").item(0);
+			int sref = Integer.parseInt(source.getAttribute("ref"));
+			Group sourceGroup = ia.getGroup(sref);
+			
+			Element target = (Element) e.getElementsByTagName("target").item(0);
+			int tref = Integer.parseInt(target.getAttribute("ref"));
+			Group targetGroup = ia.getGroup(tref);
+			
+			BugTracker bt = ia.getBugTracker();
+			GroupTransition mt = new GroupTransition(sourceGroup, targetGroup, bt);
 			mt.setAllHumanBranching(false);
 			mt.setTarget(targetGroup);
 			

@@ -119,9 +119,61 @@ public class ModelFileChecker{
     private final int BUTTON_ADDGROUP = 'G';
     private final int BUTTON_ADDTRANS = 'T';
 
-    public ModelFileChecker(String sid){
+    public ModelFileChecker(String sid, Document xmlDoc){
         Globals.SID = sid;
         Globals.USERPATH = "/home/new/rover/users/user"+sid+"/";
+
+        System.out.println("Starting xml ModelFileChecker");
+        initialize();
+        System.out.println("Done Initializing");
+
+  
+
+        System.out.println("getting interaction groups test " + interaction.getGroups());
+        loadModelXML(xmlDoc, interaction);
+        System.out.println("Done Loading interaction and now about to start check");
+
+        performCheck();
+        System.out.println("now about to load violations");
+        loadViolations();
+
+        
+        System.out.println(" printing all violations now 9594839r820483928r9e===!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        interaction.printViolations();
+
+        System.out.println("getting xml xoc");
+        Document doc = getXMLViolationDocument();
+        /*
+        System.out.println("Root element" + doc.getDocumentElement().getNodeName());
+        NodeList nList = doc.getElementsByTagName("violation");
+        for(int temp = 0;temp<nList.getLength(); temp++){
+            Node nNode = nList.item(temp);
+            System.out.println(" Current Element " + nNode.getNodeName());
+            Element elem = (Element) nNode;
+            System.out.println("Type " + elem.getElementsByTagName("type").item(0).getTextContent());
+        }
+        
+    */
+
+    }
+
+
+    public ModelFileChecker(String sid){
+        //set global filepaths
+        Globals.SID = sid;
+        Globals.USERPATH = "/home/new/rover/users/user"+sid+"/";
+
+        //ensure directory for sid exists
+        if(!(new File(Globals.USERPATH).exists())){
+            //setup a new user folder
+            new File(Globals.USERPATH).mkdir();
+            //setup a blank dot_files folder
+            new File(Globals.USERPATH + "dot_files");
+            //setup a blank prism folder
+            new File(Globals.USERPATH + "dot_files");
+        }
+
+
 
         System.out.println("Starting ModelFileChecker");
         initialize();
@@ -156,6 +208,13 @@ public class ModelFileChecker{
     }
 
     public Document getXMLViolationDocument(){
+            if (backgroundThread != null && backgroundThread.getThread().isAlive())
+            try {
+                backgroundThread.getThread().join();
+            } catch (InterruptedException e) {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         return interaction.getXMLViolationDocument();
     }
 
@@ -229,15 +288,16 @@ public class ModelFileChecker{
     }
 
 
-
+    public void loadModelXML(Document xmlDoc, Interaction interaction){
+       // InteractionFileLoader loader = new InteractionFileLoader(fileName, interaction, this);
+        Decoder decoder = new Decoder(this, isNonAssisted);
+        decoder.readSupreme(xmlDoc, interaction); 
+    }
 
     public void loadModelFile(String fileName, Interaction interaction){
-   
        // InteractionFileLoader loader = new InteractionFileLoader(fileName, interaction, this);
         Decoder decoder = new Decoder(this, isNonAssisted);
         decoder.readSupreme(fileName, interaction); //absFilePath + "Supreme.xml"
-        
-
     }
 
 
