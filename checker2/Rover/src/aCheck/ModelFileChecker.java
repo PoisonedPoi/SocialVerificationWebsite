@@ -3,7 +3,6 @@ package aCheck;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 import javafx.embed.swing.SwingFXUtils;
-
 import javax.imageio.ImageIO;
 import java.io.File;
 import java.io.FileInputStream;
@@ -119,9 +118,24 @@ public class ModelFileChecker{
     private final int BUTTON_ADDGROUP = 'G';
     private final int BUTTON_ADDTRANS = 'T';
 
+    private final String SID; //session id, gives the user folder name as "user + SID", it should not be changed once set 
+    private final String USERFOLDER;//the actual folder path for this user
     public ModelFileChecker(String sid, Document xmlDoc){
-        Globals.SID = sid;
-        Globals.USERPATH = "/home/new/rover/users/user"+sid+"/";
+        this.SID = sid;
+        this.USERFOLDER = Globals.USERPATH +  "user" + sid + "/";
+
+        //ensure directory for sid exists
+        if(!(new File(USERFOLDER).exists())){
+            //setup a new user folder
+            new File(USERFOLDER).mkdir();
+            //setup a blank dot_files folder
+            new File(USERFOLDER + "dot_files").mkdir();
+            //setup a blank prism folder
+            new File(USERFOLDER + "prism").mkdir();
+        }
+
+
+        
 
         System.out.println("Starting xml ModelFileChecker");
         initialize();
@@ -137,8 +151,7 @@ public class ModelFileChecker{
         System.out.println("now about to load violations");
         loadViolations();
 
-        
-        System.out.println(" printing all violations now 9594839r820483928r9e===!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        System.out.println("printing all violations ---");
         interaction.printViolations();
 
         System.out.println("getting xml xoc");
@@ -157,25 +170,25 @@ public class ModelFileChecker{
 
     }
 
-
     public ModelFileChecker(String sid){
         //set global filepaths
-        Globals.SID = sid;
-        Globals.USERPATH = "/home/new/rover/users/user"+sid+"/";
+       this.SID = sid;
+        this.USERFOLDER = Globals.USERPATH  + "user" + sid + "/";
 
         //ensure directory for sid exists
-        if(!(new File(Globals.USERPATH).exists())){
+        if(!(new File(USERFOLDER).exists())){
             //setup a new user folder
-            new File(Globals.USERPATH).mkdir();
+            new File(USERFOLDER).mkdir();
             //setup a blank dot_files folder
-            new File(Globals.USERPATH + "dot_files");
+            new File(USERFOLDER + "dot_files").mkdir();
             //setup a blank prism folder
-            new File(Globals.USERPATH + "dot_files");
+            new File(USERFOLDER + "prism").mkdir();
         }
 
 
 
-        System.out.println("Starting ModelFileChecker");
+
+        System.out.println("Starting thread test 3 ModelFileChecker with user " + SID);
         initialize();
         System.out.println("Done Initializing");
 
@@ -204,7 +217,24 @@ public class ModelFileChecker{
             System.out.println("Type " + elem.getElementsByTagName("type").item(0).getTextContent());
         }
         
+        //destroyUserFolder();
+    }
 
+    //note the current instance of this modelfilechecker should not be used again after calling this method
+    public void destroyUserFolder(){
+        File folder = new File(USERFOLDER);
+        deleteFolder(folder);
+    }
+
+    private void deleteFolder(File folder){
+        for(File subFile : folder.listFiles()){
+            if(subFile.isDirectory()){
+                deleteFolder(subFile);
+            }else{
+                subFile.delete();
+            }
+        }
+        folder.delete();
     }
 
     public Document getXMLViolationDocument(){
@@ -319,6 +349,7 @@ public class ModelFileChecker{
 
         // Currently set to empty declarations
         interaction = new Interaction(graphProperties);
+        interaction.setUSERFOLDER(this.USERFOLDER);
         currGroupTransition = null;
 
         //TODO figure out way to safely remove
@@ -630,6 +661,14 @@ public boolean[] getEndStates(Node node) {
         backgroundThread = new PrismThread( interaction, this, interaction.getInit());
         Thread t = backgroundThread.getThread();
         backgroundThread.start("concurrentAndGraph");
+    }
+
+    public String getSID(){
+        return SID;
+    }
+
+    public String getUSERFOLDER(){
+        return USERFOLDER;
     }
 
 

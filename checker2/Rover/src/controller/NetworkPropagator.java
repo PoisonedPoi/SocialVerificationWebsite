@@ -14,13 +14,13 @@ import study.BugTracker;
 
 public class NetworkPropagator {
 	
-	private static BugTracker bt;
+	private  BugTracker bt;
 	
 	public NetworkPropagator(BugTracker bt) {
 		this.bt = bt;
 	}
 
-	public static void propagateSequentialChanges(ArrayList<Group> groupsToUpdate,  Interaction ia, ModelFileChecker mc, boolean concurrent) {
+	public  void propagateSequentialChanges(ArrayList<Group> groupsToUpdate,  Interaction ia, ModelFileChecker mc, boolean concurrent) {
 		// get the checker
 		Checker c = ia.getChecker();
 		System.out.println("at start of network propegator " + ia.getGroups());

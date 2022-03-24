@@ -8,9 +8,9 @@ import java.util.ArrayList;
 import aCheck.Globals;
 public class FilterUtil {
 	
-	public static ArrayList<String[]> extractRawResults() {
+	public static ArrayList<String[]> extractRawResults(String USERFOLDER) {
 		ArrayList<String[]> rawResults = new ArrayList<String[]>();
-		try (BufferedReader br = new BufferedReader(new FileReader(new File(Globals.USERPATH + "tempout.txt")))) {
+		try (BufferedReader br = new BufferedReader(new FileReader(new File(USERFOLDER + "tempout.txt")))) {
 		    String line;
 		    while ((line = br.readLine()) != null) {
 		    	//System.out.println(line);

@@ -34,6 +34,7 @@ public class MicroEncoder {
 		currStateChar = 0;
 		isCollection = false;
 	}
+
 	
 	public HashMap<State,ModuleStatePair> encode() {
 		// check to ensure that the microinteraction is not null

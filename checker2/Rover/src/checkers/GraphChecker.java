@@ -138,7 +138,7 @@ private Interaction ia;
 	private void clearPrismOutputFile() {
 		PrintWriter writer = null;
 		try {
-			writer = new PrintWriter(new File(Globals.USERPATH+"tempout.txt"));
+			writer = new PrintWriter(new File(ia.getUSERFOLDER()+"tempout.txt"));
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -148,7 +148,7 @@ private Interaction ia;
 	}
 	
 	private ArrayList<Group> extractFilterResults() {
-		ArrayList<String[]> rawFilterResults = (new FilterUtil()).extractRawResults();
+		ArrayList<String[]> rawFilterResults = (new FilterUtil()).extractRawResults(ia.getUSERFOLDER());
 		ArrayList<Group> filterResults = new ArrayList<Group>();
 		for (String[] strs : rawFilterResults) {
 			int groupId = Integer.parseInt(strs[strs.length-1]);

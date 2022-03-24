@@ -25,7 +25,7 @@ public class GraphEncoder {
 	}
 	
 	public File encode() {
-		File pfile = new File(Globals.USERPATH+"graph.pm");
+		File pfile = new File(ia.getUSERFOLDER()+"graph.pm");
 		PrintWriter writer = null;
 		try {
 			writer = new PrintWriter(pfile);

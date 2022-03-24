@@ -85,6 +85,9 @@ public class Interaction {
 	//the violations the checker finds
 	private HashMap<Property, Violation> violations;
 	
+	//has the user folder location (NOTE SHOULD NOT BE CHANGED AFTER SET)
+	private String USERFOLDER;
+
 	public Interaction(ArrayList<Property> properties) {
 		this.graphProperties = properties;
 		initialize();
@@ -212,6 +215,14 @@ public class Interaction {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	public String getUSERFOLDER(){
+		return USERFOLDER;
+	}
+
+	public void setUSERFOLDER(String USERFOLDER){
+		this.USERFOLDER = USERFOLDER;
 	}
 	
 	public Checker getChecker() {

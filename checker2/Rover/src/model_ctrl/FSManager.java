@@ -42,10 +42,11 @@ public class FSManager {
 	private Properties prop;
 	private InputStream input;
 	private ArrayList<String> flagFiles;
-
-	public FSManager() {
+	private String USERFOLDER;
+	public FSManager(String USERFOLDER) { //NOTE used to be empty
+		this.USERFOLDER = USERFOLDER;
 		//Set the current workspace. This is the application directory
-		WORKSPACE = new File(Globals.USERPATH+ File.separator);
+		WORKSPACE = new File(USERFOLDER);
 		prop = new Properties();
 		flagFiles = new ArrayList<String>();
 		//Read the properties file to set the necessary conditions for the program.

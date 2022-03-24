@@ -374,13 +374,13 @@ public class SequentialChecker {
 				// TODO Auto-generated catch block
 			//	e.printStackTrace();
 			//}
-			PrintWriter writer = new PrintWriter(new File(Globals.USERPATH + "tempout.txt"));
+			PrintWriter writer = new PrintWriter(new File(ia.getUSERFOLDER() + "tempout.txt"));
 			writer.print("");
 			writer.close();// wipe the log file
 			mainLog.flush();
 
 			// extract the results and put the string values into an arraylist
-			ArrayList<String[]> rawResults = (new FilterUtil()).extractRawResults();
+			ArrayList<String[]> rawResults = (new FilterUtil()).extractRawResults(ia.getUSERFOLDER());
 						
 			// run through each index and get the labels associated with each index
 			ArrayList<ArrayList<State>> endSts = new ArrayList<ArrayList<State>>();

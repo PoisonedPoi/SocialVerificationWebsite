@@ -239,3 +239,42 @@ public class Repairer {
 	}
 	
 }
+
+
+
+/*
+
+getting xml xoc
+java.io.FileNotFoundException
+	at sparse.PrismSparse.ExportMDP(PrismSparse.java:486)
+	at prism.NondetModel.exportToFile(NondetModel.java:419)
+	at prism.Prism.exportTransToFile(Prism.java:2283)
+	at checkers.TMExporter.exportToFile(TMExporter.java:40)
+	at checkers.Checker.tmExporter(Checker.java:257)
+	at checkers.PrismThread.run(PrismThread.java:152)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+Exception in thread "prism" java.lang.NullPointerException
+	at java.base/java.io.FileInputStream.<init>(FileInputStream.java:149)
+	at java.base/java.io.FileReader.<init>(FileReader.java:75)
+	at checkers.TMExporter.parseTM(TMExporter.java:63)
+	at checkers.Checker.tmExporter(Checker.java:258)
+	at checkers.PrismThread.run(PrismThread.java:152)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+Getting scratch disk contents
+
+
+
+
+
+airness is false
+properties File is filter(print, Pmax=? [ st_m=4 ]);
+
+java.io.FileNotFoundException: /home/new/rover/users/user2170/tempout.txt (No such file or directory)
+	at java.base/java.io.FileOutputStream.open0(Native Method)
+	at java.base/java.io.FileOutputStream.open(FileOutputStream.java:293)
+	at java.base/java.io.FileOutputStream.<init>(FileOutputStream.java:235)
+	at java.base/java.io.FileOutputStream.<init>(FileOutputStream.java:184)
+	at java.base/java.io.PrintWriter.<init>(PrintWriter.java:309)
+	at checkers.SequentialChecker.getEndStates(SequentialChecker.java:377)
+	at checkers.SequentialChecker.getStartEndStates(SequentialChecker.java:56)
+*/

@@ -350,7 +350,7 @@ public class Microinteraction {
 
 	public String toString() {
 		String str = "Microinteraction: " + this.name + ", ID=" + this.id + "\n";
-				
+		/*
 		// print the global variables
 		str += "Global Variables: \n";
 		for (int i = 0; i < globals.size(); i++) {
@@ -362,7 +362,7 @@ public class Microinteraction {
 		for (Module mod : modules) {
 			str += mod.toString();
 		}
-		
+		*/
 		return str;
 	}
 }

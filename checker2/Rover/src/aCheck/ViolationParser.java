@@ -8,20 +8,12 @@ import java.util.Iterator;
 import checkers.Conflict;
 import checkers.ModBehPair;
 import checkers.Property;
-import javafx.geometry.Insets;
-import javafx.scene.layout.HBox;
+
 import model.Group;
 import model.GroupTransition;
 import model.Interaction;
 import model.Module;
-import javafx.scene.control.TreeView;
-import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeCell;
-import javafx.util.Callback;
-import javafx.scene.layout.AnchorPane;
-import javafx.event.EventHandler;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.control.Tooltip;
+
 
 public class ViolationParser{ //this class parses the interaction and the groups to find the violations and their properties
 
@@ -29,7 +21,6 @@ public class ViolationParser{ //this class parses the interaction and the groups
 	private Interaction ia;
 	
 	// conflicts
-	TreeItem root;
 	//Conflict greeting;
 	//Conflict farewell;
 	Conflict noMicrosInInit;
@@ -63,7 +54,7 @@ public class ViolationParser{ //this class parses the interaction and the groups
 			System.out.println("read " + str + " in propertyCategories violation pane");
 			this.propertyCategories.put(str, new Conflict(null, str, "nofix", null, null, null, null));
 		}
-		root = new TreeItem("Property Violations");
+		//root = new TreeItem("Property Violations");
        
 
 	}
@@ -89,14 +80,14 @@ public class ViolationParser{ //this class parses the interaction and the groups
 		// look at all property violations
 		if (ia.getInit().getMicrointeractions().isEmpty()) {
             System.out.println("early violation");
-			root.getChildren().add(noMicrosInInit);
+			//root.getChildren().add(noMicrosInInit);
 			//tv.add(noMicrosInInit);
 		}
 		else {
 			//tv.remove(noMicrosInInit);
             System.out.println("checking interaction properties");
 			if (!ia.getAuthProp() && ia.getCurrDesign().equals("Delivery")) {
-				root.getChildren().add(new Conflict(null,"Delivery interaction must ALWAYS reach a group named \"Auth\" that verifies the human's identity. Either this group does not exist, or it is not guaranteed reachable!", "nofix", null, null, null, null));
+				//root.getChildren().add(new Conflict(null,"Delivery interaction must ALWAYS reach a group named \"Auth\" that verifies the human's identity. Either this group does not exist, or it is not guaranteed reachable!", "nofix", null, null, null, null));
 				System.out.println("Interaction violating delivery");
 			}
 			
@@ -104,7 +95,7 @@ public class ViolationParser{ //this class parses the interaction and the groups
 				if (!addedPropertyCategories.contains("Branching Errors")) {
 					System.out.println("Interaction violating branch");
 					addedPropertyCategories.add("Branching Errors");
-					root.getChildren().add(propertyCategories.get("Branching Errors"));
+					//root.getChildren().add(propertyCategories.get("Branching Errors"));
 				}
 				// POSSIBLY NEEDED    propertyCategories.get("Branching Errors").getChildren().add(new Conflict(null, "Branch conditions insufficient (See grayed-out transitions. Are you using else statements appropriately?).", "ia", null, null, null, null));
 			}
@@ -112,7 +103,7 @@ public class ViolationParser{ //this class parses the interaction and the groups
 				System.out.println("Interaction violating sequential");
 				if (!addedPropertyCategories.contains("Jams")) {
 					addedPropertyCategories.add("Jams");
-					root.getChildren().add(propertyCategories.get("Jams"));
+				//	root.getChildren().add(propertyCategories.get("Jams"));
 				}
 				// POSSIBLY NEEDED propertyCategories.get("Jams").getChildren().add(new Conflict(null, "Sequential composition of groups insufficient (see transitions with red or yellow indicators).", "ia", null, null, null, null, null, null));
 			}
@@ -131,7 +122,7 @@ public class ViolationParser{ //this class parses the interaction and the groups
 					System.out.println("	Group is violating, so probably a speech violation");
 					if (!addedPropertyCategories.contains("Speech Flubs")) {
 						addedPropertyCategories.add("Speech Flubs");
-						root.getChildren().add(propertyCategories.get("Speech Flubs"));
+					//	root.getChildren().add(propertyCategories.get("Speech Flubs"));
 					}
 					//POSSIBLY NEEDED  propertyCategories.get("Speech Flubs").getChildren().add(new Conflict(null, "In " + group.getName() + ", robot may interrupt the human's speech.", "nofix", null, null, group, mc, null, null));
 				}
@@ -169,7 +160,7 @@ public class ViolationParser{ //this class parses the interaction and the groups
 							}
 							if (!addedPropertyCategories.contains(prop.getCategory())) {
 								addedPropertyCategories.add(prop.getCategory());
-								root.getChildren().add(propertyCategories.get(prop.getCategory()));
+							//	root.getChildren().add(propertyCategories.get(prop.getCategory()));
 							}
 							//POSSIBLY NEEDED propertyCategories.get(prop.getCategory()).getChildren().add(graphPropGroupConflictLookup.get(group).get(prop.getID()));
 						}
@@ -199,7 +190,7 @@ public class ViolationParser{ //this class parses the interaction and the groups
 
 						if (!addedPropertyCategories.contains(prop.getCategory())) {
 							addedPropertyCategories.add(prop.getCategory());
-							root.getChildren().add(propertyCategories.get(prop.getCategory()));
+							//root.getChildren().add(propertyCategories.get(prop.getCategory()));
 						}
 						//POSSIBLY NEEDED propertyCategories.get(prop.getCategory()).getChildren().add(graphPropIAConflictLookup.get(prop.getID()));
 					}
@@ -234,7 +225,7 @@ public class ViolationParser{ //this class parses the interaction and the groups
 			
 			desc += " at the same time.";
 			
-			root.getChildren().add(new Conflict(null, desc, (mbp.getFix() == null)?"canfix":"fix", behaviors, mbp, group, mc));
+			//root.getChildren().add(new Conflict(null, desc, (mbp.getFix() == null)?"canfix":"fix", behaviors, mbp, group, mc));
 		}
 	}
 /*

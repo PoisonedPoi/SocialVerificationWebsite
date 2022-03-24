@@ -732,7 +732,7 @@ public class Group  {
 			    
 			    for (Integer t : targs) {
 				    // add the link
-				    State source = states.get(s);
+				    State source = states.get(s); //thread error here
 				    State target = states.get(t);
 				    Transition trans = new Transition(source,target, new ArrayList<Point>());
 				    source.addOutputTrans(trans);

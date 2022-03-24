@@ -26,6 +26,8 @@ public class Encoder {
 	public static void encodeGlobalVars(Microinteraction micro, PrintWriter writer, String suf) {
 		encodeGlobs(micro, writer, suf);
 	}
+
+
 	
 	private static void encodeGlobs(Microinteraction micro, PrintWriter writer, String suf) {
 		ArrayList<Variable> globals = micro.getGlobalVars();

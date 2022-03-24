@@ -53,7 +53,7 @@ public class ConcurrentChecker {
 		Result result;
 		
 		try {
-			modulesFile = prism.parseModelFile(new File(Globals.ROOT_FP + File.separator + "users" + File.separator + "user"+Globals.SID + File.separator +"prism" + File.separator + group.getMacrointeraction().getName() + ".pm"));
+			modulesFile = prism.parseModelFile(new File(c.getUSERFOLDER() +"prism" + File.separator + group.getMacrointeraction().getName() + ".pm"));
 			prism.loadPRISMModel(modulesFile);
 		} catch (FileNotFoundException | PrismException e1) {
 			// TODO Auto-generated catch block
@@ -184,7 +184,7 @@ public class ConcurrentChecker {
 
 			try {
 				propertiesFile = prism.parsePropertiesString(modulesFile, property);
-				PrintWriter writer = new PrintWriter(new File(Globals.USERPATH + "tempout.txt"));
+				PrintWriter writer = new PrintWriter(new File(c.getUSERFOLDER() + "tempout.txt"));
 				writer.print("");
 				writer.close();// wipe the log file
 				result = prism.modelCheck(propertiesFile, propertiesFile.getPropertyObject(0));

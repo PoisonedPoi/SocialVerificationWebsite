@@ -71,7 +71,7 @@ public class ImportMicrosCT extends VBox {
 
 	private void initialize() {
 
-		FSManager fsm = new FSManager();
+		FSManager fsm = new FSManager(mc.getUSERFOLDER());
 		
 		//Searches through all the micros to and displays the ones' containing a the search string
 		/*searchBar.textProperty().addListener(e -> {
