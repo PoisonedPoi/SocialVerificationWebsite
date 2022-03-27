@@ -242,10 +242,8 @@ public class Microinteraction {
 	}
 	
 	public void build() {
-		System.out.println("about to maek builder");
 		Builder bob = new Builder(this);
 		builtMicro = bob.build();
-		System.out.println("finished build");
 	}
 	
 	public void setBuiltMicro(Microinteraction otherMic) {
@@ -349,7 +347,7 @@ public class Microinteraction {
 	}
 
 	public String toString() {
-		String str = "Microinteraction: " + this.name + ", ID=" + this.id + "\n";
+		String str = "Microinteraction: " + this.name + ", ID=" + this.id;
 		/*
 		// print the global variables
 		str += "Global Variables: \n";

@@ -50,9 +50,11 @@ public class SequentialChecker {
 	}
 	
 	public void getStartEndStates(Prism prism, PrismLog mainLog, Microinteraction micro) {
+		System.out.println(ia.getUSERFOLDER() + "	Getting start States");
 		ArrayList<ArrayList<State>> s = getStartStates(micro);
 		micro.setStartStates(s);
 		
+		System.out.println(ia.getUSERFOLDER() + "	Getting End States");
 		ArrayList<ArrayList<State>> e = getEndStates(micro, prism, mainLog);
 		micro.setEndStates(e, isNonAssisted);
 	}
@@ -306,7 +308,7 @@ public class SequentialChecker {
 		PropertiesFile propertiesFile = null;
 		Result result;
 
-		System.out.println("SEQ: Getting end states");
+		//System.out.println("SEQ: Getting end states");
 		
 		/*
 		 * SPECIAL CASE (hack, probably should comment out): if there are no start states, then simply return an empty list!
@@ -315,8 +317,9 @@ public class SequentialChecker {
 			return new ArrayList<ArrayList<State>>();
 				
 		try {
-
+			System.out.println(ia.getUSERFOLDER() + " CriticalSection 1");
 			modulesFile = prism.parseModelFile(new File(Micro2File.get(m)));
+			//System.out.println(Micro2File.get(m));
 			prism.loadPRISMModel(modulesFile);
 
 			// get and store the indices for each label (Idx2Label, then Label2State)
@@ -352,8 +355,11 @@ public class SequentialChecker {
 			
 			//TODO: CHECK THAT THIS LABEL IS REACHABLE GIVEN THE ENABLED INITIAL STATES!!!!!!!!!!!!!
 			
+			System.out.println(ia.getUSERFOLDER() + " CriticalSection 2");
+
+
 			String property = "filter(print, Pmax=? [ " + label + " ] );";
-			System.out.println(property);
+			//System.out.println(property);
 
 			// parse the results from the filter property, storing which collections of states the micro may result in
 			propertiesFile = prism.parsePropertiesString(modulesFile, property);
@@ -363,11 +369,19 @@ public class SequentialChecker {
 				// TODO Auto-generated catch block
 			//	e.printStackTrace();
 			//}
-			System.out.println("Engine (Explicit is " + Prism.EXPLICIT + "): " + prism.getEngine());
-			System.out.println("Fairness is " + prism.getFairness());
-			System.out.println("properties File is " + propertiesFile);
 
-			prism.modelCheck(propertiesFile, propertiesFile.getPropertyObject(0));
+
+
+
+			//System.out.println("Engine (Explicit is " + Prism.EXPLICIT + "): " + prism.getEngine());
+			//System.out.println("Fairness is " + prism.getFairness());
+			//System.out.println("properties File is " + propertiesFile);
+
+			System.out.println(ia.getUSERFOLDER() + " CriticalSection 3");
+
+
+			prism.modelCheck(propertiesFile, propertiesFile.getPropertyObject(0)); //error is here
+			System.out.println(ia.getUSERFOLDER() + "past critical section 3");
 			//try {
 			//	prism.setEngine(prism.EXPLICIT);
 			//} catch (PrismException e) {
@@ -417,7 +431,7 @@ public class SequentialChecker {
 			e.printStackTrace();
 		} catch (PrismException e) {
 			// TODO Auto-generated catch block
-			//e.printStackTrace();
+			e.printStackTrace();
 		}
 
 		return null;

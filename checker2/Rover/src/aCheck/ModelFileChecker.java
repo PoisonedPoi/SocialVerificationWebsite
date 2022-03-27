@@ -141,7 +141,7 @@ public class ModelFileChecker{
         initialize();
         System.out.println("Done Initializing");
 
-  
+        /*
 
         System.out.println("getting interaction groups test " + interaction.getGroups());
         loadModelXML(xmlDoc, interaction);
@@ -190,10 +190,10 @@ public class ModelFileChecker{
 
         System.out.println("Starting thread test 3 ModelFileChecker with user " + SID);
         initialize();
-        System.out.println("Done Initializing");
+        //System.out.println("Done Initializing");
 
   
-
+        
         System.out.println("getting interaction groups test " + interaction.getGroups());
         loadModelFile("interaction.xml", interaction);
         System.out.println("Done Loading interaction");
@@ -374,15 +374,15 @@ public class ModelFileChecker{
         // comment this out if starting prism immediately is not desired
         PrismThread pt = new PrismThread( interaction, this);
         Thread t = pt.getThread();
-        t.setPriority(Thread.MAX_PRIORITY);  // I think this is completely unnecessary and doesn't result in a change of speed
         pt.start("");
-        System.out.println(" thread started");
+        System.out.println("Made interaction, Started First Prism Thread");
         //wait for initialize to be done
         try{
             t.join();
         }catch(InterruptedException e){
             e.printStackTrace();
         }
+        System.out.println(USERFOLDER + " First Thread joined, done with initialize");
 
        
 

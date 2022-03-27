@@ -60,7 +60,6 @@ public class PrismThread implements Runnable {
 	
 	private void initialize( Interaction ia) {
 		this.c = ia.getChecker();
-
 		this.ia = ia;
 		t = new Thread(this, "prism");
 	}
@@ -81,22 +80,29 @@ public class PrismThread implements Runnable {
 	
 	public void run() {
 		if (!disablePrism) {
-			System.out.println("didnt disable prism");
-			if (c == null)
+			if (c == null){
+				System.out.println(ia.getUSERFOLDER() + "|	PRISM THREAD: Starting Prism and Making Checker");
 				this.startPrism();
-			
-			System.out.println("started prism");
-			System.out.println(type);
+				return;
+			}
+				
+
+			System.out.println("\n" + ia.getUSERFOLDER() + "|	PRISM THREAD: Starting " + type + "   ");
 			if (type.equals("concurrent")) {
 				c.generatePrismFile(group.getMacrointeraction());
 				c.checkConcurrent(group);
 			}
 			else if (type.equals("startEndStates")) {
-				System.out.println("PRISM THREAD: start-end states");
+				System.out.println(ia.getUSERFOLDER() + "|	PRISM THREAD:		Parameter " +micro.toString());
+				
+				System.out.println(ia.getUSERFOLDER() + "|	PRISM THREAD:		generateprismfile " +micro.toString());
+				//System.out.println("PRISM THREAD: start-end states");
 				c.generatePrismFile(micro);
 				//c.dotExporter(micro);
+				System.out.println(ia.getUSERFOLDER() + "|	PRISM THREAD:		getstartendstates " +micro.toString());
+				
 				c.getStartEndStates(micro);
-				System.out.println("PRISM THREAD: obtained start end states");
+				//System.out.println("PRISM THREAD: obtained start end states");
 			}
 			else if (type.equals("sequential")) {
 				if (mt == null)
@@ -126,16 +132,7 @@ public class PrismThread implements Runnable {
 						c.checkConcurrent(group);
 					}
 				}
-				System.out.println(" done with setup in concurrent and graph");
 				c.checkGraph(ia);
-				// update the conflict pane
-				/*
-				Platform.runLater(
-						() -> {
-							mc.updateConflictPane();////////////////////////////////////////////
-						}
-					);
-					*/
 			}
 			else if (type.equals("reachability")) {
 				c.checkReachability();
@@ -154,8 +151,8 @@ public class PrismThread implements Runnable {
 			else if (type.equals("generatePrismFile")) {
 				c.generatePrismFile(micro);
 			}
+			System.out.println(ia.getUSERFOLDER() + "|	PRISM THREAD: DONE " + type + " operation finished");
 		}
-		System.out.println("done");
 	}
 	
 	@SuppressWarnings("restriction")
@@ -167,18 +164,14 @@ public class PrismThread implements Runnable {
 			}
 		);
 		*/
+		System.out.println(ia.getUSERFOLDER() + "|	PRISM THREAD-starprism: Making Checker" + "   " );
 		c = new Checker(ia, mc.getNonAssistedSwitch(), ia.getGraphProperties());
-		
 		c.generatePrismFiles();
 		c.startPrism();
-
-		if (ia.getIsCopy()) {
-			ia.setChecker(c, mc);
-		}
-		else {
-			ia.setChecker(c,mc);
-		}
-		System.out.println("about to start design");
+		System.out.println(ia.getUSERFOLDER() + "|	PRISM THREAD-startprism: Setting Checker in interaction       ");
+		ia.setChecker(c, mc);
+		System.out.println(ia.getUSERFOLDER() + "|	PRISM THREAD-startprism: Checker Set       ");
+		
 		mc.startDesign();
 	}
 	

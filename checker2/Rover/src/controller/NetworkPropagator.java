@@ -20,10 +20,10 @@ public class NetworkPropagator {
 		this.bt = bt;
 	}
 
-	public  void propagateSequentialChanges(ArrayList<Group> groupsToUpdate,  Interaction ia, ModelFileChecker mc, boolean concurrent) {
+	public void propagateSequentialChanges(ArrayList<Group> groupsToUpdate,  Interaction ia, ModelFileChecker mc, boolean concurrent) {
 		// get the checker
 		Checker c = ia.getChecker();
-		System.out.println("at start of network propegator " + ia.getGroups());
+		//System.out.println("at start of network propegator " + ia.getGroups());
 		/*
 		 * Iterate through each of the microcollections to update!
 		 */
@@ -264,7 +264,7 @@ public class NetworkPropagator {
 			
 		}
 
-		System.out.println("done checking");
+		//System.out.println("done checking");
 	}
 	
 }

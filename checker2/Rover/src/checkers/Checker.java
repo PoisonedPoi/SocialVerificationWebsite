@@ -206,12 +206,9 @@ public class Checker {
 	}
 	
 	public void getStartEndStates(Microinteraction m) {
-		System.out.println("Getting start states");
 		scratch = null;
 		SequentialChecker seq = new SequentialChecker(ia, Micro2File, State2Label, Label2State,  isNonAssisted, bt);
-		System.out.println("Getting start end states");
 		seq.getStartEndStates(prism, mainLog, m);
-		System.out.println("Done getting start end states");
 	}
 	
 	// concurrent
@@ -240,12 +237,9 @@ public class Checker {
 		System.out.println(m);
 		scratch = null;
 
-		System.out.println("In the exporter checker method");
-
 		// first export to the dot file and obtain the hashmap of idxs2states
 		DotExporter dot = new DotExporter(Micro2File, State2Label, Label2State);
 		dot.setUSERFOLDER(ia.getUSERFOLDER());
-		System.out.println("About to export to dot file");
 		HashMap<Integer, ArrayList<State>> idx2states = dot.exportToDotFile(prism, mainLog, m);
 		dot.removeDotFile();
 

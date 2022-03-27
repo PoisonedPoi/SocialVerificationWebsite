@@ -2293,6 +2293,7 @@ public class Prism extends PrismComponent implements PrismSettingsListener
 				currentModelExpl.exportToDotFile(tmpLog);
 				break;
 			case Prism.EXPORT_DOT_STATES:
+			System.out.println("PRISM IS EXPORTING DOT STATES IN exportTODotFile")
 				currentModelExpl.exportToDotFile(tmpLog, null, true);
 				break;
 			case Prism.EXPORT_MRMC:
@@ -2801,7 +2802,7 @@ public class Prism extends PrismComponent implements PrismSettingsListener
 	 * @param propertiesFile Parent property file of property (for labels/constants/...)
 	 * @param prop The property to check
 	 */
-	public Result modelCheck(PropertiesFile propertiesFile, Property prop) throws PrismException, PrismLangException
+	public synchronized Result modelCheck(PropertiesFile propertiesFile, Property prop) throws PrismException, PrismLangException
 	{
 		Result res = null;
 		Values definedPFConstants = propertiesFile.getConstantValues();
