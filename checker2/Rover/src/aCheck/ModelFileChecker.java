@@ -141,7 +141,7 @@ public class ModelFileChecker{
         initialize();
         System.out.println("Done Initializing");
 
-        /*
+        
 
         System.out.println("getting interaction groups test " + interaction.getGroups());
         loadModelXML(xmlDoc, interaction);
