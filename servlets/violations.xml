@@ -1,0 +1,43 @@
+<!-- One liner version for testing
+
+    <?xml version="1.0" encoding="UTF-8" standalone="no"?><violation_list><violation><category>group</category><type>Waiting Flubs</type><description>The robot should wait for the human to acknowledge the robot before beginning the interaction. The robot may do other things while it is waiting, as long as it speaks only infrequently.</description><violator_groups><group>init</group></violator_groups></violation><violation><category>interaction</category><type>Greeting Flubs</type><description>The robot should not greet humans that haven't approached it.</description></violation><violation><category>interaction</category><type>Answer Flubs</type><description>The interaction should not end before the robot has answered any questions.</description></violation><violation><category>group</category><type>Farewell Flubs</type><description>the interaction might end without a farewell! The interaction should end with a farewell.</description><violator_groups><group>untitled0</group></violator_groups></violation><violation><category>group</category><type>Turn-taking Flubs</type><description>in which the ROBOT speaks twice in a row.</description><violator_groups><group>untitled1</group></violator_groups></violation></violation_list>
+
+-->
+
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<violation_list>
+    <violation>
+        <category>group</category>
+        <type>Waiting Flubs</type>
+        <description>The robot should wait for the human to acknowledge the robot before beginning the interaction. The robot may do other things while it is waiting, as long as it speaks only infrequently.</description>
+        <violator_groups>
+            <group>init</group>
+        </violator_groups>
+    </violation>
+    <violation>
+        <category>interaction</category>
+        <type>Greeting Flubs</type>
+        <description>The robot should not greet humans that haven't approached it.</description>
+    </violation>
+    <violation>
+        <category>interaction</category>
+        <type>Answer Flubs</type>
+        <description>The interaction should not end before the robot has answered any questions.</description>
+    </violation>
+    <violation>
+        <category>group</category>
+        <type>Farewell Flubs</type>
+        <description>the interaction might end without a farewell! The interaction should end with a farewell.</description>
+        <violator_groups>
+            <group>untitled0</group>
+        </violator_groups>
+    </violation>
+    <violation>
+        <category>group</category>
+        <type>Turn-taking Flubs</type>
+        <description>in which the ROBOT speaks twice in a row.</description>
+        <violator_groups>
+            <group>untitled1</group>
+        </violator_groups>
+    </violation>
+</violation_list>
