@@ -140,7 +140,7 @@ public class ConcurrentChecker {
 				propertiesFile = prism.parsePropertiesString(modulesFile, propertyHuman);
 				result = prism.modelCheck(propertiesFile, propertiesFile.getPropertyObject(0));
 				String resultStr = result.getResultString();
-				System.out.println(resultStr);
+				//System.out.println(resultStr);
 				if (resultStr.contains("1.0")) {
 					group.setHSpeaksFirst(true);
 				}
@@ -150,7 +150,7 @@ public class ConcurrentChecker {
 				propertiesFile = prism.parsePropertiesString(modulesFile, propertyRobot);
 				result = prism.modelCheck(propertiesFile, propertiesFile.getPropertyObject(0));
 				resultStr = result.getResultString();
-				System.out.println(resultStr);
+				//System.out.println(resultStr);
 				if (resultStr.contains("1.0")) {
 					group.setSpeaksFirst(true);
 				}
@@ -189,7 +189,6 @@ public class ConcurrentChecker {
 				writer.close();// wipe the log file
 				result = prism.modelCheck(propertiesFile, propertiesFile.getPropertyObject(0));
 				mainLog.flush();
-				System.out.println("*********result is " + result.toString());
 				if (result.toString().equals("false"))
 					aggregateResults = false;
 			} catch (PrismLangException e) {

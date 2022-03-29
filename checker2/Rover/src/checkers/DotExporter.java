@@ -35,7 +35,7 @@ public class DotExporter {
 		this.Micro2File = Micro2File;
 		this.Label2State = Label2State;
 		this.State2Label = State2Label;
-		System.out.println("DOT EXPORTER USED 4444444444444444444444444444444444444444444444444444444444444");
+		//System.out.println("DOT EXPORTER USED");
 	}
 
 	public void setUSERFOLDER(String USERFOLDER){
@@ -46,17 +46,17 @@ public class DotExporter {
 		ModulesFile modulesFile;
 		
 		try {
-			System.out.println("About to call prism with file " + Micro2File.get(m));
+			//System.out.println("About to call prism with file " + Micro2File.get(m));
 			modulesFile = prism.parseModelFile(new File(Micro2File.get(m)));
-			System.out.println("Parsed model file");
+			//System.out.println("Parsed model file");
 			prism.loadPRISMModel(modulesFile);
-			System.out.println("Loaded prism model");
-			System.out.println(prism.getExplicit());
+			//System.out.println("Loaded prism model");
+			//System.out.println(prism.getExplicit());
 			
 			File f = new File(USERFOLDER + "temp.dot");
 			prism.exportTransToFile(true, Prism.EXPORT_DOT_STATES, f);
-			System.out.println(f.exists());
-			System.out.println("Called prism to export to dot file with user folder, " + USERFOLDER);
+			//System.out.println(f.exists());
+			//System.out.println("Called prism to export to dot file with user folder, " + USERFOLDER);
 			
 
 
@@ -143,12 +143,7 @@ public class DotExporter {
 							}
 						    
 						    State result = Label2State.get(m).get(lab);
-							System.out.println("---- test data " + USERFOLDER + "--------");
-							System.out.println(m);
-							System.out.println(" --- m done ");
-							System.out.println(lab);
-							
-							System.out.println("---- done test data ----");
+
 						   if(result!=null){
  								stateNames.add(result.getName());
 							

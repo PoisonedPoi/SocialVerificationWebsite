@@ -275,7 +275,7 @@ public class GraphEncoder {
 		anySpeaks = false;
 		it = group2idx.entrySet().iterator();
 		while (it.hasNext()) {
-			System.out.println("finding one that speaks first");
+			//System.out.println("finding one that speaks first");
 			HashMap.Entry pair = (HashMap.Entry)it.next();
 			Group group = (Group) pair.getKey();
 			if (group.getSpeaksFirst()) {

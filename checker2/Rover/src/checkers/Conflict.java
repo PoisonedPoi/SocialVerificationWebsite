@@ -28,11 +28,11 @@ public class Conflict {
 	@SuppressWarnings({ "restriction", "unchecked" })
 	public Conflict(Property prop, String describe, String type, ArrayList<String> choices, ModBehPair mbp, Group group, ModelFileChecker mc) {
 		if(prop == null){
-			System.out.println("prop is null");
+			//System.out.println("prop is null");
 		}else if(type == null){
-			System.out.println(" type is null");
+			//System.out.println(" type is null");
 		}else{
-			System.out.println("conflict made for " + prop.toString() + "Type " + type);
+			//System.out.println("conflict made for " + prop.toString() + "Type " + type);
 		}
 		//System.out.println("got here in conflict");
 		this.mc = mc;

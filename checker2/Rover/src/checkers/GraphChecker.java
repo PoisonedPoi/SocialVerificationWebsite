@@ -40,7 +40,7 @@ private Interaction ia;
 	}
 	
 	public void check(Prism prism, PrismLog mainLog) { //hapens once per check
-		System.out.println("**********000000000000000000000000000000Graph CHecking 0-00000000000000000000000000058439859");
+		//System.out.println("**********000000000000000000000000000000Graph CHecking 0-00000000000000000000000000058439859");
 		/*
 		 * initialize the prism file
 		 */
@@ -57,7 +57,7 @@ private Interaction ia;
 		 */
 		GraphEncoder ge = new GraphEncoder(ia);
 		File prismFile = ge.encode();
-		System.out.println("Graph checking "+prismFile.getAbsolutePath());
+		//System.out.println("Graph checking "+prismFile.getAbsolutePath());
 		idx2group = ge.getIdx2Group()
 ;		
 		try {

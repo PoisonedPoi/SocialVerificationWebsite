@@ -234,7 +234,7 @@ public class Checker {
 	
 	// export to transition matrix
 	public void tmExporter(Microinteraction m) {
-		System.out.println(m);
+		//System.out.println(m);
 		scratch = null;
 
 		// first export to the dot file and obtain the hashmap of idxs2states

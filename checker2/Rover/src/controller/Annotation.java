@@ -107,7 +107,7 @@ public class Annotation extends Text {
 		case 1:
 			ArrayList<Guard> guards = ((ArrayList<Guard>)(ArrayList<?>) obj);
 			for (Guard g : guards) {
-				System.out.println(g);
+				//System.out.println(g);
 				str += g.stringify() + "\n";
 			}
 

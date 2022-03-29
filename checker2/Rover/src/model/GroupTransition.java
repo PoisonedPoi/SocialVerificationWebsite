@@ -146,8 +146,8 @@ public class GroupTransition  {
 	}
 	
 	public boolean setAllHumanBranching(boolean[] vals) {
-		System.out.println(humanBranching[0] + " " + humanBranching[1] + " " + humanBranching[2]);
-		System.out.println(vals[0] + " " + vals[1] + " " + vals[2]);
+		//System.out.println(humanBranching[0] + " " + humanBranching[1] + " " + humanBranching[2]);
+		//System.out.println(vals[0] + " " + vals[1] + " " + vals[2]);
 		boolean changed = false;
 		if (vals[0] != humanBranching[0] || vals[1] != humanBranching[1] || vals[2] != humanBranching[2])
 			changed = true;

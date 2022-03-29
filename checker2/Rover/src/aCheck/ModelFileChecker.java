@@ -4,7 +4,7 @@ import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
 import javafx.embed.swing.SwingFXUtils;
 import javax.imageio.ImageIO;
-import java.io.File;
+import java.io.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -18,6 +18,12 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.ResourceBundle;
+
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+import java.io.StringWriter;
 
 import javafx.scene.*;
 import javafx.scene.control.*;
@@ -120,7 +126,7 @@ public class ModelFileChecker{
 
     private final String SID; //session id, gives the user folder name as "user + SID", it should not be changed once set 
     private final String USERFOLDER;//the actual folder path for this user
-    public ModelFileChecker(String sid, Document xmlDoc){
+    public ModelFileChecker(String sid,  String xmlString){
         this.SID = sid;
         this.USERFOLDER = Globals.USERPATH +  "user" + sid + "/";
 
@@ -133,29 +139,23 @@ public class ModelFileChecker{
             //setup a blank prism folder
             new File(USERFOLDER + "prism").mkdir();
         }
-
-
-        
-
-        System.out.println("Starting xml ModelFileChecker");
         initialize();
-        System.out.println("Done Initializing");
-
-        
-
-        System.out.println("getting interaction groups test " + interaction.getGroups());
-        loadModelXML(xmlDoc, interaction);
-        System.out.println("Done Loading interaction and now about to start check");
-
+        //System.out.println("Done Initializing");
+        //System.out.println("getting interaction groups test " + interaction.getGroups());
+        loadModelXMLString(xmlString, interaction);
+        //System.out.println("Done Loading interaction and now about to start check");
         performCheck();
-        System.out.println("now about to load violations");
+        //System.out.println("now about to load violations");
         loadViolations();
 
-        System.out.println("printing all violations ---");
-        interaction.printViolations();
+        printXMLViolationDocument();
 
-        System.out.println("getting xml xoc");
-        Document doc = getXMLViolationDocument();
+        //System.out.println("printing all violations ---");
+        //interaction.printViolations();
+
+        //System.out.println("getting xml xoc");
+        //Document doc = getXMLViolationDocument();
+
         /*
         System.out.println("Root element" + doc.getDocumentElement().getNodeName());
         NodeList nList = doc.getElementsByTagName("violation");
@@ -187,35 +187,35 @@ public class ModelFileChecker{
 
 
 
-
-        System.out.println("Starting thread test 3 ModelFileChecker with user " + SID);
         initialize();
         //System.out.println("Done Initializing");
 
   
         
-        System.out.println("getting interaction groups test " + interaction.getGroups());
+       // System.out.println("getting interaction groups test " + interaction.getGroups());
         loadModelFile("interaction.xml", interaction);
-        System.out.println("Done Loading interaction");
+        //System.out.println("Done Loading interaction");
 
         performCheck();
 
         loadViolations();
 
         
-        System.out.println(" printing all violations now 9594839r820483928r9e===!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-        interaction.printViolations();
+        //System.out.println(" printing all violations now 9594839r820483928r9e===!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+        //interaction.printViolations();
 
-        System.out.println("getting xml xoc");
-        Document doc = getXMLViolationDocument();
-        System.out.println("Root element" + doc.getDocumentElement().getNodeName());
-        NodeList nList = doc.getElementsByTagName("violation");
-        for(int temp = 0;temp<nList.getLength(); temp++){
-            Node nNode = nList.item(temp);
-            System.out.println(" Current Element " + nNode.getNodeName());
-            Element elem = (Element) nNode;
-            System.out.println("Type " + elem.getElementsByTagName("type").item(0).getTextContent());
-        }
+        printXMLViolationDocument();
+
+        // System.out.println("getting xml xoc");
+        // Document doc = getXMLViolationDocument();
+        // System.out.println("Root element" + doc.getDocumentElement().getNodeName());
+        // NodeList nList = doc.getElementsByTagName("violation");
+        // for(int temp = 0;temp<nList.getLength(); temp++){
+        //     Node nNode = nList.item(temp);
+        //     System.out.println(" Current Element " + nNode.getNodeName());
+        //     Element elem = (Element) nNode;
+        //     System.out.println("Type " + elem.getElementsByTagName("type").item(0).getTextContent());
+        // }
         
         //destroyUserFolder();
     }
@@ -248,6 +248,24 @@ public class ModelFileChecker{
         return interaction.getXMLViolationDocument();
     }
 
+    //print violationdocument to stdout as an xml string so parent process can redirect output
+    public void printXMLViolationDocument(){
+        Document xmlDocument = getXMLViolationDocument();
+        TransformerFactory tf = TransformerFactory.newInstance();
+        Transformer transformer;
+        try{
+            transformer = tf.newTransformer();
+
+            StringWriter writer = new StringWriter();
+
+            transformer.transform(new DOMSource(xmlDocument), new StreamResult(writer));
+            String xmlString = writer.getBuffer().toString();
+            System.out.println(xmlString);
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
 
 
     public void performCheck(){
@@ -258,18 +276,18 @@ public class ModelFileChecker{
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-               System.out.println("getting interaction groups  after stopping background thread test " + interaction.getGroups());
+               //System.out.println("getting interaction groups  after stopping background thread test " + interaction.getGroups());
         
        // Microinteraction newMicro = interaction.getMicros().get(interaction.getMicros().size()-1);
 
         new PrismThread(interaction, mainController); //used to include newMicro
-        System.out.println("getting interaction groups test after new prism thread " + interaction.getGroups());
+        //System.out.println("getting interaction groups test after new prism thread " + interaction.getGroups());
         if (interaction.testIsCyclic()) {
             // start over again by wiping the end states!
-            System.out.println("test was cyclic");
+            //System.out.println("test was cyclic");
             forceNetworkPropagation(false);
         } else {
-            System.out.println("test was not cyclic");
+            //System.out.println("test was not cyclic");
             ArrayList<Group> groupsToUpdate = new ArrayList<Group>();
             for(Group g : interaction.getGroups()){
                 groupsToUpdate.add(g);
@@ -279,7 +297,7 @@ public class ModelFileChecker{
             interaction.getNetworkPropagator().propagateSequentialChanges(groupsToUpdate, interaction, mainController, false);
         }
         
-        System.out.println("Done with network propagation");
+        //System.out.println("Done with network propagation");
 
         verifyConcurrentAndGraph();
     }
@@ -324,6 +342,12 @@ public class ModelFileChecker{
         decoder.readSupreme(xmlDoc, interaction); 
     }
 
+    public void loadModelXMLString(String xmlString, Interaction interaction){
+       // InteractionFileLoader loader = new InteractionFileLoader(fileName, interaction, this);
+        Decoder decoder = new Decoder(this, isNonAssisted);
+        decoder.readSupremeXMLString(xmlString, interaction); 
+    }
+
     public void loadModelFile(String fileName, Interaction interaction){
        // InteractionFileLoader loader = new InteractionFileLoader(fileName, interaction, this);
         Decoder decoder = new Decoder(this, isNonAssisted);
@@ -356,7 +380,6 @@ public class ModelFileChecker{
         interaction.setTutorial(false);
         interaction.setNonAssistedSwitch(isNonAssisted);
 
-
         buttonFlag = 0;
         //importMicrosCT = new ImportMicrosCT(this);
        // rep = new Repairer(interaction, this, importMicrosCT); //shouldnt or dont know how to use
@@ -375,15 +398,13 @@ public class ModelFileChecker{
         PrismThread pt = new PrismThread( interaction, this);
         Thread t = pt.getThread();
         pt.start("");
-        System.out.println("Made interaction, Started First Prism Thread");
+        //System.out.println("Made interaction, Started First Prism Thread");
         //wait for initialize to be done
         try{
             t.join();
         }catch(InterruptedException e){
             e.printStackTrace();
         }
-        System.out.println(USERFOLDER + " First Thread joined, done with initialize");
-
        
 
     }   
@@ -459,14 +480,14 @@ public class ModelFileChecker{
 
     private void buildInteractionHelper() {
         groups = interaction.getGroups();
-        System.out.println("near end of init, now groups sie is  " + groups.size());
+        //System.out.println("near end of init, now groups sie is  " + groups.size());
         Decoder decoder = new Decoder(this, isNonAssisted);
         decoder.readSupreme(absFilePath + "Supreme.xml", interaction);
 
         // Read MicroCollections and transitions. Build the same way as a tab in
         // microinteraction
         groups = interaction.getGroups();
-        System.out.println("near end of init, now groups sie is  " + groups.size());
+        //System.out.println("near end of init, now groups sie is  " + groups.size());
         
         for (Group group : groups) {
             for (Microinteraction micro : group.getMicrointeractions()){
@@ -573,7 +594,8 @@ public boolean[] getEndStates(Node node) {
         }
 
         if (alreadyExists) {
-            System.out.println("Cannot add microinteraction " + newMicro.getName() + " because it already exists in this grouping.");
+            //TODO add violation
+            //System.out.println("Cannot add microinteraction " + newMicro.getName() + " because it already exists in this grouping.");
             return;
         }
 
@@ -581,7 +603,8 @@ public boolean[] getEndStates(Node node) {
          * don't do anything if there are already 4 microinteractions in the group!
          */
         if (microCount > 3) {
-            System.out.println("Cannot add microinteraction " + newMicro.getName() + " because there are already 4 in the group.");
+            //TODO add violation
+            //System.out.println("Cannot add microinteraction " + newMicro.getName() + " because there are already 4 in the group.");
             return;
         }
 
@@ -617,7 +640,7 @@ public boolean[] getEndStates(Node node) {
             }
         }
 
-        System.out.println("Network propagation");
+        //System.out.println("Network propagation");
         if (interaction.testIsCyclic()) {
             // start over again by wiping the end states!
             forceNetworkPropagation(false);
@@ -626,7 +649,7 @@ public boolean[] getEndStates(Node node) {
             groupsToUpdate.add((Group) node);
             interaction.getNetworkPropagator().propagateSequentialChanges(groupsToUpdate,  interaction, mainController, false);
         }
-        System.out.println("Done with network propagation");
+        //System.out.println("Done with network propagation");
 
         verifyConcurrentAndGraph();
 
@@ -670,8 +693,4 @@ public boolean[] getEndStates(Node node) {
     public String getUSERFOLDER(){
         return USERFOLDER;
     }
-
-
-
-    
 }

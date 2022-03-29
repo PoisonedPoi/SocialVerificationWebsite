@@ -33,13 +33,13 @@ public class ViolationParser{ //this class parses the interaction and the groups
     public ViolationParser(Interaction ia, ArrayList<String> propertyCategories, ModelFileChecker mc) {
 		this.ia = ia;
 		this.mc = mc;
-		System.out.println("**********violation class created *******");
+		//System.out.println("**********violation class created *******");
 		//test
 		noMicrosInInit = new Conflict(null, "Initial state contains no microinteractions.", "nofix", null, null,null,null);
 		graphPropIAConflictLookup = new HashMap<Integer,Conflict>();
-		System.out.println("graphProperties");
+		//System.out.println("graphProperties");
 		for (Property prop : ia.getGraphProperties()) {
-			System.out.println("ties is " + prop.getTies() + " and " + prop.getContext());
+			//System.out.println("ties is " + prop.getTies() + " and " + prop.getContext());
 			if (prop.getTies().equals("interaction")) {
 				Conflict conf = new Conflict(prop, ((prop.getContext() != null)?(prop.getContext() + ", "):"") + prop.getDescription(), "nofix", null, null, null, null);
 				graphPropIAConflictLookup.put(prop.getID(),conf);
@@ -49,9 +49,9 @@ public class ViolationParser{ //this class parses the interaction and the groups
 		this.propertyCategories = new HashMap<String,Conflict>();
 		this.addedPropertyCategories = new ArrayList<String>();
 		
-		System.out.println(" printing property categories");
+		//System.out.println(" printing property categories");
 		for (String str : propertyCategories) {
-			System.out.println("read " + str + " in propertyCategories violation pane");
+			//System.out.println("read " + str + " in propertyCategories violation pane");
 			this.propertyCategories.put(str, new Conflict(null, str, "nofix", null, null, null, null));
 		}
 		//root = new TreeItem("Property Violations");
@@ -60,7 +60,7 @@ public class ViolationParser{ //this class parses the interaction and the groups
 	}
 		
 	public void update() {
-		System.out.println("*************** doing update (or check as we are using it)s *** *************");
+		//System.out.println("*************** doing update (or check as we are using it)s *** *************");
 		Iterator it = propertyCategories.entrySet().iterator();
 
 		// while (it.hasNext()) {
@@ -73,53 +73,53 @@ public class ViolationParser{ //this class parses the interaction and the groups
 			for (Group group : ia.getGroups())
 				addGazeGestureConflicts(group);
 
-            System.out.println("violation return 1");
+            //System.out.println("violation return 1");
 			return;
 		}
-		System.out.println("starting to look at property violations");
+		//System.out.println("starting to look at property violations");
 		// look at all property violations
 		if (ia.getInit().getMicrointeractions().isEmpty()) {
-            System.out.println("early violation");
+            //System.out.println("early violation");
 			//root.getChildren().add(noMicrosInInit);
 			//tv.add(noMicrosInInit);
 		}
 		else {
 			//tv.remove(noMicrosInInit);
-            System.out.println("checking interaction properties");
+           // System.out.println("checking interaction properties");
 			if (!ia.getAuthProp() && ia.getCurrDesign().equals("Delivery")) {
 				//root.getChildren().add(new Conflict(null,"Delivery interaction must ALWAYS reach a group named \"Auth\" that verifies the human's identity. Either this group does not exist, or it is not guaranteed reachable!", "nofix", null, null, null, null));
-				System.out.println("Interaction violating delivery");
+				//System.out.println("Interaction violating delivery");
 			}
 			
 			if (ia.isViolatingBranch()) {
 				if (!addedPropertyCategories.contains("Branching Errors")) {
-					System.out.println("Interaction violating branch");
+					//System.out.println("Interaction violating branch");
 					addedPropertyCategories.add("Branching Errors");
 					//root.getChildren().add(propertyCategories.get("Branching Errors"));
 				}
 				// POSSIBLY NEEDED    propertyCategories.get("Branching Errors").getChildren().add(new Conflict(null, "Branch conditions insufficient (See grayed-out transitions. Are you using else statements appropriately?).", "ia", null, null, null, null));
 			}
 			if (ia.isViolatingSequential()) {
-				System.out.println("Interaction violating sequential");
+				//System.out.println("Interaction violating sequential");
 				if (!addedPropertyCategories.contains("Jams")) {
 					addedPropertyCategories.add("Jams");
 				//	root.getChildren().add(propertyCategories.get("Jams"));
 				}
 				// POSSIBLY NEEDED propertyCategories.get("Jams").getChildren().add(new Conflict(null, "Sequential composition of groups insufficient (see transitions with red or yellow indicators).", "ia", null, null, null, null, null, null));
 			}
-			System.out.println("finished checking interaction properties");
+			//System.out.println("finished checking interaction properties");
 			HashMap<Integer,Boolean> graphPropertyValues;
 			
 			/*
 			 * Group-specific proeprties
 			 */
 
-            System.out.println("checking group propertie");
+            //System.out.println("checking group propertie");
 
 			for (Group group : ia.getGroups()) {
-				System.out.println(" Group " + group.getName() + " getting checked");
+				//System.out.println(" Group " + group.getName() + " getting checked");
 				if (group.getViolating()) {
-					System.out.println("	Group is violating, so probably a speech violation");
+					//System.out.println("	Group is violating, so probably a speech violation");
 					if (!addedPropertyCategories.contains("Speech Flubs")) {
 						addedPropertyCategories.add("Speech Flubs");
 					//	root.getChildren().add(propertyCategories.get("Speech Flubs"));
@@ -129,22 +129,22 @@ public class ViolationParser{ //this class parses the interaction and the groups
 				
 				// initialize the group lookup if not already initialized
 				if (!graphPropGroupConflictLookup.containsKey(group)){
-					System.out.println("	added this group to group graphpropgroupconflict lookup");
+					//System.out.println("	added this group to group graphpropgroupconflict lookup");
 					graphPropGroupConflictLookup.put(group, new HashMap<Integer,Conflict>());
 				}
 
 
 					
-				System.out.println("	checking all properties to see if violation happened in group");
+				//System.out.println("	checking all properties to see if violation happened in group");
 				// add conflicts!
 				graphPropertyValues = group.getGraphPropertyValues();
 				for (Property prop : ia.getGraphProperties()) {
 					
 					if (prop.getTies().equals("group") || prop.getTies().equals("init")) { //check all group specific properties
-						System.out.println("		checking Property" + prop.toString() );
+						//System.out.println("		checking Property" + prop.toString() );
 						// if the property if violated
 						if (!graphPropertyValues.get(prop.getID())) { //it returns false if a property is violated
-							System.out.println("		property was violated" + " and desc " + prop.getDescription());
+							//System.out.println("		property was violated" + " and desc " + prop.getDescription());
 							if(ia.hasViolationForProperty(prop)){
 								Violation violater = ia.getViolation(prop);
 								violater.addGroupViolating(group);
@@ -168,24 +168,24 @@ public class ViolationParser{ //this class parses the interaction and the groups
 				}
 				
 				// get list of modules
-				System.out.println("Now getting list of modules");
+				//System.out.println("Now getting list of modules");
 				addGazeGestureConflicts(group);
 			}
-            System.out.println("done printing out groups, now checking interaction properties specifically");
+            //System.out.println("done printing out groups, now checking interaction properties specifically");
 
 
 			/*
 			 * interaction-specific properties
 			 */
-			 System.out.println("checking interaction");
+			//System.out.println("checking interaction");
 			graphPropertyValues = ia.getGraphPropertyValues();
 			for (Property prop : ia.getGraphProperties()) {
 				if (prop.getTies().equals("interaction")) {
-					System.out.println("		checking Property" + prop.toString());
+					//System.out.println("		checking Property" + prop.toString());
 					if (!graphPropertyValues.get(prop.getID())) {
 						
-						System.out.println("		Violation found");
-						System.out.println(prop.toString()  + " and desc " + prop.getDescription());
+						//System.out.println("		Violation found");
+						//System.out.println(prop.toString()  + " and desc " + prop.getDescription());
 						ia.addViolation(new Violation(prop));
 
 						if (!addedPropertyCategories.contains(prop.getCategory())) {
@@ -200,11 +200,11 @@ public class ViolationParser{ //this class parses the interaction and the groups
 	}
 	
 	public void addGazeGestureConflicts(Group group) {
-		System.out.println(" *********** adding gaze gester conflict **********");
+		//System.out.println(" *********** adding gaze gester conflict **********");
 		ArrayList<Module> allMods = group.getMacrointeraction().getModules();
 		
 		for (ModBehPair mbp : group.allRelevantBehaviorConflicts(allMods)) {
-			System.out.println("error 221 ViolationPane here");
+			//System.out.println("error 221 ViolationPane here");
 			String desc = "";
 			if (mbp.getFix() != null) 
 				desc += "(RESOLVED) ";

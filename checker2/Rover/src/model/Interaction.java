@@ -163,6 +163,7 @@ public class Interaction {
 			Element rootElement = document.createElement("violation_list");
 			document.appendChild(rootElement);
 			
+			//print violation list
 			for(Property prop : graphProperties){
 				if(prop.getTies().equals("group") || prop.getTies().equals("init")){
 					if(violations.get(prop) != null){
@@ -196,7 +197,7 @@ public class Interaction {
 						Element violationElement = document.createElement("violation");
 
 						Element category = document.createElement("category");
-						category.appendChild(document.createTextNode("group"));
+						category.appendChild(document.createTextNode("interaction"));
 						violationElement.appendChild(category);
 
 						Element type = document.createElement("type");
@@ -449,7 +450,7 @@ public class Interaction {
 	
 	public Microinteraction getMicro(String name) {
 		if (Name2Micro.get(name) == null) {
-			System.out.println(name + " does not exist as a microinteraction!");
+			//System.out.println(name + " does not exist as a microinteraction!");
 			return null;
 		}
 		return Name2Micro.get(name);
@@ -465,7 +466,7 @@ public class Interaction {
 	
 	public Group getGroup(String name) {
 		if (Name2Group.get(name) == null) {
-			System.out.println(name + " does not exist as a Group!");
+			//System.out.println(name + " does not exist as a Group!");
 			return null;
 		}
 		return Name2Group.get(name);
@@ -546,10 +547,10 @@ public class Interaction {
 	// graph properties
 	public void setProp(Property prop, boolean val) {
 
-		System.out.println("interaction graph property set                                                          hey look here");
+		//System.out.println("interaction graph property set                                                          hey look here");
 		if (prop.getTies().equals("init")) {
 			getInit().setGraphProp(prop,val);
-			System.out.println("******************INIT: " + getInit().getName() + ": greeter satisfied? " + val);
+			//System.out.println("******************INIT: " + getInit().getName() + ": greeter satisfied? " + val);
 		}
 		else {
 			boolean propVal = graphPropertyValues.get(prop.getID());

@@ -280,7 +280,7 @@ public class BugTracker {
             e.printStackTrace();
         }
 
-        System.out.println("Ended the bug and command trackers. " + exceptions.size() + " exceptions occurred.");
+        //System.out.println("Ended the bug and command trackers. " + exceptions.size() + " exceptions occurred.");
 
         PrintWriter writer;
         try {

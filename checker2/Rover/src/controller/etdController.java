@@ -98,7 +98,7 @@ public class etdController {
 				guardTF = guardField.getText().trim();
 				updateTF = updateField.getText().trim();
 				
-				System.out.println(guardTF);
+				//System.out.println(guardTF);
 				if(guardTF.length() > 0)
 					returnObj[0] = Decoder.parseGuard(guardTF, micro, mod);
 				else

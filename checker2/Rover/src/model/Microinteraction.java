@@ -252,7 +252,7 @@ public class Microinteraction {
 	
 	public Microinteraction getBuiltMicro() {
 		if (builtMicro == null) {
-			System.out.println("Error: microinteraction has not been built");
+			//System.out.println("Error: microinteraction has not been built");
 			return null;
 		}
 		return builtMicro;

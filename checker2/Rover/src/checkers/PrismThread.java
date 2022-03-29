@@ -81,25 +81,25 @@ public class PrismThread implements Runnable {
 	public void run() {
 		if (!disablePrism) {
 			if (c == null){
-				System.out.println(ia.getUSERFOLDER() + "|	PRISM THREAD: Starting Prism and Making Checker");
+				//System.out.println(ia.getUSERFOLDER() + "|	PRISM THREAD: Starting Prism and Making Checker");
 				this.startPrism();
 				return;
 			}
 				
 
-			System.out.println("\n" + ia.getUSERFOLDER() + "|	PRISM THREAD: Starting " + type + "   ");
+			//System.out.println("\n" + ia.getUSERFOLDER() + "|	PRISM THREAD: Starting " + type + "   ");
 			if (type.equals("concurrent")) {
 				c.generatePrismFile(group.getMacrointeraction());
 				c.checkConcurrent(group);
 			}
 			else if (type.equals("startEndStates")) {
-				System.out.println(ia.getUSERFOLDER() + "|	PRISM THREAD:		Parameter " +micro.toString());
+				//System.out.println(ia.getUSERFOLDER() + "|	PRISM THREAD:		Parameter " +micro.toString());
 				
-				System.out.println(ia.getUSERFOLDER() + "|	PRISM THREAD:		generateprismfile " +micro.toString());
+				//System.out.println(ia.getUSERFOLDER() + "|	PRISM THREAD:		generateprismfile " +micro.toString());
 				//System.out.println("PRISM THREAD: start-end states");
 				c.generatePrismFile(micro);
 				//c.dotExporter(micro);
-				System.out.println(ia.getUSERFOLDER() + "|	PRISM THREAD:		getstartendstates " +micro.toString());
+				//System.out.println(ia.getUSERFOLDER() + "|	PRISM THREAD:		getstartendstates " +micro.toString());
 				
 				c.getStartEndStates(micro);
 				//System.out.println("PRISM THREAD: obtained start end states");
@@ -145,13 +145,13 @@ public class PrismThread implements Runnable {
 				c.dotExporter(micro);
 			}
 			else if (type.equals("exportToTM")) {
-				System.out.println("Calling the exporter");
+				//System.out.println("Calling the exporter");
 				c.tmExporter(micro);
 			}
 			else if (type.equals("generatePrismFile")) {
 				c.generatePrismFile(micro);
 			}
-			System.out.println(ia.getUSERFOLDER() + "|	PRISM THREAD: DONE " + type + " operation finished");
+			//System.out.println(ia.getUSERFOLDER() + "|	PRISM THREAD: DONE " + type + " operation finished");
 		}
 	}
 	
@@ -164,13 +164,13 @@ public class PrismThread implements Runnable {
 			}
 		);
 		*/
-		System.out.println(ia.getUSERFOLDER() + "|	PRISM THREAD-starprism: Making Checker" + "   " );
+		//System.out.println(ia.getUSERFOLDER() + "|	PRISM THREAD-starprism: Making Checker" + "   " );
 		c = new Checker(ia, mc.getNonAssistedSwitch(), ia.getGraphProperties());
 		c.generatePrismFiles();
 		c.startPrism();
-		System.out.println(ia.getUSERFOLDER() + "|	PRISM THREAD-startprism: Setting Checker in interaction       ");
+		//System.out.println(ia.getUSERFOLDER() + "|	PRISM THREAD-startprism: Setting Checker in interaction       ");
 		ia.setChecker(c, mc);
-		System.out.println(ia.getUSERFOLDER() + "|	PRISM THREAD-startprism: Checker Set       ");
+		//System.out.println(ia.getUSERFOLDER() + "|	PRISM THREAD-startprism: Checker Set       ");
 		
 		mc.startDesign();
 	}

@@ -33,7 +33,7 @@ public class NetworkPropagator {
 			/*
 			 * Get and remove the relevant microcollection
 			 */
-			System.out.println(" DOING CEHCK ON ANOTHER GROUP11111111111911991919919191991919");
+			//System.out.println(" DOING CEHCK ON ANOTHER GROUP11111111111911991919919191991919");
 			Group group = groupsToUpdate.get(0);
 			groupsToUpdate.remove(group);
 			
@@ -126,7 +126,7 @@ public class NetworkPropagator {
 			 * Re-compute the prism file and calculate the end states from that prism file!
 			 */
 
-			System.out.println("Getting the start and end states for each microinteraction");
+			//System.out.println("Getting the start and end states for each microinteraction");
 			for (Microinteraction micro : group.getMicrointeractions()) {
 				PrismThread pt = new PrismThread(ia, mc, micro);
 				Thread t = pt.getThread();
@@ -137,7 +137,7 @@ public class NetworkPropagator {
 					e.printStackTrace();
 				}
 			}
-			System.out.println("Done getting the start and end states for each microinteraction");
+			//System.out.println("Done getting the start and end states for each microinteraction");
 			
 			/*
 			 * check the sequential composition of everything connected to the microcollection
@@ -155,15 +155,15 @@ public class NetworkPropagator {
 					e.printStackTrace();
 				}
 			}
-			System.out.println("Done with sequential checking");
+			//System.out.println("Done with sequential checking");
 			
 			/*
 			 * re-compute the macrointeraction
 			 */
 			if (!group.getMicrointeractions().isEmpty()) {
-				System.out.println("Creating a reduced merged microinteraction");
+				//System.out.println("Creating a reduced merged microinteraction");
 				group.createReducedMergedMacrointeraction(c,  ia, mc);
-				System.out.println("Created a reduced merged microinteraction");
+				//System.out.println("Created a reduced merged microinteraction");
 				if (concurrent) {
 					PrismThread pt = new PrismThread( ia, mc, group);
 					Thread t = pt.getThread();
@@ -176,7 +176,7 @@ public class NetworkPropagator {
 				}
 			}
 
-			System.out.println("Done with concurrennt checking");
+			//System.out.println("Done with concurrennt checking");
 			
 			/*
 			 * update the indicator lights
@@ -233,7 +233,7 @@ public class NetworkPropagator {
 			/*
 			 * compare the new end states to the old end states. If they differ, and the branching conditions allow for it, then add target microcollection to arraylist!
 			 */
-			System.out.println("part 2 of checking");
+			//System.out.println("part 2 of checking");
 			boolean[] newEnds = group.getHumanEndStates();
 			// if the old ends differ from the new ends
 			if (newEnds[0] != currEndStates[0] || newEnds[1] != currEndStates[1] || newEnds[2] != currEndStates[2] || group.getMarking()) {

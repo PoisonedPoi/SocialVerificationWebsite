@@ -207,7 +207,7 @@ public class Group  {
 	}
 	
 	public void setGraphProp(Property prop, boolean val) {
-				System.out.println("set GraphPropertyValues						Set graph prop for group " + getName() + " with propID " + prop.getID() + " and val " + val);
+		//System.out.println("set GraphPropertyValues						Set graph prop for group " + getName() + " with propID " + prop.getID() + " and val " + val);
 		boolean propVal = graphPropertyValues.get(prop.getID());
 		String propBugID = prop.getBugtrackID();
 		if (propVal != val && val == true) {
@@ -221,14 +221,14 @@ public class Group  {
 	
 	public boolean getGraphProp(Property prop) {
 		if(prop == null ){
-			System.out.println(" prop was null");
+			//System.out.println(" prop was null");
 			return false;
 		}
 
 		int i = prop.getID();
 
 		if(graphPropertyValues.get(i) == null){
-			System.out.println("property not found ");
+			//System.out.println("property not found ");
 			return false;
 		}
 		return graphPropertyValues.get(prop.getID());
@@ -337,29 +337,28 @@ public class Group  {
 	}
 	
 	public void checkIfViolating(PropModsBeh pmb, boolean isNonProperty) {
-		System.out.println("check if violating on group 222");
 		ModBehPair convertedPmb = new ModBehPair(pmb.mod2beh, isNonProperty);
 		
 		boolean existsInFixedModBehPairs = false;
 		boolean existsInUnresolvedModBehPairs = false;
 		for (ModBehPair mbp : fixedBehaviorConflicts) {
-			System.out.println("LOOPING through the current fixed behavior conflicts");
+			//System.out.println("LOOPING through the current fixed behavior conflicts");
 			if (convertedPmb.equalsOther(mbp)) {
-				System.out.println("EXISTS in fixed!");
+				//System.out.println("EXISTS in fixed!");
 				existsInFixedModBehPairs = true;
 				break;
 			}
 		}
 		for (ModBehPair mbp : unresolvedBehaviorConflicts) {
 			if (convertedPmb.equalsOther(mbp)) {
-				System.out.println("EXISTS in unresolved!");
+				//System.out.println("EXISTS in unresolved!");
 				existsInUnresolvedModBehPairs = true;
 				break;
 			}
 		}
 		
 		if (!existsInFixedModBehPairs && !existsInUnresolvedModBehPairs) {
-			System.out.println("CHECK RESULTS: yes");
+			//System.out.println("CHECK RESULTS: yes");
 			unresolvedBehaviorConflicts.add(convertedPmb);
 		}
 		
@@ -560,7 +559,7 @@ public class Group  {
 	
 	//what does this all do?
 	public void createReducedMergedMacrointeraction(Checker c,  Interaction ia, ModelFileChecker mc) {
-		System.out.println("Group: Creating reduced merged macroInteraction 222");
+		//System.out.println("Group: Creating reduced merged macroInteraction 222");
 		// create the microinteraction
 		macrointeraction = new Microinteraction();
 		
@@ -572,7 +571,7 @@ public class Group  {
 		micro2idx2states = new HashMap<Microinteraction,HashMap<Integer,ArrayList<State>>>();
 		endStateIdxs = new HashMap<Microinteraction,ArrayList<Integer>>();
 
-		System.out.println("Iterating through each microinteraction");
+		//System.out.println("Iterating through each microinteraction");
 		ArrayList<Variable> globals = new ArrayList<Variable>();
 		ArrayList<Module> modules = new ArrayList<Module>();
 		for (Microinteraction micro : microinteractions) {
@@ -582,7 +581,7 @@ public class Group  {
 				continue;
 			}
 
-			System.out.println("Exporting micro to TM");
+			//System.out.println("Exporting micro to TM");
 			PrismThread pt = new PrismThread( ia, mc, micro);
 			Thread thread = pt.getThread();
 			pt.start("exportToTM");
@@ -592,7 +591,7 @@ public class Group  {
 				e.printStackTrace();
 			}
 
-			System.out.println("Getting scratch disk contents");
+			//System.out.println("Getting scratch disk contents");
 			Object scratch = c.getScratch();
 			HashMap<Integer,ArrayList<State>> idx2states = (HashMap<Integer, ArrayList<State>>) ((ArrayList<Object>) scratch).get(0);
 			ArrayList<Integer> endStates = new ArrayList<Integer>();
@@ -600,7 +599,7 @@ public class Group  {
 			endStateIdxs.put(micro, endStates);
 			HashMap<Integer,ArrayList<Integer>> idx2idx = (HashMap<Integer,ArrayList<Integer>>) ((ArrayList<Object>) scratch).get(1);
 
-			System.out.println("Creating new variables");
+			//System.out.println("Creating new variables");
 			// add the gaze and gesture variables
 			Variable gazeAt = new Variable("bool", "GAZE_AT");
 			gazeAt.setValue("false");
@@ -830,7 +829,7 @@ public class Group  {
 				}
 			}
 		}
-		System.out.println("Done with each microinteraction");
+		//System.out.println("Done with each microinteraction");
 		
 		// give one more module
 		

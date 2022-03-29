@@ -39,7 +39,7 @@ public class MicroEncoder {
 	public HashMap<State,ModuleStatePair> encode() {
 		// check to ensure that the microinteraction is not null
 		if (micro == null) {
-			System.out.println("Error: microinteraction to be encoded does not exist. Perhaps it was not built?");
+			//System.out.println("Error: microinteraction to be encoded does not exist. Perhaps it was not built?");
 			return null;
 		}
 		

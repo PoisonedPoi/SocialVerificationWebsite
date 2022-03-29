@@ -123,7 +123,7 @@ public class Exporter {
 						}
 						else {
 							if (glob.getName().equals("Instruction")) {
-								System.out.println(" shouldnt see this, glob is instruction");
+								//System.out.println(" shouldnt see this, glob is instruction");
 								String str;
 								//if (glob.getValue().equals("Instruction 1")) {
 								//	str = "First instruction. Pick up a piece of bread and place it on the plate";
