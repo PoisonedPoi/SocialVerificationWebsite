@@ -17,6 +17,7 @@ import prism.Prism;
 import prism.PrismException;
 import prism.PrismLangException;
 import prism.PrismLog;
+import aCheck.Globals;
 
 public class TMExporter {
 	
@@ -25,9 +26,15 @@ public class TMExporter {
 	private File tmFile;
 	private Microinteraction m;
 	
+	private String USERFOLDER;
+
 	public TMExporter(HashMap<Microinteraction,String> Micro2File, Microinteraction m) {
 		this.Micro2File = Micro2File;
 		this.m = m;
+	}
+
+	public void setUSERFOLDER(String USERFOLDER){
+		this.USERFOLDER = USERFOLDER;
 	}
 
 	public void exportToFile(Prism prism, PrismLog mainLog) {
@@ -35,8 +42,7 @@ public class TMExporter {
 		try {
 			modulesFile = prism.parseModelFile(new File(Micro2File.get(m)));
 			prism.loadPRISMModel(modulesFile);
-			
-			File f = new File(m.getName()+".txt");
+			File f = new File(USERFOLDER + m.getName()+".txt");
 			prism.exportTransToFile(true, Prism.EXPORT_PLAIN, f);
 			tmFile = f;
 			

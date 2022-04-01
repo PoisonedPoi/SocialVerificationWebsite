@@ -15,6 +15,7 @@ public class ModBehPair {
 	
 	boolean nonProperty;
 	
+	//how is this used? no one knows
 	public ModBehPair(HashMap<Module,String> modstr, boolean nonProperty) {
 		// this.nonProperty = nonProperty;
 		// mods = new ArrayList<Module>();

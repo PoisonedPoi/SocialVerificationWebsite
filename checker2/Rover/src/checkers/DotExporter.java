@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import aCheck.Globals;
 import model.Microinteraction;
 import model.State;
 import model_ctrl.ModuleStatePair;
@@ -27,31 +28,38 @@ public class DotExporter {
 	private HashMap<Microinteraction, HashMap<ModuleStatePair, State>> Label2State;
 	
 	private File dotFile;
-	
+	private String USERFOLDER;
 	public DotExporter(HashMap<Microinteraction,String> Micro2File, 
 			HashMap<Microinteraction, HashMap<State, ModuleStatePair>> State2Label,
 			HashMap<Microinteraction, HashMap<ModuleStatePair, State>> Label2State) {
 		this.Micro2File = Micro2File;
 		this.Label2State = Label2State;
 		this.State2Label = State2Label;
-		System.out.println("DOT EXPORTER USED 4444444444444444444444444444444444444444444444444444444444444");
+		//System.out.println("DOT EXPORTER USED");
+	}
+
+	public void setUSERFOLDER(String USERFOLDER){
+		this.USERFOLDER = USERFOLDER;
 	}
 	
 	public HashMap<Integer,ArrayList<State>> exportToDotFile(Prism prism, PrismLog mainLog, Microinteraction m) {
 		ModulesFile modulesFile;
 		
 		try {
-			System.out.println("About to call prism with file " + Micro2File.get(m));
+			//System.out.println("About to call prism with file " + Micro2File.get(m));
 			modulesFile = prism.parseModelFile(new File(Micro2File.get(m)));
-			System.out.println("Parsed model file");
+			//System.out.println("Parsed model file");
 			prism.loadPRISMModel(modulesFile);
-			System.out.println("Loaded prism model");
-			System.out.println(prism.getExplicit());
+			//System.out.println("Loaded prism model");
+			//System.out.println(prism.getExplicit());
 			
-			File f = new File("temp.dot");
+			File f = new File(USERFOLDER + "temp.dot");
 			prism.exportTransToFile(true, Prism.EXPORT_DOT_STATES, f);
-			System.out.println("Called prism to export to dot file");
+			//System.out.println(f.exists());
+			//System.out.println("Called prism to export to dot file with user folder, " + USERFOLDER);
 			
+
+
 			// TODO: modularize the following code. It is the same as the code in sequential checker
 			// get and store the indices for each label (Idx2Label, then Label2State)
 			HashMap<Integer,String> Idx2Label = new HashMap<Integer,String>();
@@ -93,10 +101,13 @@ public class DotExporter {
 			// to store the states
 			HashMap<Integer, ArrayList<State>> idx2states = new HashMap<Integer, ArrayList<State>>();
 			
-			// read and rewrite the dot file
-			File fNew = new File("dot_files" + File.separator + m.getName() + ".dot");
+			// read and rewrite the dot file   
+
+
+			
+			File fNew = new File(USERFOLDER+ "dot_files/" +  m.getName() + ".dot"); //Globals.ROOT_FP + File.separator + "users" + File.separator + "user"+Globals.SID + File.separator + "dot_files" + File.separator + m.getName() + ".dot"
 			PrintWriter writer = new PrintWriter(fNew);
-			try (BufferedReader br = new BufferedReader(new FileReader(f))) {
+			try (BufferedReader br = new BufferedReader(new FileReader(f))) { //ocasionally not being found
 			    String line;
 			    while ((line = br.readLine()) != null) {
 			    	if (line.contains(" [label=")) {
@@ -108,7 +119,7 @@ public class DotExporter {
 			    		idx2states.put(intIdx, new ArrayList<State>());
 			    		
 			    		writer.print(beg);
-			    		
+			    		writer.flush();
 			    		String[] varsRaw = end.split(",");
 			    		
 			    		// store the state names
@@ -122,7 +133,7 @@ public class DotExporter {
 						    String modVal = varsRaw[idx];
 						    
 						    // search for the correct module state pair
-						    ModuleStatePair lab = null;// = new ModuleStatePair((String)pair.getValue(), Integer.parseInt(modVal));
+						    ModuleStatePair lab = new ModuleStatePair((String)pair.getValue(), Integer.parseInt(modVal));
 						    Iterator it2 = Label2State.get(m).entrySet().iterator();
 							while (it2.hasNext()) {
 							    HashMap.Entry p = (HashMap.Entry)it2.next();
@@ -132,10 +143,13 @@ public class DotExporter {
 							}
 						    
 						    State result = Label2State.get(m).get(lab);
-						    stateNames.add(result.getName());
-						    
-						    // adding stuff to the idx2states arraylist
-						    idx2states.get(intIdx).add(result);
+
+						   if(result!=null){
+ 								stateNames.add(result.getName());
+							
+						   		 // adding stuff to the idx2states arraylist
+						     	idx2states.get(intIdx).add(result);
+							}
 						}
 						
 						// print the arraylist just in case

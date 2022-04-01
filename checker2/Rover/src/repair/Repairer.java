@@ -5,10 +5,7 @@ import java.util.HashMap;
 
 import controller.ImportMicrosCT;
 import aCheck.ModelFileChecker;
-import javafx.scene.Node;
-import javafx.scene.control.Control;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Polygon;
+
 import model.*;
 import model.Group;
 import javafx.scene.control.TextArea;
@@ -37,7 +34,7 @@ public class Repairer {
 		if (!ia.getInit().getGreetingProp()) {
 			//mc.addMicroToGroup(ia.getInit(), null);
 			Group prevInit = ia.getInit();
-			Point2D.Double placement = calculateViolationXYPosition(prevInit, startX, startY, dimX, dimY);
+			//Point2D.Double placement = calculateViolationXYPosition(prevInit, startX, startY, dimX, dimY);
 			prevInit.setNotInit();
 			Group group = new Group(true, ia.getBugTracker());
 			ia.setInit(group);
@@ -47,10 +44,10 @@ public class Repairer {
 			mc.addMicroToGroup(group, imct.getMBFileByKeyword("Greeter"));
 			
 			GroupTransition mtran = new GroupTransition(group, prevInit, ia.getBugTracker());
-			Polygon poly = new Polygon();
-			mtran.setPoly(poly);
+			//Polygon poly = new Polygon();
+			//mtran.setPoly(poly);
 			ia.addTransition(mtran);
-			addGroup(group, placement, null, mtran);
+			addGroup(group, null, mtran);
 		}
 		mc.verify();
 		return null;
@@ -72,7 +69,7 @@ public class Repairer {
 		}
 	
 	}
-	
+	/*
 	private Point2D.Double calculateViolationXYPosition(Group group, double startX, double startY, double dimX, double dimY) {
 		double groupX = group.getLayoutX() + group.getWidth()/2;
 		double groupY = group.getLayoutY() + group.getHeight()/2;
@@ -106,8 +103,8 @@ public class Repairer {
 			}
 		}
 	}
-	
-	private void addGroup(Group toAdd, Point2D.Double placement, GroupTransition sourceTrans, GroupTransition targetTrans) {
+	*/
+	private void addGroup(Group toAdd,  GroupTransition sourceTrans, GroupTransition targetTrans) {
 	//	mc.addGroupHelper(toAdd, placement.getX(), placement.getY());
 		
 		if (targetTrans != null)
@@ -124,10 +121,10 @@ public class Repairer {
 		
 		//mc.addMicroToGroup(ia.getInit(), null);
 		Group prevInit = ia.getInit();
-		Point2D.Double placement = calculateViolationXYPosition(prevInit, startX, startY, dimX, dimY);
+		//sPoint2D.Double placement = calculateViolationXYPosition(prevInit, startX, startY, dimX, dimY);
 		
 		Group group = new Group(true, ia.getBugTracker());
-		Polygon poly = new Polygon();
+		//Polygon poly = new Polygon();
 		
 		
 		if (!preview) {
@@ -141,9 +138,9 @@ public class Repairer {
 			mc.addMicroToGroup(group, imct.getMBFileByKeyword("Greeter"));
 			
 			GroupTransition mtran = new GroupTransition(group, prevInit, ia.getBugTracker());
-			mtran.setPoly(poly);
+			//mtran.setPoly(poly);
 			ia.addTransition(mtran);
-			addGroup(group, placement, null, mtran);
+			addGroup(group,  null, mtran);
 			group.setName("init");
 			
 			mc.verify();
@@ -151,20 +148,20 @@ public class Repairer {
 		else {
 			previewer.add(group);
 			group.setName("");
-			group.setStyle("-fx-border-style: dashed;");
-			group.addMicroBoxShell(imct.getMBbyID(imct.getMBFileByKeyword("Greeter").toString()));
+			//group.setStyle("-fx-border-style: dashed;");
+			//group.addMicroBoxShell(imct.getMBbyID(imct.getMBFileByKeyword("Greeter").toString()));
 		//	mc.addGroupShell(group, placement.getX(), placement.getY());
 			GroupTransition mt = new GroupTransition(group,prevInit,null);
 			prevInit.getInputMacroTransitions().remove(mt);
-			mt.setPoly(poly);
-			mt.getStrokeDashArray().addAll(25d, 10d);
+			//mt.setPoly(poly);
+			//mt.getStrokeDashArray().addAll(25d, 10d);
 		//	mc.addMacroTransShell(mt);
 			previewer.add(mt);
 			
-			for (Circle node : mt.getIndicatorComponents()) 
-				previewer.add(node);
+			// for (Circle node : mt.getIndicatorComponents()) 
+			// 	previewer.add(node);
 			
-			previewer.add(mt.getPoly());
+			//previewer.add(mt.getPoly());
 			previewer.add(mt.getConditions());
 			
 			// align the dummy nodes
@@ -185,24 +182,24 @@ public class Repairer {
 		GroupTransition mtran = new GroupTransition(group, group2, ia.getBugTracker());
 		boolean[] humanBranching = {false, true, false};
 		mtran.setAllHumanBranching(humanBranching);
-		Polygon poly = new Polygon();
-		mtran.setPoly(poly);
+		//Polygon poly = new Polygon();
+		//mtran.setPoly(poly);
 		ia.addTransition(mtran);
-		Point2D.Double placement = calculateViolationXYPosition(group, startX, startY, dimX, dimY);
-		addGroup(group, placement, mtran, null);
+		//Point2D.Double placement = calculateViolationXYPosition(group, startX, startY, dimX, dimY);
+		addGroup(group, mtran, null); //group, placement, ...
 		
 		// add the microinteraction
 		mc.addMicroToGroup(group2, imct.getMBFileByKeyword("Remark"));
 		
-		// access the microinteraction and pre-set the parameter
+		// access the microinteraction and pre-set the parameter           --removed while removing javafx, could be important
 		Microinteraction remark = group2.getMicrointeractions().get(0);
-		HashMap<Variable,Node> params = remark.getParameterizer().getParams();
-		for (Variable var : remark.getGlobalVars()) {
-			if (var.getType().equals("str")) {
-				var.setValue("I can help if you want.");
-				((TextArea) params.get(var)).setText(var.getValue());
-			}
-		}
+		// HashMap<Variable,Node> params = remark.getParameterizer().getParams();
+		// for (Variable var : remark.getGlobalVars()) {
+		// 	if (var.getType().equals("str")) {
+		// 		var.setValue("I can help if you want.");
+		// 		((TextArea) params.get(var)).setText(var.getValue());
+		// 	}
+		// }
 				
 		/*
 		 * GROUP with WAIT
@@ -213,18 +210,18 @@ public class Repairer {
 		GroupTransition mtranWait = new GroupTransition(group2, waitGroup, ia.getBugTracker());
 		boolean[] humanBranchingWait = {false, true, false};
 		mtranWait.setAllHumanBranching(humanBranchingWait);
-		Polygon polyWait = new Polygon();
-		mtranWait.setPoly(polyWait);
+		//Polygon polyWait = new Polygon();
+		//mtranWait.setPoly(polyWait);
 		ia.addTransition(mtranWait);
-		placement = calculateViolationXYPosition(group2, startX, startY, dimX, dimY);
+		//placement = calculateViolationXYPosition(group2, startX, startY, dimX, dimY);
 				
 		GroupTransition mtranWaitLoop = new GroupTransition(waitGroup, waitGroup, ia.getBugTracker());
 		boolean[] humanBranchingWaitLoop = {false, true, false};
 		mtranWaitLoop.setAllHumanBranching(humanBranchingWaitLoop);
-		Polygon polyWaitLoop = new Polygon();
-		mtranWaitLoop.setPoly(polyWaitLoop);
+		//Polygon polyWaitLoop = new Polygon();
+		//mtranWaitLoop.setPoly(polyWaitLoop);
 		ia.addTransition(mtranWaitLoop);
-		addGroup(waitGroup, placement, mtranWait, mtranWaitLoop);
+		addGroup(waitGroup,  mtranWait, mtranWaitLoop); //placement
 				
 		mc.verify();
 		
@@ -242,3 +239,42 @@ public class Repairer {
 	}
 	
 }
+
+
+
+/*
+
+getting xml xoc
+java.io.FileNotFoundException
+	at sparse.PrismSparse.ExportMDP(PrismSparse.java:486)
+	at prism.NondetModel.exportToFile(NondetModel.java:419)
+	at prism.Prism.exportTransToFile(Prism.java:2283)
+	at checkers.TMExporter.exportToFile(TMExporter.java:40)
+	at checkers.Checker.tmExporter(Checker.java:257)
+	at checkers.PrismThread.run(PrismThread.java:152)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+Exception in thread "prism" java.lang.NullPointerException
+	at java.base/java.io.FileInputStream.<init>(FileInputStream.java:149)
+	at java.base/java.io.FileReader.<init>(FileReader.java:75)
+	at checkers.TMExporter.parseTM(TMExporter.java:63)
+	at checkers.Checker.tmExporter(Checker.java:258)
+	at checkers.PrismThread.run(PrismThread.java:152)
+	at java.base/java.lang.Thread.run(Thread.java:833)
+Getting scratch disk contents
+
+
+
+
+
+airness is false
+properties File is filter(print, Pmax=? [ st_m=4 ]);
+
+java.io.FileNotFoundException: /home/new/rover/users/user2170/tempout.txt (No such file or directory)
+	at java.base/java.io.FileOutputStream.open0(Native Method)
+	at java.base/java.io.FileOutputStream.open(FileOutputStream.java:293)
+	at java.base/java.io.FileOutputStream.<init>(FileOutputStream.java:235)
+	at java.base/java.io.FileOutputStream.<init>(FileOutputStream.java:184)
+	at java.base/java.io.PrintWriter.<init>(PrintWriter.java:309)
+	at checkers.SequentialChecker.getEndStates(SequentialChecker.java:377)
+	at checkers.SequentialChecker.getStartEndStates(SequentialChecker.java:56)
+*/

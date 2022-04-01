@@ -50,7 +50,7 @@ public class MicroParameterizer {
                 temp.valueProperty().addListener(new ChangeListener<String>() {
                     @Override
                     public void changed(ObservableValue ov, String t, String t1) {
-                        System.out.println("glob setting value in Handle");
+                        //System.out.println("glob setting value in Handle");
                         if (!(t == null))
                             glob.setValue(t1);
                         if (mc != null)

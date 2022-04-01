@@ -16,6 +16,7 @@ import prism.Prism;
 import prism.PrismException;
 import prism.PrismLangException;
 import prism.PrismLog;
+import aCheck.Globals;
 import prism.Result;
 
 public class GraphChecker {
@@ -39,7 +40,7 @@ private Interaction ia;
 	}
 	
 	public void check(Prism prism, PrismLog mainLog) { //hapens once per check
-		System.out.println("**********000000000000000000000000000000Graph CHecking 0-00000000000000000000000000058439859");
+		//System.out.println("**********000000000000000000000000000000Graph CHecking 0-00000000000000000000000000058439859");
 		/*
 		 * initialize the prism file
 		 */
@@ -56,7 +57,7 @@ private Interaction ia;
 		 */
 		GraphEncoder ge = new GraphEncoder(ia);
 		File prismFile = ge.encode();
-		System.out.println("Graph checking "+prismFile.getAbsolutePath());
+		//System.out.println("Graph checking "+prismFile.getAbsolutePath());
 		idx2group = ge.getIdx2Group()
 ;		
 		try {
@@ -137,7 +138,7 @@ private Interaction ia;
 	private void clearPrismOutputFile() {
 		PrintWriter writer = null;
 		try {
-			writer = new PrintWriter(new File("tempout.txt"));
+			writer = new PrintWriter(new File(ia.getUSERFOLDER()+"tempout.txt"));
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -147,7 +148,7 @@ private Interaction ia;
 	}
 	
 	private ArrayList<Group> extractFilterResults() {
-		ArrayList<String[]> rawFilterResults = (new FilterUtil()).extractRawResults();
+		ArrayList<String[]> rawFilterResults = (new FilterUtil()).extractRawResults(ia.getUSERFOLDER());
 		ArrayList<Group> filterResults = new ArrayList<Group>();
 		for (String[] strs : rawFilterResults) {
 			int groupId = Integer.parseInt(strs[strs.length-1]);

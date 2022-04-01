@@ -1,7 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+
 <web-app>
-    <display-name>Hello World</display-name>
     <servlet>
-     <servlet-name>Checker</servlet-name>
-     <servlet-class>CheckerServlet</servlet-class>
+        <servlet-name>Checker</servlet-name>
+        <servlet-class>CheckerServlet</servlet-class>
     </servlet>
+
+    <servlet-mapping>
+        <servlet-name>Checker</servlet-name>
+        <url-pattern>/Checker</url-pattern>
+    </servlet-mapping>
 </web-app>

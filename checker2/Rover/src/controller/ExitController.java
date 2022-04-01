@@ -14,7 +14,7 @@ import javafx.scene.control.Button;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
-
+import aCheck.Globals;
 
 /*
  * Controller Class for Exit Program Dialogue Box
@@ -50,23 +50,23 @@ public class ExitController {
 				
 				// remove graph and bug files, if they exist
 				try {
-					if ((new File("bugs.csv")).exists()) {
+					if ( (new File(Globals.USERPATH +"bugs.csv")).exists()) {
 						Path path = Paths.get("bugs.csv");
 						Files.delete(path);
 					}
-					if (new File("tempfile").exists()) {
+					if (new File(Globals.USERPATH +"tempfile").exists()) {
 						Path path = Paths.get("tempfile");
 						Files.delete(path);
 					}
-					if (new File("tempout.txt").exists()) {
+					if (new File(Globals.USERPATH +"tempout.txt").exists()) {
 						Path path = Paths.get("tempout.txt");
 						Files.delete(path);
 					}
-					if ((new File("graph.pm")).exists()) {
+					if ((new File(Globals.USERPATH +"graph.pm")).exists()) {
 						Path path = Paths.get("graph.pm");
 						Files.delete(path);
 					}
-					if ((new File("interaction.xml")).exists()) {
+					if ((new File(Globals.USERPATH +"interaction.xml")).exists()) {
 						Path path = Paths.get("interaction.xml");
 						Files.delete(path);
 					}

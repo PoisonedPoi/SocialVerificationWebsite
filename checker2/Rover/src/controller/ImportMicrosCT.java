@@ -22,6 +22,7 @@ import javafx.scene.image.WritableImage;
 import javafx.scene.SnapshotParameters;
 import model.MicroBox;
 import model_ctrl.FSManager;
+import aCheck.Globals;
 
 /*
  * Class to view and add microinteractions to microcollections in the project
@@ -70,7 +71,7 @@ public class ImportMicrosCT extends VBox {
 
 	private void initialize() {
 
-		FSManager fsm = new FSManager();
+		FSManager fsm = new FSManager(mc.getUSERFOLDER());
 		
 		//Searches through all the micros to and displays the ones' containing a the search string
 		/*searchBar.textProperty().addListener(e -> {
@@ -154,7 +155,7 @@ public class ImportMicrosCT extends VBox {
 
 		else {
 			clearGrid();
-			String path = fsm.getPath() + File.separator + "Lib" + File.separator + catagory;
+			String path = Globals.RESOURCEPATH + "Lib" + File.separator + catagory;
 			Color color = colorPick(selectCatagory.getItems().indexOf(catagory) - 1);
 			microsList = fsm.getMicrosInDir(new File(path), color);
 		}

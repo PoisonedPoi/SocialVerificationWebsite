@@ -18,7 +18,7 @@ import prism.*;
 import study.BugTracker;
 import javafx.scene.control.Tooltip;
 import javafx.scene.paint.Color;
-
+import aCheck.Globals;
 public class SequentialChecker {
 	
 	private Interaction ia;
@@ -50,9 +50,11 @@ public class SequentialChecker {
 	}
 	
 	public void getStartEndStates(Prism prism, PrismLog mainLog, Microinteraction micro) {
+		//System.out.println(ia.getUSERFOLDER() + "	Getting start States");
 		ArrayList<ArrayList<State>> s = getStartStates(micro);
 		micro.setStartStates(s);
 		
+		//System.out.println(ia.getUSERFOLDER() + "	Getting End States");
 		ArrayList<ArrayList<State>> e = getEndStates(micro, prism, mainLog);
 		micro.setEndStates(e, isNonAssisted);
 	}
@@ -305,8 +307,6 @@ public class SequentialChecker {
 		ModulesFile modulesFile;
 		PropertiesFile propertiesFile = null;
 		Result result;
-
-		System.out.println("SEQ: Getting end states");
 		
 		/*
 		 * SPECIAL CASE (hack, probably should comment out): if there are no start states, then simply return an empty list!
@@ -315,10 +315,9 @@ public class SequentialChecker {
 			return new ArrayList<ArrayList<State>>();
 				
 		try {
-
 			modulesFile = prism.parseModelFile(new File(Micro2File.get(m)));
+			//System.out.println(Micro2File.get(m));
 			prism.loadPRISMModel(modulesFile);
-
 			// get and store the indices for each label (Idx2Label, then Label2State)
 			HashMap<Integer,String> Idx2Label = new HashMap<Integer,String>();
 			ArrayList<ModuleStatePair> labels = new ArrayList<ModuleStatePair>(); // get keys from the Label2State hashmap
@@ -342,7 +341,6 @@ public class SequentialChecker {
 				if (labIsState)
 					Idx2Label.put(i, label);
 			}
-			
 			// before coming up with a property, check that all arrays have the correct data
 			it = Micro2File.entrySet().iterator();
 						
@@ -351,9 +349,10 @@ public class SequentialChecker {
 			String label = State2Label.get(m).get(end).toString();
 			
 			//TODO: CHECK THAT THIS LABEL IS REACHABLE GIVEN THE ENABLED INITIAL STATES!!!!!!!!!!!!!
-			
+
+
 			String property = "filter(print, Pmax=? [ " + label + " ] );";
-			System.out.println(property);
+			//System.out.println(property);
 
 			// parse the results from the filter property, storing which collections of states the micro may result in
 			propertiesFile = prism.parsePropertiesString(modulesFile, property);
@@ -363,22 +362,30 @@ public class SequentialChecker {
 				// TODO Auto-generated catch block
 			//	e.printStackTrace();
 			//}
-			System.out.println("Engine (Explicit is " + Prism.EXPLICIT + "): " + prism.getEngine());
-			System.out.println("Fairness is " + prism.getFairness());
-			prism.modelCheck(propertiesFile, propertiesFile.getPropertyObject(0));
+
+
+
+
+			//System.out.println("Engine (Explicit is " + Prism.EXPLICIT + "): " + prism.getEngine());
+			//System.out.println("Fairness is " + prism.getFairness());
+			//System.out.println("properties File is " + propertiesFile);
+
+			prism.modelCheck(propertiesFile, propertiesFile.getPropertyObject(0)); //will occasionally cause error here if threaded instead of used as process
+			
+			
 			//try {
 			//	prism.setEngine(prism.EXPLICIT);
 			//} catch (PrismException e) {
 				// TODO Auto-generated catch block
 			//	e.printStackTrace();
 			//}
-			PrintWriter writer = new PrintWriter(new File("tempout.txt"));
+			PrintWriter writer = new PrintWriter(new File(ia.getUSERFOLDER() + "tempout.txt"));
 			writer.print("");
 			writer.close();// wipe the log file
 			mainLog.flush();
 
 			// extract the results and put the string values into an arraylist
-			ArrayList<String[]> rawResults = (new FilterUtil()).extractRawResults();
+			ArrayList<String[]> rawResults = (new FilterUtil()).extractRawResults(ia.getUSERFOLDER());
 						
 			// run through each index and get the labels associated with each index
 			ArrayList<ArrayList<State>> endSts = new ArrayList<ArrayList<State>>();
@@ -390,6 +397,7 @@ public class SequentialChecker {
 						// find the module state pair associated with index i
 						ModuleStatePair temp = null;
 						for (ModuleStatePair msp : labels) {
+						//	System.out.println(" test " + strs[i]);
 							if (msp.mod.equals(lab) && msp.state == Integer.parseInt(strs[i])) {
 								temp = msp;
 								break;
@@ -414,7 +422,7 @@ public class SequentialChecker {
 			e.printStackTrace();
 		} catch (PrismException e) {
 			// TODO Auto-generated catch block
-			//e.printStackTrace();
+			e.printStackTrace();
 		}
 
 		return null;

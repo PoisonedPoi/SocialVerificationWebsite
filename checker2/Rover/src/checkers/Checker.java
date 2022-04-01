@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import controller.ConsoleCT;
+import aCheck.Globals;
 import model.*;
 import model.Group;
 import model_ctrl.MicroEncoder;
@@ -54,6 +55,10 @@ public class Checker {
 		this.ia = ia;
 		initialize();
 	}
+
+	public String getUSERFOLDER(){
+		return ia.getUSERFOLDER();
+	}
 	
 	private void initialize() {
 		Micro2File = new HashMap<Microinteraction,String>();
@@ -73,8 +78,8 @@ public class Checker {
 	 */
 	public void startPrism() {
 		// Init
-		mainLog = new PrismFileLog("tempout.txt");
-		prism = new Prism(mainLog, mainLog);
+		mainLog = new PrismFileLog(ia.getUSERFOLDER() + "tempout.txt");
+		prism = new Prism(mainLog);
 		
 		try {
 			prism.initialise();
@@ -101,7 +106,7 @@ public class Checker {
 	}
 	
 	private void generatePrismFilesHelper(Microinteraction m) {
-		String filename = "prism" + File.separator + m.getName() + ".pm";
+		String filename = ia.getUSERFOLDER() + "prism" + File.separator + m.getName() + ".pm";
 		Micro2File.put(m, filename);
 		MicroEncoder enc = new MicroEncoder(m, filename);
 		HashMap<State,ModuleStatePair> states = enc.encode();
@@ -201,12 +206,9 @@ public class Checker {
 	}
 	
 	public void getStartEndStates(Microinteraction m) {
-		System.out.println("Getting start states");
 		scratch = null;
 		SequentialChecker seq = new SequentialChecker(ia, Micro2File, State2Label, Label2State,  isNonAssisted, bt);
-		System.out.println("Getting start end states");
 		seq.getStartEndStates(prism, mainLog, m);
-		System.out.println("Done getting start end states");
 	}
 	
 	// concurrent
@@ -232,13 +234,12 @@ public class Checker {
 	
 	// export to transition matrix
 	public void tmExporter(Microinteraction m) {
+		//System.out.println(m);
 		scratch = null;
-
-		System.out.println("In the exporter checker method");
 
 		// first export to the dot file and obtain the hashmap of idxs2states
 		DotExporter dot = new DotExporter(Micro2File, State2Label, Label2State);
-		System.out.println("About to export to dot file");
+		dot.setUSERFOLDER(ia.getUSERFOLDER());
 		HashMap<Integer, ArrayList<State>> idx2states = dot.exportToDotFile(prism, mainLog, m);
 		dot.removeDotFile();
 

@@ -65,10 +65,11 @@ public class Microinteraction {
 		
 		startStates = null;
 		endStates = null;
-		
+
 		// stuff to do with viz
-		tooltipCanvas = new TooltipViz(450, 350, this);
-		staticTooltip = false;
+		//tooltipCanvas = new TooltipViz(450, 350, this);/////////// took this out
+		//staticTooltip = false;
+
 	}
 
 	public void addGlobal(Variable var) {
@@ -113,25 +114,25 @@ public class Microinteraction {
 	}
 	
 	public void setTooltip(Tooltip tt) {
-		this.tt = tt;
+		// this.tt = tt;
 	}
 	
 	public Tooltip getTooltip() {
-		return tt;
+		return null; //tt
 	}
 	
 	public void setStaticTooltip(TooltipViz tool) {
-		staticTooltip = true;
+		// staticTooltip = true;
 		
-		SnapshotParameters params = new SnapshotParameters();
-		params.setFill(Color.TRANSPARENT);         
-		WritableImage image = tool.snapshot(params, null);
-		this.tooltipCanvas.getGraphicsContext2D().drawImage(image, 0, 0);
+		// SnapshotParameters params = new SnapshotParameters();
+		// params.setFill(Color.TRANSPARENT);         
+		// WritableImage image = tool.snapshot(params, null);
+		// this.tooltipCanvas.getGraphicsContext2D().drawImage(image, 0, 0);
 		
 	}
 	
 	public void setIsStaticTooltip(boolean val) {
-		staticTooltip = val;
+		// staticTooltip = val;
 	}
 	
 	public MicroBox getMicroBox() {
@@ -168,8 +169,8 @@ public class Microinteraction {
 		/*
 		 * whenever the end states are set, re-draw the tooltip canvas!
 		 */
-		if (!staticTooltip)
-			((TooltipViz) tooltipCanvas).draw(isNonAssisted);
+		// if (!staticTooltip)
+		// 	((TooltipViz) tooltipCanvas).draw(isNonAssisted);
 		
 	}
 	
@@ -243,7 +244,6 @@ public class Microinteraction {
 	public void build() {
 		Builder bob = new Builder(this);
 		builtMicro = bob.build();
-		
 	}
 	
 	public void setBuiltMicro(Microinteraction otherMic) {
@@ -252,7 +252,7 @@ public class Microinteraction {
 	
 	public Microinteraction getBuiltMicro() {
 		if (builtMicro == null) {
-			System.out.println("Error: microinteraction has not been built");
+			//System.out.println("Error: microinteraction has not been built");
 			return null;
 		}
 		return builtMicro;
@@ -347,8 +347,8 @@ public class Microinteraction {
 	}
 
 	public String toString() {
-		String str = "Microinteraction: " + this.name + ", ID=" + this.id + "\n";
-				
+		String str = "Microinteraction: " + this.name + ", ID=" + this.id;
+		/*
 		// print the global variables
 		str += "Global Variables: \n";
 		for (int i = 0; i < globals.size(); i++) {
@@ -360,7 +360,7 @@ public class Microinteraction {
 		for (Module mod : modules) {
 			str += mod.toString();
 		}
-		
+		*/
 		return str;
 	}
 }

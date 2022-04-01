@@ -1,9 +1,11 @@
 package model_ctrl;
+
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import aCheck.*;
 import model.Guard;
 import model.Microinteraction;
 import model.Module;
@@ -32,11 +34,12 @@ public class MicroEncoder {
 		currStateChar = 0;
 		isCollection = false;
 	}
+
 	
 	public HashMap<State,ModuleStatePair> encode() {
 		// check to ensure that the microinteraction is not null
 		if (micro == null) {
-			System.out.println("Error: microinteraction to be encoded does not exist. Perhaps it was not built?");
+			//System.out.println("Error: microinteraction to be encoded does not exist. Perhaps it was not built?");
 			return null;
 		}
 		

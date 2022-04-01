@@ -1,16 +1,16 @@
 #!/bin/bash
 
 
-javac -cp "./bin:../prism-svn-proposed-global-sync/prism/lib/colt.jar:../prism-svn-proposed-global-sync/prism/lib/jhoafparser.jar:../prism-svn-proposed-global-sync/prism/lib/pepa.zip:../prism-svn-proposed-global-sync/prism/lib/prism.jar:/usr/lib/jvm/jdk1.8.0_181/jre/lib/jfxswt.jar:/usr/lib/jvm/jdk1.8.0_121/jre/lib/ext/jfxrt.jar" -d bin $(find ./src/* | grep .java)
+javac -cp "./bin:prism-library/prism/lib/colt.jar:prism-library/prism/lib/jhoafparser.jar:prism-library/prism/lib/pepa.zip:prism-library/prism/lib/prism.jar:/usr/lib/jvm/jdk1.8.0_181/jre/lib/jfxswt.jar:/usr/lib/jvm/jdk1.8.0_121/jre/lib/ext/jfxrt.jar" -d bin $(find ./src/* | grep .java)
 
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:../prism-svn-proposed-global-sync/prism/lib/
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:prism-library/prism/lib/
 # LD_LIBRARY_PATH if linux
 
 echo 
 echo DONE PARSING
 echo 
-
-/usr/lib/jvm/jdk1.8.0_181/bin/java -Djava.library.path=../prism-svn-proposed-global-sync/prism/lib/ -Dfile.encoding=UTF-8 -classpath "./bin:../prism-svn-proposed-global-sync/prism/lib/colt.jar:../prism-svn-proposed-global-sync/prism/lib/jhoafparser.jar:../prism-svn-proposed-global-sync/prism/lib/pepa.zip:../prism-svn-proposed-global-sync/prism/lib/prism.jar:/usr/lib/jvm/jdk1.8.0_181/jre/lib/jfxswt.jar:/usr/lib/jvm/jdk1.8.0_121/jre/lib/ext/jfxrt.jar" aCheck.CheckingDriver 
+#-Djava.library.path=prism-library/prism/lib/ -Dfile.encoding=UTF-8
+java -Djava.library.path=prism-library/prism/lib/ -Dfile.encoding=UTF-8 -cp "./bin:prism-library/prism/lib/colt.jar:prism-library/prism/lib/jhoafparser.jar:prism-library/prism/lib/pepa.zip:prism-library/prism/lib/prism.jar:/usr/lib/jvm/jdk1.8.0_181/jre/lib/jfxswt.jar:/usr/lib/jvm/jdk1.8.0_121/jre/lib/ext/jfxrt.jar" aCheck.CheckingDriver 96 "test"
 
 
 

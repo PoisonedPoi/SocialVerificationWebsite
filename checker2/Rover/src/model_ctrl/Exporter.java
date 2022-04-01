@@ -77,7 +77,7 @@ public class Exporter {
 			
 			// identifier
 			writer.print("\n\t<group ");
-			writer.println("id=\"" + group2id.get(group) + "\" init=\"" + group.isInit() + "\" x=\"" + group.getLayoutX() + "\" y=\"" + group.getLayoutY() +  "\">");
+			writer.println("id=\"" + group2id.get(group) + "\" init=\"" + group.isInit() + "\" x=\"" + 0  + "\" y=\"" + 0  +  "\">");//group.getLayoutX()     group.getLayoutY()
 			
 			// name
 			writer.println("\t\t<name>" + group.getName() + "</name>");
@@ -123,7 +123,7 @@ public class Exporter {
 						}
 						else {
 							if (glob.getName().equals("Instruction")) {
-								System.out.println(" shouldnt see this, glob is instruction");
+								//System.out.println(" shouldnt see this, glob is instruction");
 								String str;
 								//if (glob.getValue().equals("Instruction 1")) {
 								//	str = "First instruction. Pick up a piece of bread and place it on the plate";
@@ -176,7 +176,7 @@ public class Exporter {
 			
 			// identifier
 			writer.print("\n\t<group ");
-			writer.println("id=\"" + (group2id.get(group) + inst*ia.getGroups().size()) + "\" init=\"false\" x=\"" + group.getLayoutX() + "\" y=\"" + group.getLayoutY() +  "\">");
+			writer.println("id=\"" + (group2id.get(group) + inst*ia.getGroups().size()) + "\" init=\"false\" x=\"" + 0 + "\" y=\"" + 0 +  "\">");// group.getLayoutX() 	group.getLayoutY()
 			
 			// name
 			writer.println("\t\t<name>" + group.getName() + "</name>");

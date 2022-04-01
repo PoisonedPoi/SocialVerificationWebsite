@@ -23,6 +23,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import model.MicroBox;
+import aCheck.Globals;
 
 /*
  * Class that handles all file and directory related queries 
@@ -41,15 +42,16 @@ public class FSManager {
 	private Properties prop;
 	private InputStream input;
 	private ArrayList<String> flagFiles;
-
-	public FSManager() {
+	private String USERFOLDER;
+	public FSManager(String USERFOLDER) { //NOTE used to be empty
+		this.USERFOLDER = USERFOLDER;
 		//Set the current workspace. This is the application directory
-		WORKSPACE = new File(System.getProperty("user.dir") + File.separator);
+		WORKSPACE = new File(USERFOLDER);
 		prop = new Properties();
 		flagFiles = new ArrayList<String>();
 		//Read the properties file to set the necessary conditions for the program.
 		try {
-			input = new FileInputStream("Master" +File.separator+ "Configuration" +File.separator+ "config.properties");
+			input = new FileInputStream(Globals.RESOURCEPATH + "Master" +File.separator+ "Configuration" +File.separator+ "config.properties");
 			prop.load(input);
 		} catch (FileNotFoundException e) {
 			ErrDController edc = new ErrDController();

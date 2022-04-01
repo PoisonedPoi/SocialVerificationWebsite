@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<nta>
+	<name>interaction</name>
+
+	<group id="0" init="true" x="100.0" y="100.0">
+		<name>init</name>
+		<micro>
+			<name>Greeter</name>
+			<parameter type="bool" val="true">Greet_with_speech</parameter>
+			<parameter type="bool" val="true">Greet_with_handshake</parameter>
+			<parameter type="bool" val="true">Wait_for_response</parameter>
+		</micro>
+		<micro>
+			<name>Instruction</name>
+			<parameter type="str" val="do this">Instruction</parameter>
+		</micro>
+		<micro>
+			<name>Remark</name>
+			<parameter type="str" val="this is my result">content</parameter>
+			<parameter type="bool" val="false">use_gesture</parameter>
+			<parameter type="bool" val="true">Allow_human_to_respond</parameter>
+		</micro>
+	</group>
+
+	<group id="1" init="false" x="386.0" y="94.0">
+		<name>test</name>
+		<micro>
+			<name>Handoff</name>
+		</micro>
+		<micro>
+			<name>Answer</name>
+			<parameter type="bool" val="true">Introduction</parameter>
+		</micro>
+		<micro>
+			<name>Ask</name>
+			<parameter type="array">
+				<name>answers robot can recognize</name>
+				<item type="string" val="yes" link="human_ready"/>
+				<item type="string" val="no" link="human_ignore"/>
+				<item type="string" val="maybe" link=""/>
+			</parameter>
+			<parameter type="str" val="can I do this?">question</parameter>
+		</micro>
+	</group>
+
+	<group id="2" init="false" x="265.0" y="340.0">
+		<name>name3</name>
+		<micro>
+			<name>Wait</name>
+			<parameter type="bool" val="false">look_at_people</parameter>
+			<parameter type="bool" val="false">allow_speech</parameter>
+			<parameter type="int" val="4">wait time (seconds)</parameter>
+		</micro>
+		<micro>
+			<name>Farewell</name>
+		</micro>
+	</group>
+
+	<group id="3" init="false" x="625.0" y="107.0">
+		<name>untitled0</name>
+	</group>
+
+	<transition>
+		<source ref="0"/>
+		<target ref="1"/>
+		<guard condition="human_ready"/>
+		<guard condition="human_busy"/>
+		<guard condition="human_ignore"/>
+	</transition>
+
+	<transition>
+		<source ref="1"/>
+		<target ref="2"/>
+		<guard condition="human_ready"/>
+		<guard condition="human_busy"/>
+		<guard condition="human_ignore"/>
+	</transition>
+
+	<transition>
+		<source ref="2"/>
+		<target ref="3"/>
+		<guard condition="human_ready"/>
+		<guard condition="human_busy"/>
+		<guard condition="human_ignore"/>
+	</transition>
+	<design>copy</design>
+</nta>

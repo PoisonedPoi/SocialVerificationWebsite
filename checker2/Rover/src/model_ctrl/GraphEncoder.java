@@ -9,7 +9,7 @@ import java.util.Iterator;
 
 import model.*;
 import model.Group;
-
+import aCheck.Globals;
 public class GraphEncoder {
 	
 	private Interaction ia;
@@ -25,7 +25,7 @@ public class GraphEncoder {
 	}
 	
 	public File encode() {
-		File pfile = new File("graph.pm");
+		File pfile = new File(ia.getUSERFOLDER()+"graph.pm");
 		PrintWriter writer = null;
 		try {
 			writer = new PrintWriter(pfile);
@@ -275,7 +275,7 @@ public class GraphEncoder {
 		anySpeaks = false;
 		it = group2idx.entrySet().iterator();
 		while (it.hasNext()) {
-			System.out.println("finding one that speaks first");
+			//System.out.println("finding one that speaks first");
 			HashMap.Entry pair = (HashMap.Entry)it.next();
 			Group group = (Group) pair.getKey();
 			if (group.getSpeaksFirst()) {

@@ -222,7 +222,7 @@ public class Module {
 		// copy the states, but don't fill in the transitions
 		for (State state : states) {
 			State temp = state.copyWithoutTrans();
-			System.out.println(temp.getStateClass());
+			//System.out.println(temp.getStateClass());
 			mod.addState(temp);
 		}
 		
