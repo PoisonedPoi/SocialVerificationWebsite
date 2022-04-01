@@ -1,12 +1,20 @@
 //TODOS and possible addons,
 //add canvas "push" buttons to increase screen width/height
 //add error flub handlers to display violations
+//-----------------------------------------------------------------------------------------------------------------
 
-var interactionController;
 
-//Adding and removing microinteractions to groups
+
+
+var IC; //Interaction Controller
 document.addEventListener("DOMContentLoaded", () => {
-    interactionController = new controller();
+    IC = new controller();
+    console.log("testing");
+
+    var xml = "<?xml version='1.0'?><query><author>John Steinbeck</author></query>";
+    console.log(xml);
+    console.log("end testing");
+
 });
 
 class controller {
@@ -18,54 +26,114 @@ class controller {
         var initialTypes = this.gatherMicrosFromDatabase();
         this.interaction.loadMicroTypes(initialTypes); //load types of microinteractions into the model
         loadMicrointeractions(this.interaction.trackedMicroTypes); //view loads micro interaction types on left sidebar
-
     }
+
 
     gatherMicrosFromDatabase(){
-        //TODO access serverlet to get all micros and store them as micro types, for now hard code
-        let parameter1 = new Parameter(0, "do you like chicken", true, false, false);
-        let parameter2 = new Parameter(1, "fill in field", false, true, false);
-        let parameter3 = new Parameter(2, "select option", false, false, true,["test", "option", "close"]);
-        let parameters1 = [parameter1, parameter2];
-        let micro1 = new MicroType("chicken", parameters1);
-        let micro2 = new MicroType("greeter", [parameter3]);
-
+        //TODO access serverlet to get all micros and store them as micro types, for now these are the hard coded versions
         let microTypes = [];
-        microTypes.push(micro1);
-        microTypes.push(micro2);
+
+        //greeter
+        let parameter0 = new Parameter(0, "Wait for Response", "Wait_for_response", "Set whether the robot waits for the human to greet back", "bool");
+        let parameter1 = new Parameter(1, "Greet with Speech", "Greet_with_speech", "Set whether the robot greets the human with speech", "bool");
+        let parameter2 = new Parameter(2, "Greet with Handshake", "Greet_with_handshake", "Set whether the robot extends its arm for a handshake", "bool");
+        let microGreeter = new MicroType("Greeter", [parameter0,parameter1,parameter2]);
+        microTypes.push(microGreeter);
+
+        //ask
+        let parameter3 = new Parameter(3, "Question", "question", "The Specific question the robot will ask", "str");
+        let parameter4 = new Parameter(4, "Responses the robot can recognize", "answers robot can recognize", "input the answers the robot can recognize the user saying, and then set the state that should be executed following the response", "array");
+        let microAsk = new MicroType("Ask", [parameter3, parameter4]);
+        microTypes.push(microAsk);
+
+        //remark
+        let parameter5 = new Parameter(5, "Content", "content", "What the robot will say to the user", "str");
+        let parameter6 = new Parameter(6, "Use Gesture", "use_gesture", "Should the robot use gestures (this is different from handoff)", "bool");
+        let parameter7 = new Parameter(7, "Allow the human to respond", "Allow_human_to_respond", "Whether the robot gives the human any time to respond after the robot's remark before moving on", "bool");
+        let microRemark = new MicroType("Remark", [parameter5, parameter6, parameter7]);
+        microTypes.push(microRemark);
+
         return microTypes;
     }
+
+    sendModelToDatabase(){
+
+        // let data = this.exportToXML();
+        // console.log(data);
+        // var http = new XMLHttpRequest();
+        // http.open("POST", "\location", true);
+        // http.setRequestHeader("content-type", "application/x-www-form-urlencoded");
+        // http.onreadystatechange = function(){
+        //     if(this.readyState == 4 && this.status == 200){
+        //         console.log(this.responseText);
+        //         console.log("I think that http worked!!");
+        //     }
+        // }
+        
+        
+        //TODO automate
+        var xml = '<?xml version="1.0" encoding="utf-8"?><nta> <name>interaction</name> <group id="0" init="true"><name>init</name><micro><name>greeter</name><parameter type="bool" val="true">Greet_with_speech</parameter><parameter type="bool" val="true">Greet_with_handshake</parameter><parameter type="bool" val="true">Wait_for_response</parameter></micro></group><design>copy</design></nta>';
+
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.open("POST", "api/checker");///
+        var xmlDoc;
+        xmlhttp.onreadystatechange = function () {
+            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+                console.log("returned with full");
+                console.log(xmlhttp);
+                xmlDoc = xmlhttp.responseXML;
+                console.log(xmlDoc);
+            }
+        };
+        xmlhttp.setRequestHeader('Content-Type', 'text/xml');
+        
+        xmlhttp.send(xml);
+
+
+        //send model to database via post request
+
+        //get back response, if 200 it should give back a list of violations
+        //parse violations
+        let violations = []
+        //this.interaction.storeViolations(violations); //model
+        this.makeConflicts(violations); //view
+    }
+
+
+    makeConflicts(violations){
+        //for each violation update view to show a conflict in conflicts div
+    }
+    
+    exportToXML() {
+    let JSONInteraction = IC.interaction.exportModelToJSON();
+    return JSONInteraction;
+}
+
+
+
+}
+
+function verifyModel(){
+    let modelXML = IC.interaction.exportModelToXML();
+    console.log(modelXML);
+    //IC.sendModelToDatabase();
 }
 
 
 //------- important event handlers and functions related to the controller --------------------------------
 
 function exportToXML(){
-    let JSONInteraction = interactionController.interaction.exportModelToJSON();
+    let JSONInteraction = IC.exportToXML();
     console.log(JSONInteraction);
 }
 
-
-function dropOnGroup(event) {
-    let offset = event.dataTransfer.getData("Text").split(',');//expects x , y , id
-    let micro = document.getElementById(offset[2]); //this is the micro type box element, we check this below
-    if (micro === null || micro.classList === null || !micro.classList.contains("micro-box")) {
-        return false;
-    }
-
-    let groupBox = event.target;
-    let groupID = groupBox.getAttribute("group-num");
-
-    addMicroToGroup(groupID, micro.getAttribute("type"));
-}
-
-
-function addMicroToGroup(groupID, type){
-    let newMicroID = interactionController.interaction.addMicroToGroup(groupID, type);//model
+//called by
+function addMicroToGroup(groupBox, type){
+    let groupID = groupBox.getAttribute("data-groupid");
+    let newMicroID = IC.interaction.addMicroToGroup(groupID, type);//model
     let microBox = newMicroBox(type);
-    microBox.setAttribute("id", "micro"+newMicroID);
-    microBox.setAttribute("microID", newMicroID);
-    addMicroBoxToGroupView(groupID, microBox);//view
+    microBox.setAttribute("data-microid", newMicroID);
+    addMicroBoxToGroupView(groupBox, microBox);//view
 }
 
 function removeMicro(microBoxID){
@@ -73,61 +141,50 @@ function removeMicro(microBoxID){
     var microID = micro.getAttribute("microid").replace(/\D/g, '');;
     let group = micro.parentNode;
     let groupID = group.getAttribute("group-num");
-    interactionController.interaction.removeMicroFromGroup(groupID ,microID);//model
+    IC.interaction.removeMicroFromGroup(groupID ,microID);//model
     group.removeChild(micro);//view
 }
 
 
 function addGroup(ev){
-    groupID = interactionController.interaction.createGroup(); //model
+    groupID = IC.interaction.createGroup(); //model
     addGroupToView(ev, groupID); //view
 }
 
-function removeGroup(groupID) {
-    let modelGroupID = groupID.replace(/\D/g, ''); //model stores group id as whole numbers
-    let deleted = interactionController.interaction.removeGroup(modelGroupID);//model (also removes transitions that are connected to it)
-    if (deleted){
-        removeGroupFromView(groupID); //view
+function removeGroup(groupBoxID) {
+    let group = document.getElementById(groupBoxID);
+    let groupID = group.getAttribute("data-groupid"); //model stores group id as whole numbers
+    let deleted = IC.interaction.removeGroup(groupID);//model (also removes transitions that are connected to it)
+    if (deleted){ //there may be a reason this cant be deleted
+        removeGroupFromView(group); //view
     }
     
 }
 
 function addTransition(firstGroup, secondGroup){
-    let id = interactionController.interaction.addTransition(firstGroup.getAttribute("group-num"), secondGroup.getAttribute("group-num"));//model
+    let id = IC.interaction.addTransition(firstGroup.getAttribute("data-groupid"), secondGroup.getAttribute("data-groupid"));//model
     drawTransition(id, firstGroup, secondGroup);//view
 }
 
-var allMicroTypes = [];
 
 function loadMicrointeractions(microTypes) {
     let sidebar = document.getElementById("interaction-microinteraction-container");
     //load microinteractions from database, for now they are hard coded
-    allMicroTypes = [];
     for(let i=0;i<microTypes.length;i++){
-        let newMicro = document.createElement("div");
-        newMicro.setAttribute("id", i);
-        newMicro.setAttribute("type", microTypes[i].type);
-        newMicro.classList.add("micro-box");
-        newMicro.classList.add("mt-2");
-        newMicro.innerText = microTypes[i].type;
-        allMicroTypes.push(newMicro);
+        let newMicroBox = document.createElement("div");
+        newMicroBox.setAttribute("data-micro-type", microTypes[i].type);
+        newMicroBox.setAttribute("data-type", "microtype-box");
+        newMicroBox.setAttribute("draggable", true);
+        newMicroBox.setAttribute("onDragStart", "dragStart(event)");
+        newMicroBox.setAttribute("id", uuidv4());
+        newMicroBox.classList.add("micro-box");
+        newMicroBox.classList.add("mt-2");
+        newMicroBox.classList.add("row");
+        newMicroBox.classList.add("justify-content-center");
+        newMicroBox.innerText = microTypes[i].type;
+        sidebar.appendChild(newMicroBox);
     }
-    for (let i = 0; i < allMicroTypes.length; i++) {
-        allMicroTypes[i].setAttribute("id", ("microtype-" + i));
-        allMicroTypes[i].setAttribute("draggable", true);
-        allMicroTypes[i].setAttribute("onDragStart", "drag_start(event)");
-        let microTypeRow = document.createElement("div");
-        microTypeRow.classList.add("row");
-        microTypeRow.appendChild(allMicroTypes[i]);
-        sidebar.appendChild(microTypeRow);
-    }
-
-    
-
 }
-
-
-
 
 
 
@@ -139,6 +196,7 @@ function loadMicrointeractions(microTypes) {
 var controlBtnPressed = false;
 var lineBtnPressed = false;
 function newGroupBtnPressed(val){
+
     if(controlBtnPressed){
         controlBtnPressed = false;
     }else{
@@ -148,6 +206,9 @@ function newGroupBtnPressed(val){
 }
 
 function newLineBtnPressed(val){
+    console.log("line pressed");
+    console.log(lineBtnPressed);
+    event.preventDefault();
     if(lineBtnPressed){
         lineBtnPressed = false;
     }else{
@@ -169,42 +230,48 @@ function applyButtonColor(button){
 //-------------------------Moving and dragging functionality-------------------------------------------------------------------
 
 //this handles the drag and drop events for moving things around
-function drag_start(event) {
+function dragStart(event) {
     var style = window.getComputedStyle(event.target, null);
-    var str = (parseInt(style.getPropertyValue("left")) - event.clientX) + ',' + (parseInt(style.getPropertyValue("top")) - event.clientY) + ',' + event.target.id;
-    event.dataTransfer.setData("Text", str); //we are storing x , y , id   (where id is id of thing clicked on)
+    var obj = {x:(parseInt(style.getPropertyValue("left")) - event.clientX), y: (parseInt(style.getPropertyValue("top")) - event.clientY), target: event.target.id};
+    event.dataTransfer.setData("text", JSON.stringify(obj)); //{x: int, y: int, target: event.target.id}
 }
 
-function drag_over(event) {
+function dragOver(event) {
     event.preventDefault();
     return false;
 }
 
+function dropOnGroup(event) {
+    let dragged = JSON.parse(event.dataTransfer.getData("text"));
+    let micro = document.getElementById(dragged.target); //this is the micro type box element, we check this below
+    if (micro == null || !(micro.getAttribute("data-type") == "microtype-box")) {
+        return false;
+    }
+    let groupBox = event.target;
+    addMicroToGroup(groupBox, micro.getAttribute("data-micro-type"));
+}
+
 //used for moving groups only at the moment
 function dropOnInteractionCanvas(event) {
-    var list = document.getElementsByClassName('svg-arrow');
-    var offset = event.dataTransfer.getData("Text").split(',');//expects x , y , id
-    var dm = document.getElementById(offset[2]); //this is (hopefully) the group box element, we check this below
-
-    if (dm === null || !dm.classList.contains("group-box")) {
+    let dragged = JSON.parse(event.dataTransfer.getData("text"));
+    let dm = document.getElementById(dragged.target); //this is the group box element, we check this below
+    if (dm === null || !(dm.getAttribute("data-type") == "group-box")) {
         return false;
     }
     //check bounds for canvas
-    var i = event.clientX + parseInt(offset[0], 10)
-    if (event.clientX + parseInt(offset[0], 10) < 0) {
+    if (event.clientX + parseInt(dragged.x, 10) < 0) {
         dm.style.left = 1 + 'px';
     } else {
-        dm.style.left = (event.clientX + parseInt(offset[0], 10)) + 'px';
+        dm.style.left = (event.clientX + parseInt(dragged.x, 10)) + 'px';
     }
-    if ((event.clientY + parseInt(offset[1], 10)) < 0) {
+    if ((event.clientY + parseInt(dragged.y, 10)) < 0) {
         dm.style.top = 1 + 'px';
     } else {
-        dm.style.top = (event.clientY + parseInt(offset[1], 10)) + 'px';
+        dm.style.top = (event.clientY + parseInt(dragged.y, 10)) + 'px';
     }
 
     //TOOD stop from being placed on another group
     var list = document.getElementsByClassName('svg-arrow');
-    //TODO refresh line if one is connected instead of remove and replace
     redrawConnectedLines(dm);
     event.preventDefault();
     return false;
@@ -222,101 +289,97 @@ document.addEventListener("DOMContentLoaded", () => {
     $('#parameters-panel').hide();
   });
 
-function setupInteractionCanvas(){ //TODO redo this into clicking on groups
+function setupInteractionCanvas(){
     var canvas = document.getElementById('interaction-group-canvas');
-    canvas.addEventListener("click", (ev) => {
-        
-        if(lineBtnPressed){
-            if(firstGroupInLine === null){
-                if(!ev.target.className.includes('group-box')){
-                    return false;
-                }
-                firstGroupInLine = ev.target;
-                ev.target.classList.add('group-box-selected');
-            }else{
-                if(!ev.target.className.includes('group-box')){
-                    return false;
-                }
-                //draw transition
-                secondGroupInLine = ev.target;
-                addTransition(firstGroupInLine, secondGroupInLine);
-                firstGroupInLine.classList.remove("group-box-selected");
-                firstGroupInLine = null;
-                secondGroupInLine = null;
-                lineBtnPressed = false;
-                applyButtonColor(document.getElementById("drawLineBtn"));
-            }
-         }else if(controlBtnPressed){
-        //if we click in the canvas and not on a box
+    canvas.addEventListener("click", function(ev){
+        if (controlBtnPressed) {
+            //if we click in the canvas and not on a box
             addGroup(ev);
         }
+        return false;
     });
-    return false;
 }
 
 //==================================creating/adding dom elements -------------------------------------------------------------------
+function uuidv4() { //unique id generator
+    return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c =>
+        (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
+    );
+}
+
 function newMicroBox(type) {
     let microBox = document.createElement("div");
     microBox.classList.add("micro-box");
     microBox.oncontextmenu = rightClickMicro;
     microBox.setAttribute("id", ("microbox" + numMicros));
-    microBox.setAttribute("type", "microbox");
+    microBox.setAttribute("data-type", "micro-box");
+    microBox.setAttribute("data-microid", "")//reminder this must be set later for whatever object this box relates to in the database
     microBox.setAttribute("micro-type:", type);
-    microBox.innerText = type;
     microBox.addEventListener("click", leftCLickGroupMicro);
-    numMicros++;
+    microBox.innerText = type;
     return microBox;
 }
 
-function addMicroBoxToGroupView(groupID, microBox){
-    var group = document.getElementById("group"+groupID);
+function addMicroBoxToGroupView(group, microBox){
     group.appendChild(microBox);
-    //TODO (possibly add parameters to right sidebar here)
 }
 
 function addGroupToView(ev, groupID){
     var canvas = document.getElementById('interaction-group-canvas');
-    var newGroup = document.createElement("div");
-                var title = document.createElement("div");
-                title.innerText = interactionController.interaction.getGroup(groupID).name;
-                newGroup.appendChild(title);
-                newGroup.classList.add("group-box");
-                // newGroup.classList.add("d-flex");
-                // newGroup.classList.add("justify-content-center");
-                newGroup.setAttribute("style", "left: " + (ev.clientX-canvas.offsetLeft) + "px; top: " +  (ev.clientY-canvas.offsetTop) + "px;");       //
-                newGroup.setAttribute("id", ("group" + groupID));
-                newGroup.setAttribute("group-num",groupID);
-                newGroup.setAttribute("draggable", true);
-                newGroup.setAttribute("onDragStart","drag_start(event)");
-                newGroup.setAttribute("onDrop","dropOnGroup(event)");
-                newGroup.setAttribute("type", "group");
-                newGroup.setAttribute("onClick", "clickedGroup()");
-                if(interactionController.interaction.getGroup(groupID).initialGroup){
-                    newGroup.classList.add('group-box-initial');
-                }
-                newGroup.oncontextmenu = rightClickGroup;
-                numBoxes++;
-                var interactionCanvas = document.getElementById('interaction-group-canvas');
-                interactionCanvas.appendChild(newGroup);
-                controlBtnPressed = false;
-                applyButtonColor(document.getElementById("newGroupBtn"));
+    var newGroup = document.createElement("div"); 
+    newGroup.setAttribute("style", "left: " + (ev.clientX-canvas.offsetLeft) + "px; top: " +  (ev.clientY-canvas.offsetTop) + "px;");       //
+    newGroup.setAttribute("data-type", "group-box");
+    newGroup.setAttribute("data-groupid",groupID);
+    newGroup.setAttribute("group-num",groupID);
+    newGroup.setAttribute("draggable", true);
+    newGroup.setAttribute("onDragStart","dragStart(event)");
+    newGroup.setAttribute("onDrop","dropOnGroup(event)");
+    newGroup.addEventListener("click", clickedGroup)
+    newGroup.classList.add("group-box");
+    newGroup.classList.add("justify-content-center");
+    newGroup.setAttribute("id", uuidv4());
+    if(IC.interaction.getGroup(groupID).initialGroup){
+        newGroup.classList.add('group-box-initial');
+    }
+    newGroup.oncontextmenu = rightClickGroup;
+    var title = document.createElement("div");
+    title.innerText = IC.interaction.getGroup(groupID).name;
+    newGroup.appendChild(title);
+    numBoxes++;
+    var interactionCanvas = document.getElementById('interaction-group-canvas');
+    interactionCanvas.appendChild(newGroup);
+    controlBtnPressed = false;
+    applyButtonColor(document.getElementById("newGroupBtn"));
 }
 
-function clickedGroup(){
-   // console.log("clicked on group");
-}
+function clickedGroup(ev){
+    //are we adding transition between two line?
+    if (lineBtnPressed) {
+        if (firstGroupInLine === null) {
+            firstGroupInLine = ev.target;
+            ev.target.classList.add('group-box-selected');
+        } else {
+            //draw transition
+            secondGroupInLine = ev.target;
+            addTransition(firstGroupInLine, secondGroupInLine);
+            firstGroupInLine.classList.remove("group-box-selected");
+            firstGroupInLine = null;
+            lineBtnPressed = false;
+            applyButtonColor(document.getElementById("drawLineBtn"));
+        }
+    }  
+}  
 
-function removeGroupFromView(groupID){
-    var groupToRemove = document.getElementById(groupID);
+function removeGroupFromView(groupToRemove){
     //now remove connected lines
     var list = document.getElementsByClassName('svg-arrow'); //problem with list getting bad data
     const listLength = list.length;
     var linesToRemove = [];
     for(let t=0;t<listLength;t++){
         let svgArrow = list[t];
-        if(svgArrow.getAttribute("group1") === groupID){
+        if(svgArrow.getAttribute("data-group1") === groupToRemove.id){
             linesToRemove.push(svgArrow);
-        }else if(svgArrow.getAttribute("group2") === groupID){
+        }else if(svgArrow.getAttribute("data-group2") === groupToRemove.id){
             linesToRemove.push(svgArrow);
         }
     }
@@ -331,23 +394,21 @@ function removeGroupFromView(groupID){
 //--------drawing/redrawing lines and transitions
 function drawTransition(id, firstGroup, secondGroup) {
     if (firstGroup === secondGroup) {
-        return;
+        return; //TODO not supported yet
     }
     var canvas = document.getElementById('interaction-group-canvas');
     var newLine = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     canvas.appendChild(newLine);
-    //var newText = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     newLine.classList.add('svg-arrow');
-    newLine.setAttribute("type", "transition");
-    newLine.setAttribute("transid",id);
-    newLine.setAttribute("id", "line-" + firstGroup.id + "-" + secondGroup.id);
-    newLine.setAttribute("group1", firstGroup.id);
-    newLine.setAttribute("group2", secondGroup.id);
+    newLine.setAttribute("data-type", "transition");
+    newLine.setAttribute("data-transid",id);
+    //newLine.setAttribute("id", "line-" + firstGroup.id + "-" + secondGroup.id);
+    newLine.setAttribute("data-group1", firstGroup.id);
+    newLine.setAttribute("data-group2", secondGroup.id);
 
     var line = document.createElementNS("http://www.w3.org/2000/svg", "line");
     //draw line from nearest edge of first box to nearest edge of second box
     //transitions go from an out point a third of the way down a side of a box to an in point two thirds of the way down the side of a box, with an in point an out point rotated in similar fashion
-    let shortestLength = 999999999999;
     let x1 = parseInt(firstGroup.style.left, 10);
     let x2 = parseInt(secondGroup.style.left, 10);
     let y1 = parseInt(firstGroup.style.top, 10);
@@ -385,12 +446,14 @@ function drawTransition(id, firstGroup, secondGroup) {
     line.classList.add('arrow');
     newLine.appendChild(line);
 
+    //todo https://stackoverflow.com/questions/16701522/how-to-linebreak-an-svg-text-within-javascript
     var text = document.createElementNS("http://www.w3.org/2000/svg", "text");
     text.classList.add("arrow-text");
+    text.setAttribute("id", uuidv4());
     text.setAttribute("x", ((smallest.p2.x + smallest.p1.x) / 2).toString());
     text.setAttribute("y", (((smallest.p2.y + smallest.p1.y) / 2) + 15).toString());
     text.setAttribute("text-anchor", "middle");
-    let transState = interactionController.interaction.getTransitionState(id);
+    let transState = IC.interaction.getTransitionState(id);
     newLine.appendChild(text);
     let ttm = ""; //transition text message
     ttm += transState.ready ? "Ready " : "";
@@ -418,14 +481,14 @@ function redrawConnectedLines(group) { //gets lines connected to this group and 
     var linesToRemove = [];
     for (let t = 0; t < listLength; t++) {
         let svgArrow = list[t];
-        if (svgArrow.getAttribute("group1") === group.id) {
+        if (svgArrow.getAttribute("data-group1") === group.id) {
             linesToRemove.push(svgArrow);
-            drawTransition(svgArrow.getAttribute("transid"), group, document.getElementById(svgArrow.getAttribute("group2")));
+            drawTransition(svgArrow.getAttribute("data-transid"), group, document.getElementById(svgArrow.getAttribute("data-group2")));
             //do move
-        } else if (svgArrow.getAttribute("group2") === group.id) {
+        } else if (svgArrow.getAttribute("data-group2") === group.id) {
             linesToRemove.push(svgArrow);
  
-            drawTransition(svgArrow.getAttribute("transid"),document.getElementById(svgArrow.getAttribute("group1")), group);
+            drawTransition(svgArrow.getAttribute("data-transid"),document.getElementById(svgArrow.getAttribute("data-group1")), group);
         }
     }
 
@@ -435,26 +498,19 @@ function redrawConnectedLines(group) { //gets lines connected to this group and 
 }
 
 
-
-
-
-
-
-
-
 //--------------------------------left and right click on items in canvas=========================
 document.onclick = hideMenu;
 
 //left clicks
 function leftCLickGroupMicro(){ 
     //display properties on property sidebar
-    $('#transition-states-panel').hide();
     $('#parameters-panel').show();
-
-    let selectedMicro = this;
+    $('#transition-states-panel').hide();
     $('#no-micros-parameters').hide();
-    let parameters = interactionController.interaction.getMicroParameters(this.getAttribute("id").replace(/\D/g, ''));
-
+    let selectedMicro = this;
+    let micro= IC.interaction.getMicro(this.getAttribute("data-microid"));
+    let parameters = micro.parameters;
+    let parameterResults = micro.parameterResults;
     let parametersPanel = $('#parameters-panel');
     parametersPanel.empty();
     parametersPanel.append($('<label style="font-size: 17px; border-bottom: 2px solid black;">' +
@@ -462,81 +518,131 @@ function leftCLickGroupMicro(){
            ' </label >'));
     let row = $('<div class="row"></div>');
     let col = $('<div class="col">');
-    let displayedParams = $('<form microID=' + selectedMicro.getAttribute("microid") + ' onsubmit="saveParameters(\'' + this.id + '-form\')" id="'+this.id+'-form" ></form>');   
+    let displayedParams = $('<form data-microID=' + selectedMicro.getAttribute("data-microid") + ' onsubmit="saveParameters(\'' + this.id + '-form\')" id="'+this.id+'-form" ></form>');   
     displayedParams.submit(function (e) {
         e.preventDefault();
     });
-    parametersPanel.append(row);
-    row.append(displayedParams);
-    displayedParams.append(col);
+    parametersPanel.append(displayedParams);
 
     //parse through each parameter and build a gui representation
     parameters.forEach(function(param){
-        let paramType = "";
-        if (param.isBoolean) {
-            paramType = 'bool';
-        } else if (param.isField) {
-            paramType = 'field';
-        } else if (param.isDropDown) {
-            paramType = 'selection';
-        }
-        let curDispParam = $('<div class="parameter" type="param" paramid = "'+ param.id + '" paramType="'+ paramType + '" id="' + selectedMicro.id + "-param" + param.id+ '"></div>');
-        if(param.isBoolean){
-            curDispParam.append($('<Label type="bool" identifier="mainLbl" class="row">' + param.description + '</Label>'));
-            curDispParam.append($('<input type="radio"  name="p-bool" value="yes"></input>'));
-            curDispParam.append($('<label for="selTrue">Yes</label><br>'));
-            curDispParam.append($('<input type="radio"  name="p-bool" value="no">'));
-            curDispParam.append($('<label for="selFalse">No</label><br>')); 
-        }else if(param.isField){
-            curDispParam.append($('<Label type="field" identifier="mainLbl" class="row">' + param.description + '</Label>'));
-            curDispParam.append($('<textarea name="p-field" rows="4" cols="24"></textarea>'));            
-        }else if(param.isDropDown){
-            curDispParam.append($('<Label type="select" identifier="mainLbl" class="row">' + param.description + '</Label>'));
-            let selections = $('<select class="form-select" name="p-selection"></select>');
-            param.dropDownSelections.forEach(function(selection){
-                selections.append('<option value="' + selection + '">' + selection + '</option>');
-            });
+        let curDispParam = $('<div class="parameter" data-type="param" data-paramid = "'+ param.id + '" data-paramType="'+ param.type + '" id="' + selectedMicro.id + "-param" + param.id+ '"></div>');
+        if(param.type == "bool"){
+            curDispParam.append($('<Label data-type="bool" data-identifier="mainLbl" class="row">' + param.title + '</Label>'));
+            let btnYes = $('<input type="radio"  name="p-bool-' + param.id + '" value="true"></input>');
+            curDispParam.append(btnYes);
+            curDispParam.append($('<label for="p-bool-' + param.id +'">Yes</label><br>'));
+            let btnNo = $('<input type="radio"  name="p-bool-' + param.id + '" value="false">');
+            curDispParam.append(btnNo);
+            curDispParam.append($('<label for="p-bool-' + param.id +'">No</label><br>'));
+            if (parameterResults.find(x => x.paramID == param.id).curResult == "yes"){
+                btnYes.attr("checked", true);
+            } else if (parameterResults.find(x => x.paramID == param.id).curResult == "no"){
+                btnNo.attr("checked", true);
+            }
+        }else if(param.type == "str"){
+            curDispParam.append($('<Label data-type="str" data-identifier="mainLbl" class="row">' + param.title + '</Label>'));
+            let textBox = $('<textarea name="p-field" rows="4" cols="24"></textarea>');
+            curDispParam.append(textBox); 
+            textBox.text(parameterResults.find(x => x.paramID == param.id).curResult);
+        } else if (param.type == "int") {
+            curDispParam.append($('<Label data-type="str" data-identifier="mainLbl" class="row">' + param.title + '</Label>'));
+            let textBox = $('<textarea name="p-field" rows="1" cols="1"></textarea>');
+            curDispParam.append(textBox);
+            textBox.text(parameterResults.find(x => x.paramID == param.id).curResult);
+        } else if (param.type == "array"){
+            curDispParam.append($('<Label style="font-size: 13px" data-type="select" data-identifier="mainLbl" class="row">' + param.title + '</Label>'));
+            let textBox = $('<textarea name="p-field" style="font-size:12px" placeholder="Enter the humans response here, then select the state the response should map to and hit add." rows="2" cols="24"></textarea>');
+            curDispParam.append(textBox);
+            let selections = $('<select class="form-select" style="font-size: 13px; " name="p-array-link"></select>');
+            selections.append($('<option val="human_ready">Human Ready</option>'));
+            selections.append($('<option val="human_ignore">Human Suspended</option>'));
             curDispParam.append(selections);
+            let addBtn = $('<button class="mt-2" style="font-size: 12px" type="button">Add</button>'); //see below for .click()
+            curDispParam.append(addBtn);
+            curDispParam.append($('<Label style="font-size: 16px" class="row">' + "Current Responses" + '</Label>'));
+            let arrayItemsBox = $('<div name="arrayItemBox" class="array-items-box container-fluid px-0"> </div>');
+            curDispParam.append(arrayItemsBox);
+            addBtn.click(function () { //Add AskItem the list
+                if(textBox.val() == ""){
+                    return;
+                }
+                arrayItemsBox.append(createAskListBox(textBox.val(), selections.val())); //add it to the ui, it will be saved to database upon clicking save
+                textBox.val('');
+            });
+
+            let result = parameterResults.find(x => x.paramID == param.id).curResult;
+            if (result != '' && result.length != 0){
+                result.forEach(paramObj => {
+                    arrayItemsBox.append(createAskListBox(paramObj.val, paramObj.linkTitle));
+                });
+            }
         }else{
             console.log("ERROR: param type not recognize");
             return;
         }
         displayedParams.append(curDispParam);
     });
-    displayedParams.append($('<button type="submit">Save</button>'));
+    displayedParams.append($('<button class="mt-2" type="submit">Save</button>'));
+}
+
+function createAskListBox(response, link){
+    let listBox = $('<div data-ltype="container" class = "ask-list-box row"></div>');
+    let deleteButton = $('<button style="background-color: red;">X</button>');
+    let deleteButtonHolder = $('<div class="col-md-2" ></div>');
+    deleteButtonHolder.append(deleteButton);
+    let linkText = $('<p data-ltype="link" class="col-md-3" style=" font-size: 10px">'+ link+'</p>');
+    let responseText = $('<p data-ltype="response" class="col-md-6 nopadding" style="padding-right:0px; padding-left:5px; font-size: 12px">'+response+'</p>');
+    listBox.append(deleteButtonHolder);
+    listBox.append(linkText);
+    listBox.append(responseText);
+    deleteButton.click(function() {
+        listBox.remove();
+    });
+    return listBox;
 }
 
 
-
 function saveParameters(formId) {
-    let form = $('#' + formId + " [type='param']");
-    let microID = $('#' + formId).attr('microid');
+    let form = $('#' + formId + " [data-type='param']");
+    let microID = $('#' + formId).attr('data-microid');
     //for every parameter
     let results = [];
     for (let i = 0; i < form.length; i++) {
-        let type = form[i].getAttribute('paramType');
-        let paramID = form[i].getAttribute('paramid');
+        let type = form[i].getAttribute('data-paramType');
+        let paramID = form[i].getAttribute('data-paramid');
         let curResult = "";
         switch(type){
             case "bool":
-                let ele = $('#' + formId + ' [paramid="' + paramID + '"] :radio ')
+                let ele = $('#' + formId + ' [data-paramid="' + paramID + '"] :radio ')
                 for (j = 0; j < ele.length; j++) {
                     if (ele[j].checked)
                         curResult = ele[j].value
                 }
                 break;
-            case "field":
-                let eleField = $('#' + formId + ' [paramid="' + paramID + '"] :input ')
-                curResult = eleField.val();
+            case "str":
+                let eleStr = $('#' + formId + ' [data-paramid="' + paramID + '"] :input ')
+                curResult = eleStr.val();
                 break;
-            case "selection":
-                let eleSelect = $('#' + formId + ' [name ="' + "p-selection" + '"]');
-                curResult = eleSelect.val();
+            case "int":
+                let eleInt = $('#' + formId + ' [data-paramid="' + paramID + '"] :input ')
+                curResult = eleInt.val();
                 break;
+            case "array":
+                
+                let eleArr = $('#' + formId + ' [data-paramid="' + paramID + '"] [data-ltype="container"] ');
+                curResult = [];
+                if (eleArr.length != 0){
+                    eleArr.each((index, item) => { //note, item is now html dom object
+                        let val = item.childNodes[2].innerText;
+                        let link = item.childNodes[1].innerText;
+                        curResult.push({ "val": val, "linkTitle": link }) //note the link title must be adapted to proper variable before being sent to database, this is done in export to xml
+                    })
+                }
         }
         results.push({paramID, curResult});
     }
-    interactionController.interaction.setMicroResults(microID, results);
+    IC.interaction.setMicroResults(microID, results);
 }
 
 /*
@@ -553,31 +659,35 @@ function leftCLickTransition(e) {
     $('#parameters-panel').hide();
     $('#transition-states-panel').show();
     curTransitionText = e.srcElement;
-    let modelTransitionID = e.srcElement.parentNode.getAttribute("transid");
-    let transitionState = interactionController.interaction.getTransitionState(modelTransitionID);
+    let modelTransitionID = e.srcElement.parentNode.getAttribute("data-transid");
+    let transitionState = IC.interaction.getTransitionState(modelTransitionID);
     //set checkboxes to current state of this transition
     $('#context-ready').prop('checked', transitionState.ready );
     $('#context-busy').prop('checked', transitionState.busy);
     $('#context-suspended').prop('checked', transitionState.suspended);
-    $('#transition-states-panel').attr('curtid', e.srcElement.parentNode.getAttribute("id")); //cur transition id (the html dom one not the model one)
+    //save current box (which is attatched to the parent line who has the transition id this box is attatched to)
+    $('#transition-states-panel').attr('data-cur-text-id', e.srcElement.getAttribute("id")); //cur transition id (the html dom one not the model one)
+    $('#transition-states-panel').attr('data-cur-trans-id', modelTransitionID); //cur transition id (the html dom one not the model one)
 }
 
+//see 431 todo
 function updateTransition(){
-    let transitionView = $('#'+ $('#transition-states-panel').attr('curtid'));
-    let transitionModelID = transitionView.attr('transid');
-    let transitionText = $('#' + $('#transition-states-panel').attr('curtid') + ' text');
-    let rect = $('#' + $('#transition-states-panel').attr('curtid') + ' rect'); //transition texts background
+    let transitionText = $('#' + $('#transition-states-panel').attr('data-cur-text-id'));
+    let transitionModelID = $('#transition-states-panel').attr('data-cur-trans-id');
+    let transitionModelBackground = transitionText.parent().find('rect');
+    console.log(transitionModelBackground);
+    let rect = $('#' + $('#transition-states-panel').attr('data-curtid') + ' rect'); //transition texts background
     let stateReady = $('#context-ready').prop('checked');
     let stateBusy = $('#context-busy').prop('checked');
     let stateSuspended = $('#context-suspended').prop('checked');
     let transitionState = { ready: stateReady, busy: stateBusy, suspended: stateSuspended};
     let ttm = "" ; //transition text message
-    ttm += stateReady ? "Ready <br/>" : "<br/>";
+    ttm += stateReady ? "Ready " : "";
     ttm += stateBusy ? "Busy " : "";
     ttm += stateSuspended ? "Suspended" : "";
     console.log(ttm);
-    interactionController.interaction.setTransitionState(transitionModelID, transitionState);
-    transitionText.text("test \n test 2 <br/> test3");
+    IC.interaction.setTransitionState(transitionModelID, transitionState);
+    transitionText.text(ttm);
 
     // console.log(transitionText);
     // var width = transitionText.width();
@@ -637,8 +747,3 @@ function rightClickMicro(e) {
                 menu.style.top = e.pageY + "px";
             }
 }
-
-
-   
-
-
