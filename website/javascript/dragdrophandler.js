@@ -30,17 +30,29 @@ class controller {
 
 
     gatherMicrosFromDatabase(){
-        //TODO access serverlet to get all micros and store them as micro types, for now hard code
-        let parameter1 = new Parameter(0, "do you like chicken", true, false, false);
-        let parameter2 = new Parameter(1, "fill in field", false, true, false);
-        let parameter3 = new Parameter(2, "select option", false, false, true,["test", "option", "close"]);
-        let parameters1 = [parameter1, parameter2];
-        let micro1 = new MicroType("chicken", parameters1);
-        let micro2 = new MicroType("greeter", [parameter3]);
-
+        //TODO access serverlet to get all micros and store them as micro types, for now these are the hard coded versions
         let microTypes = [];
-        microTypes.push(micro1);
-        microTypes.push(micro2);
+
+        //greeter
+        let parameter0 = new Parameter(0, "Wait for Response", "Wait_for_response", "Set whether the robot waits for the human to greet back", "bool");
+        let parameter1 = new Parameter(1, "Greet with Speech", "Greet_with_speech", "Set whether the robot greets the human with speech", "bool");
+        let parameter2 = new Parameter(2, "Greet with Handshake", "Greet_with_handshake", "Set whether the robot extends its arm for a handshake", "bool");
+        let microGreeter = new MicroType("Greeter", [parameter0,parameter1,parameter2]);
+        microTypes.push(microGreeter);
+
+        //ask
+        let parameter3 = new Parameter(3, "Question", "question", "The Specific question the robot will ask", "str");
+        let parameter4 = new Parameter(4, "Responses the robot can recognize", "answers robot can recognize", "input the answers the robot can recognize the user saying, and then set the state that should be executed following the response", "array");
+        let microAsk = new MicroType("Ask", [parameter3, parameter4]);
+        microTypes.push(microAsk);
+
+        //remark
+        let parameter5 = new Parameter(5, "Content", "content", "What the robot will say to the user", "str");
+        let parameter6 = new Parameter(6, "Use Gesture", "use_gesture", "Should the robot use gestures (this is different from handoff)", "bool");
+        let parameter7 = new Parameter(7, "Allow the human to respond", "Allow_human_to_respond", "Whether the robot gives the human any time to respond after the robot's remark before moving on", "bool");
+        let microRemark = new MicroType("Remark", [parameter5, parameter6, parameter7]);
+        microTypes.push(microRemark);
+
         return microTypes;
     }
 
@@ -63,7 +75,7 @@ class controller {
         var xml = '<?xml version="1.0" encoding="utf-8"?><nta> <name>interaction</name> <group id="0" init="true"><name>init</name><micro><name>greeter</name><parameter type="bool" val="true">Greet_with_speech</parameter><parameter type="bool" val="true">Greet_with_handshake</parameter><parameter type="bool" val="true">Wait_for_response</parameter></micro></group><design>copy</design></nta>';
 
         var xmlhttp = new XMLHttpRequest();
-        xmlhttp.open("POST", "api/violations");///
+        xmlhttp.open("POST", "api/checker");///
         var xmlDoc;
         xmlhttp.onreadystatechange = function () {
             if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
@@ -102,7 +114,9 @@ class controller {
 }
 
 function verifyModel(){
-    IC.sendModelToDatabase();
+    let modelXML = IC.interaction.exportModelToXML();
+    console.log(modelXML);
+    //IC.sendModelToDatabase();
 }
 
 
@@ -182,6 +196,7 @@ function loadMicrointeractions(microTypes) {
 var controlBtnPressed = false;
 var lineBtnPressed = false;
 function newGroupBtnPressed(val){
+
     if(controlBtnPressed){
         controlBtnPressed = false;
     }else{
@@ -191,6 +206,9 @@ function newGroupBtnPressed(val){
 }
 
 function newLineBtnPressed(val){
+    console.log("line pressed");
+    console.log(lineBtnPressed);
+    event.preventDefault();
     if(lineBtnPressed){
         lineBtnPressed = false;
     }else{
@@ -352,7 +370,7 @@ function clickedGroup(ev){
     }  
 }  
 
-    function removeGroupFromView(groupToRemove){
+function removeGroupFromView(groupToRemove){
     //now remove connected lines
     var list = document.getElementsByClassName('svg-arrow'); //problem with list getting bad data
     const listLength = list.length;
@@ -428,8 +446,10 @@ function drawTransition(id, firstGroup, secondGroup) {
     line.classList.add('arrow');
     newLine.appendChild(line);
 
+    //todo https://stackoverflow.com/questions/16701522/how-to-linebreak-an-svg-text-within-javascript
     var text = document.createElementNS("http://www.w3.org/2000/svg", "text");
     text.classList.add("arrow-text");
+    text.setAttribute("id", uuidv4());
     text.setAttribute("x", ((smallest.p2.x + smallest.p1.x) / 2).toString());
     text.setAttribute("y", (((smallest.p2.y + smallest.p1.y) / 2) + 15).toString());
     text.setAttribute("text-anchor", "middle");
@@ -484,13 +504,13 @@ document.onclick = hideMenu;
 //left clicks
 function leftCLickGroupMicro(){ 
     //display properties on property sidebar
-    $('#transition-states-panel').hide();
     $('#parameters-panel').show();
-
-    let selectedMicro = this;
+    $('#transition-states-panel').hide();
     $('#no-micros-parameters').hide();
-    let parameters = IC.interaction.getMicroParameters(this.getAttribute("data-microid"));
-
+    let selectedMicro = this;
+    let micro= IC.interaction.getMicro(this.getAttribute("data-microid"));
+    let parameters = micro.parameters;
+    let parameterResults = micro.parameterResults;
     let parametersPanel = $('#parameters-panel');
     parametersPanel.empty();
     parametersPanel.append($('<label style="font-size: 17px; border-bottom: 2px solid black;">' +
@@ -498,77 +518,127 @@ function leftCLickGroupMicro(){
            ' </label >'));
     let row = $('<div class="row"></div>');
     let col = $('<div class="col">');
-    let displayedParams = $('<form microID=' + selectedMicro.getAttribute("data-microid") + ' onsubmit="saveParameters(\'' + this.id + '-form\')" id="'+this.id+'-form" ></form>');   
+    let displayedParams = $('<form data-microID=' + selectedMicro.getAttribute("data-microid") + ' onsubmit="saveParameters(\'' + this.id + '-form\')" id="'+this.id+'-form" ></form>');   
     displayedParams.submit(function (e) {
         e.preventDefault();
     });
-    parametersPanel.append(row);
-    row.append(displayedParams);
-    displayedParams.append(col);
+    parametersPanel.append(displayedParams);
 
     //parse through each parameter and build a gui representation
     parameters.forEach(function(param){
-        let paramType = "";
-        if (param.isBoolean) {
-            paramType = 'bool';
-        } else if (param.isField) {
-            paramType = 'field';
-        } else if (param.isDropDown) {
-            paramType = 'selection';
-        }
-        let curDispParam = $('<div class="parameter" type="param" paramid = "'+ param.id + '" paramType="'+ paramType + '" id="' + selectedMicro.id + "-param" + param.id+ '"></div>');
-        if(param.isBoolean){
-            curDispParam.append($('<Label type="bool" identifier="mainLbl" class="row">' + param.description + '</Label>'));
-            curDispParam.append($('<input type="radio"  name="p-bool" value="yes"></input>'));
-            curDispParam.append($('<label for="selTrue">Yes</label><br>'));
-            curDispParam.append($('<input type="radio"  name="p-bool" value="no">'));
-            curDispParam.append($('<label for="selFalse">No</label><br>')); 
-        }else if(param.isField){
-            curDispParam.append($('<Label type="field" identifier="mainLbl" class="row">' + param.description + '</Label>'));
-            curDispParam.append($('<textarea name="p-field" rows="4" cols="24"></textarea>'));            
-        }else if(param.isDropDown){
-            curDispParam.append($('<Label type="select" identifier="mainLbl" class="row">' + param.description + '</Label>'));
-            let selections = $('<select class="form-select" name="p-selection"></select>');
-            param.dropDownSelections.forEach(function(selection){
-                selections.append('<option value="' + selection + '">' + selection + '</option>');
-            });
+        let curDispParam = $('<div class="parameter" data-type="param" data-paramid = "'+ param.id + '" data-paramType="'+ param.type + '" id="' + selectedMicro.id + "-param" + param.id+ '"></div>');
+        if(param.type == "bool"){
+            curDispParam.append($('<Label data-type="bool" data-identifier="mainLbl" class="row">' + param.title + '</Label>'));
+            let btnYes = $('<input type="radio"  name="p-bool-' + param.id + '" value="true"></input>');
+            curDispParam.append(btnYes);
+            curDispParam.append($('<label for="p-bool-' + param.id +'">Yes</label><br>'));
+            let btnNo = $('<input type="radio"  name="p-bool-' + param.id + '" value="false">');
+            curDispParam.append(btnNo);
+            curDispParam.append($('<label for="p-bool-' + param.id +'">No</label><br>'));
+            if (parameterResults.find(x => x.paramID == param.id).curResult == "yes"){
+                btnYes.attr("checked", true);
+            } else if (parameterResults.find(x => x.paramID == param.id).curResult == "no"){
+                btnNo.attr("checked", true);
+            }
+        }else if(param.type == "str"){
+            curDispParam.append($('<Label data-type="str" data-identifier="mainLbl" class="row">' + param.title + '</Label>'));
+            let textBox = $('<textarea name="p-field" rows="4" cols="24"></textarea>');
+            curDispParam.append(textBox); 
+            textBox.text(parameterResults.find(x => x.paramID == param.id).curResult);
+        } else if (param.type == "int") {
+            curDispParam.append($('<Label data-type="str" data-identifier="mainLbl" class="row">' + param.title + '</Label>'));
+            let textBox = $('<textarea name="p-field" rows="1" cols="1"></textarea>');
+            curDispParam.append(textBox);
+            textBox.text(parameterResults.find(x => x.paramID == param.id).curResult);
+        } else if (param.type == "array"){
+            curDispParam.append($('<Label style="font-size: 13px" data-type="select" data-identifier="mainLbl" class="row">' + param.title + '</Label>'));
+            let textBox = $('<textarea name="p-field" style="font-size:12px" placeholder="Enter the humans response here, then select the state the response should map to and hit add." rows="2" cols="24"></textarea>');
+            curDispParam.append(textBox);
+            let selections = $('<select class="form-select" style="font-size: 13px; " name="p-array-link"></select>');
+            selections.append($('<option val="human_ready">Human Ready</option>'));
+            selections.append($('<option val="human_ignore">Human Suspended</option>'));
             curDispParam.append(selections);
+            let addBtn = $('<button class="mt-2" style="font-size: 12px" type="button">Add</button>'); //see below for .click()
+            curDispParam.append(addBtn);
+            curDispParam.append($('<Label style="font-size: 16px" class="row">' + "Current Responses" + '</Label>'));
+            let arrayItemsBox = $('<div name="arrayItemBox" class="array-items-box container-fluid px-0"> </div>');
+            curDispParam.append(arrayItemsBox);
+            addBtn.click(function () { //Add AskItem the list
+                if(textBox.val() == ""){
+                    return;
+                }
+                arrayItemsBox.append(createAskListBox(textBox.val(), selections.val())); //add it to the ui, it will be saved to database upon clicking save
+                textBox.val('');
+            });
+
+            let result = parameterResults.find(x => x.paramID == param.id).curResult;
+            if (result != '' && result.length != 0){
+                result.forEach(paramObj => {
+                    arrayItemsBox.append(createAskListBox(paramObj.val, paramObj.linkTitle));
+                });
+            }
         }else{
             console.log("ERROR: param type not recognize");
             return;
         }
         displayedParams.append(curDispParam);
     });
-    displayedParams.append($('<button type="submit">Save</button>'));
+    displayedParams.append($('<button class="mt-2" type="submit">Save</button>'));
+}
+
+function createAskListBox(response, link){
+    let listBox = $('<div data-ltype="container" class = "ask-list-box row"></div>');
+    let deleteButton = $('<button style="background-color: red;">X</button>');
+    let deleteButtonHolder = $('<div class="col-md-2" ></div>');
+    deleteButtonHolder.append(deleteButton);
+    let linkText = $('<p data-ltype="link" class="col-md-3" style=" font-size: 10px">'+ link+'</p>');
+    let responseText = $('<p data-ltype="response" class="col-md-6 nopadding" style="padding-right:0px; padding-left:5px; font-size: 12px">'+response+'</p>');
+    listBox.append(deleteButtonHolder);
+    listBox.append(linkText);
+    listBox.append(responseText);
+    deleteButton.click(function() {
+        listBox.remove();
+    });
+    return listBox;
 }
 
 
-
 function saveParameters(formId) {
-    let form = $('#' + formId + " [type='param']");
-    let microID = $('#' + formId).attr('microid');
+    let form = $('#' + formId + " [data-type='param']");
+    let microID = $('#' + formId).attr('data-microid');
     //for every parameter
     let results = [];
     for (let i = 0; i < form.length; i++) {
-        let type = form[i].getAttribute('paramType');
-        let paramID = form[i].getAttribute('paramid');
+        let type = form[i].getAttribute('data-paramType');
+        let paramID = form[i].getAttribute('data-paramid');
         let curResult = "";
         switch(type){
             case "bool":
-                let ele = $('#' + formId + ' [paramid="' + paramID + '"] :radio ')
+                let ele = $('#' + formId + ' [data-paramid="' + paramID + '"] :radio ')
                 for (j = 0; j < ele.length; j++) {
                     if (ele[j].checked)
                         curResult = ele[j].value
                 }
                 break;
-            case "field":
-                let eleField = $('#' + formId + ' [paramid="' + paramID + '"] :input ')
-                curResult = eleField.val();
+            case "str":
+                let eleStr = $('#' + formId + ' [data-paramid="' + paramID + '"] :input ')
+                curResult = eleStr.val();
                 break;
-            case "selection":
-                let eleSelect = $('#' + formId + ' [name ="' + "p-selection" + '"]');
-                curResult = eleSelect.val();
+            case "int":
+                let eleInt = $('#' + formId + ' [data-paramid="' + paramID + '"] :input ')
+                curResult = eleInt.val();
                 break;
+            case "array":
+                
+                let eleArr = $('#' + formId + ' [data-paramid="' + paramID + '"] [data-ltype="container"] ');
+                curResult = [];
+                if (eleArr.length != 0){
+                    eleArr.each((index, item) => { //note, item is now html dom object
+                        let val = item.childNodes[2].innerText;
+                        let link = item.childNodes[1].innerText;
+                        curResult.push({ "val": val, "linkTitle": link }) //note the link title must be adapted to proper variable before being sent to database, this is done in export to xml
+                    })
+                }
         }
         results.push({paramID, curResult});
     }
@@ -589,20 +659,24 @@ function leftCLickTransition(e) {
     $('#parameters-panel').hide();
     $('#transition-states-panel').show();
     curTransitionText = e.srcElement;
-    let modelTransitionID = e.srcElement.parentNode.getAttribute("transid");
+    let modelTransitionID = e.srcElement.parentNode.getAttribute("data-transid");
     let transitionState = IC.interaction.getTransitionState(modelTransitionID);
     //set checkboxes to current state of this transition
     $('#context-ready').prop('checked', transitionState.ready );
     $('#context-busy').prop('checked', transitionState.busy);
     $('#context-suspended').prop('checked', transitionState.suspended);
-    $('#transition-states-panel').attr('curtid', e.srcElement.parentNode.getAttribute("id")); //cur transition id (the html dom one not the model one)
+    //save current box (which is attatched to the parent line who has the transition id this box is attatched to)
+    $('#transition-states-panel').attr('data-cur-text-id', e.srcElement.getAttribute("id")); //cur transition id (the html dom one not the model one)
+    $('#transition-states-panel').attr('data-cur-trans-id', modelTransitionID); //cur transition id (the html dom one not the model one)
 }
 
+//see 431 todo
 function updateTransition(){
-    let transitionView = $('#'+ $('#transition-states-panel').attr('curtid'));
-    let transitionModelID = transitionView.attr('transid');
-    let transitionText = $('#' + $('#transition-states-panel').attr('curtid') + ' text');
-    let rect = $('#' + $('#transition-states-panel').attr('curtid') + ' rect'); //transition texts background
+    let transitionText = $('#' + $('#transition-states-panel').attr('data-cur-text-id'));
+    let transitionModelID = $('#transition-states-panel').attr('data-cur-trans-id');
+    let transitionModelBackground = transitionText.parent().find('rect');
+    console.log(transitionModelBackground);
+    let rect = $('#' + $('#transition-states-panel').attr('data-curtid') + ' rect'); //transition texts background
     let stateReady = $('#context-ready').prop('checked');
     let stateBusy = $('#context-busy').prop('checked');
     let stateSuspended = $('#context-suspended').prop('checked');

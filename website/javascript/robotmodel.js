@@ -29,7 +29,7 @@ class robotInterface {
         //body
         //arms
         //head
-        
+        document.getElementBy
 
 
 

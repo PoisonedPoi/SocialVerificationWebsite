@@ -204,3 +204,21 @@ body {
 .tabs-content-active {
   display: block;
 }
+
+.split-clear {
+  display: inline;
+}
+
+.array-items-box {
+  width: 100%;
+  height: auto;
+  min-height: 50px;
+  max-height: 130px;
+  background-color: #ecebeb;
+  border: 2px solid black;
+  overflow: scroll;
+}
+
+.ask-item-box {
+  overflow: scroll;
+}
