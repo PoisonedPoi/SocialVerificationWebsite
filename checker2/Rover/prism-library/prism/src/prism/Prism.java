@@ -2293,7 +2293,6 @@ public class Prism extends PrismComponent implements PrismSettingsListener
 				currentModelExpl.exportToDotFile(tmpLog);
 				break;
 			case Prism.EXPORT_DOT_STATES:
-			System.out.println("PRISM IS EXPORTING DOT STATES IN exportTODotFile")
 				currentModelExpl.exportToDotFile(tmpLog, null, true);
 				break;
 			case Prism.EXPORT_MRMC:

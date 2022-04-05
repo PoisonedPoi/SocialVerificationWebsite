@@ -2801,10 +2801,8 @@ public class Prism extends PrismComponent implements PrismSettingsListener
 	 * @param propertiesFile Parent property file of property (for labels/constants/...)
 	 * @param prop The property to check
 	 */
-	public  Result modelCheck(PropertiesFile propertiesFile, Property prop) throws PrismException, PrismLangException
+	public synchronized Result modelCheck(PropertiesFile propertiesFile, Property prop) throws PrismException, PrismLangException
 	{
-		//synchronized
-		System.out.println("we did modelcheck synchronized");
 		Result res = null;
 		Values definedPFConstants = propertiesFile.getConstantValues();
 		boolean engineSwitch = false;
