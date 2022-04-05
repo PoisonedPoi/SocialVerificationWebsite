@@ -7,8 +7,6 @@ sudo cp setup-resources/rover/ -r /srv/  #copy the rover resources to srv/rover,
 sudo chown -R tomcat:tomcat /srv/rover #set owner to tomcat
 
 #make prism, requires java/javac version 8 and make, gcc, g++, libcanberra-gtk-module  (sudo apt install these)
-sudo -u tomcat cd 
-ls
 sudo -u tomcat make -C /srv/rover/main/prism-library/prism
 sudo -u tomcat make -C /srv/rover/main/prism-library/prism binary
 sudo -u tomcat /srv/rover/main/prism-library/prism/install.sh
