@@ -74,14 +74,13 @@ class controller {
 
         $.ajax({
             type: "POST",
-            url: "/getprojects.ashx",
+            url: "/SocialVerificationWebsite/ViolationParser",
             data: xmlString,
             contentType: "text/xml",
-            dataType: "text/xml",
+            //dataType: "text/xml",
             cache: false,
             error: function () { alert("No data found or error occured."); },
             success: function (xml) {
-                alert("it works");
                 alert(xml);
                 console.log(xml);
             }
