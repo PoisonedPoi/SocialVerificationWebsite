@@ -174,11 +174,11 @@ public class ModelFileChecker{
     */
     }
     
-    public ModelFileChecker(String sid,  String xmlString){
+    public ModelFileChecker(String sid,  String workingDirectory){
         this.SID = sid;
-        Globals.ROOT_FP = "/home/new/rover";
-        Globals.USERPATH =  "/home/new/rover/users/";
-        Globals.RESOURCEPATH =  "/home/new/rover/resources/";
+        Globals.ROOT_FP = workingDirectory;
+        Globals.USERPATH =  workingDirectory + "/users/";
+        Globals.RESOURCEPATH =  workingDirectory + "/resources/";
         this.USERFOLDER = Globals.USERPATH +  "user" + sid + "/";
 
         //ensure directory for sid exists
@@ -193,7 +193,7 @@ public class ModelFileChecker{
         initialize();
         //System.out.println("Done Initializing");
         //System.out.println("getting interaction groups test " + interaction.getGroups());
-        loadModelXMLString(xmlString, interaction);
+        loadModelFile("interaction.xml", interaction);
         //System.out.println("Done Loading interaction and now about to start check");
         performCheck();
         //System.out.println("now about to load violations");
