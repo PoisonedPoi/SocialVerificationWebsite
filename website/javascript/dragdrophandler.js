@@ -56,7 +56,8 @@ class controller {
         return microTypes;
     }
 
-    sendModelToDatabase(){
+    //sends xml model to database in the request and gets back the violations in the response
+    sendModelToDatabase(xmlString){
 
         // let data = this.exportToXML();
         // console.log(data);
@@ -70,33 +71,47 @@ class controller {
         //     }
         // }
         
-        
-        //TODO automate
-        var xml = '<?xml version="1.0" encoding="utf-8"?><nta> <name>interaction</name> <group id="0" init="true"><name>init</name><micro><name>greeter</name><parameter type="bool" val="true">Greet_with_speech</parameter><parameter type="bool" val="true">Greet_with_handshake</parameter><parameter type="bool" val="true">Wait_for_response</parameter></micro></group><design>copy</design></nta>';
 
-        var xmlhttp = new XMLHttpRequest();
-        xmlhttp.open("POST", "api/checker");///
-        var xmlDoc;
-        xmlhttp.onreadystatechange = function () {
-            if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-                console.log("returned with full");
-                console.log(xmlhttp);
-                xmlDoc = xmlhttp.responseXML;
-                console.log(xmlDoc);
+        $.ajax({
+            type: "POST",
+            url: "/SocialVerificationWebsite/ViolationParser",
+            data: xmlString,
+            contentType: "text/xml",
+            //dataType: "text/xml",
+            cache: false,
+            error: function () { alert("No data found or error occured."); },
+            success: function (xml) {
+                alert(xml);
+                console.log(xml);
             }
-        };
-        xmlhttp.setRequestHeader('Content-Type', 'text/xml');
+        });
         
-        xmlhttp.send(xml);
+        // //TODO automate
+        // var xml = '<?xml version="1.0" encoding="utf-8"?><nta> <name>interaction</name> <group id="0" init="true"><name>init</name><micro><name>greeter</name><parameter type="bool" val="true">Greet_with_speech</parameter><parameter type="bool" val="true">Greet_with_handshake</parameter><parameter type="bool" val="true">Wait_for_response</parameter></micro></group><design>copy</design></nta>';
+
+        // var xmlhttp = new XMLHttpRequest();
+        // xmlhttp.open("POST", "api/checker");///
+        // var xmlDoc;
+        // xmlhttp.onreadystatechange = function () {
+        //     if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
+        //         console.log("returned with full");
+        //         console.log(xmlhttp);
+        //         xmlDoc = xmlhttp.responseXML;
+        //         console.log(xmlDoc);
+        //     }
+        // };
+        // xmlhttp.setRequestHeader('Content-Type', 'text/xml');
+        
+        // xmlhttp.send(xml);
 
 
-        //send model to database via post request
+        // //send model to database via post request
 
-        //get back response, if 200 it should give back a list of violations
-        //parse violations
-        let violations = []
-        //this.interaction.storeViolations(violations); //model
-        this.makeConflicts(violations); //view
+        // //get back response, if 200 it should give back a list of violations
+        // //parse violations
+        // let violations = []
+        // //this.interaction.storeViolations(violations); //model
+        // this.makeConflicts(violations); //view
     }
 
 
@@ -116,7 +131,7 @@ class controller {
 function verifyModel(){
     let modelXML = IC.interaction.exportModelToXML();
     console.log(modelXML);
-    //IC.sendModelToDatabase();
+    IC.sendModelToDatabase(modelXML);
 }
 
 

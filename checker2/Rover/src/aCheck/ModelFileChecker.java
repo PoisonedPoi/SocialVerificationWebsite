@@ -126,8 +126,12 @@ public class ModelFileChecker{
 
     private final String SID; //session id, gives the user folder name as "user + SID", it should not be changed once set 
     private final String USERFOLDER;//the actual folder path for this user
-    public ModelFileChecker(String sid,  String xmlString){
+    
+        public ModelFileChecker(String sid,  String xmlString, String workingDirectory ){
         this.SID = sid;
+        Globals.ROOT_FP = workingDirectory;
+        Globals.USERPATH =  workingDirectory + "/users/";
+        Globals.RESOURCEPATH =  workingDirectory + "/resources/";
         this.USERFOLDER = Globals.USERPATH +  "user" + sid + "/";
 
         //ensure directory for sid exists
@@ -143,6 +147,53 @@ public class ModelFileChecker{
         //System.out.println("Done Initializing");
         //System.out.println("getting interaction groups test " + interaction.getGroups());
         loadModelXMLString(xmlString, interaction);
+        //System.out.println("Done Loading interaction and now about to start check");
+        performCheck();
+        //System.out.println("now about to load violations");
+        loadViolations();
+
+        printXMLViolationDocument();
+
+        destroyUserFolder();
+        //System.out.println("printing all violations ---");
+        //interaction.printViolations();
+
+        //System.out.println("getting xml xoc");
+        //Document doc = getXMLViolationDocument();
+
+        /*
+        System.out.println("Root element" + doc.getDocumentElement().getNodeName());
+        NodeList nList = doc.getElementsByTagName("violation");
+        for(int temp = 0;temp<nList.getLength(); temp++){
+            Node nNode = nList.item(temp);
+            System.out.println(" Current Element " + nNode.getNodeName());
+            Element elem = (Element) nNode;
+            System.out.println("Type " + elem.getElementsByTagName("type").item(0).getTextContent());
+        }
+        
+    */
+    }
+    
+    public ModelFileChecker(String sid,  String workingDirectory){
+        this.SID = sid;
+        Globals.ROOT_FP = workingDirectory;
+        Globals.USERPATH =  workingDirectory + "/users/";
+        Globals.RESOURCEPATH =  workingDirectory + "/resources/";
+        this.USERFOLDER = Globals.USERPATH +  "user" + sid + "/";
+
+        //ensure directory for sid exists
+        if(!(new File(USERFOLDER).exists())){
+            //setup a new user folder
+            new File(USERFOLDER).mkdir();
+            //setup a blank dot_files folder
+            new File(USERFOLDER + "dot_files").mkdir();
+            //setup a blank prism folder
+            new File(USERFOLDER + "prism").mkdir();
+        }
+        initialize();
+        //System.out.println("Done Initializing");
+        //System.out.println("getting interaction groups test " + interaction.getGroups());
+        loadModelFile("interaction.xml", interaction);
         //System.out.println("Done Loading interaction and now about to start check");
         performCheck();
         //System.out.println("now about to load violations");
@@ -167,13 +218,15 @@ public class ModelFileChecker{
         }
         
     */
-
     }
 
     public ModelFileChecker(String sid){
         //set global filepaths
        this.SID = sid;
-        this.USERFOLDER = Globals.USERPATH  + "user" + sid + "/";
+               Globals.ROOT_FP = "/home/new/rover";
+        Globals.USERPATH =  "/home/new/rover/users/";
+        Globals.RESOURCEPATH =  "/home/new/rover/resources/";
+        this.USERFOLDER = Globals.USERPATH +  "user" + sid + "/";
 
         //ensure directory for sid exists
         if(!(new File(USERFOLDER).exists())){
@@ -193,7 +246,7 @@ public class ModelFileChecker{
   
         
        // System.out.println("getting interaction groups test " + interaction.getGroups());
-        loadModelFile("interaction.xml", interaction);
+        loadModelFile("test.xml", interaction);
         //System.out.println("Done Loading interaction");
 
         performCheck();

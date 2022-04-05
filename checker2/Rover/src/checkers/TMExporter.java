@@ -35,6 +35,7 @@ public class TMExporter {
 
 	public void setUSERFOLDER(String USERFOLDER){
 		this.USERFOLDER = USERFOLDER;
+		//System.out.println("set userfolder to " + USERFOLDER);
 	}
 
 	public void exportToFile(Prism prism, PrismLog mainLog) {
@@ -42,6 +43,7 @@ public class TMExporter {
 		try {
 			modulesFile = prism.parseModelFile(new File(Micro2File.get(m)));
 			prism.loadPRISMModel(modulesFile);
+			//System.out.println("Reading user folder TMExporter " + USERFOLDER + m.getName()+".txt");
 			File f = new File(USERFOLDER + m.getName()+".txt");
 			prism.exportTransToFile(true, Prism.EXPORT_PLAIN, f);
 			tmFile = f;

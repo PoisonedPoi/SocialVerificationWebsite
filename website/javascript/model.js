@@ -58,19 +58,20 @@ class Interaction {
 
         //add groups
         JSONModel.groups.forEach(group => {
-            console.log("group");
             xmlString +='<group id="'+group.id+'" init="' + group.initialGroup + '" x="4.0" y="4.0">';
             xmlString +='<name>'+group.name+'</name>';
             group.micros.forEach(micro => {
                 xmlString += '<micro>';
                 xmlString += '<name>'+micro.type+'</name>';
                 micro.parameters.forEach(parameter => {
-                    console.log(parameter);
                     if(parameter.type == "array"){ //unique case
                         xmlString += '<parameter type="array">';
                         xmlString += '<name>answers robot can recognize</name>'
+                        if (micro.parameterResults.find(x => x.paramID == parameter.id).curResult == ''){
+                            return;
+                        }
                         micro.parameterResults.find(x => x.paramID == parameter.id).curResult.forEach(res => {
-                                let link="";
+                            let link="";
                             if(res.linkTitle == "Human Ready"){
                                 link = "human_ready";  //these are the variables needed in the back end
                             }else if(res.linkTitle == "Human Suspended"){
@@ -102,14 +103,12 @@ class Interaction {
                 xmlString += '<guard condition="human_busy"/>';
             }
             if (transition.state.suspended == true) {
-                xmlString += '<guard condition="human_ignore"/>'; //variable name needed in back end
+                xmlString += '<guard condition="human_ignore"/>';  //variable name needed in back end
             }
             xmlString += '</transition>'
-            console.log(transition);
         });
         xmlString += '<design>copy</design>';
         xmlString += '</nta>';
-        console.log(xmlString);
         return xmlString;
     }
 

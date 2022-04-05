@@ -253,6 +253,7 @@ public class Checker {
 		}
 
 		TMExporter tm = new TMExporter(Micro2File, m);
+		tm.setUSERFOLDER(getUSERFOLDER());
 		tm.exportToFile(prism, mainLog);
 		HashMap<Integer, ArrayList<Integer>> int2int = tm.parseTM(prism, mainLog, idx2states);
 		tm.removeTMFile();
