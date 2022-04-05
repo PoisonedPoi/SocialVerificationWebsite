@@ -3,14 +3,10 @@
 
 #Note, this is meant to be called by .sh files in parent dir
 
-#tomcat home
-TOMCAT="$1"
-
-echo -classpath ${TOMCAT}/lib/servlet-api.jar
 
 #note must be user atm, this shold be changed
 #compile the servlet
 
-javac -cp /opt/tomcat/lib/servlet-api.jar ViolationParser.java -d ../website/WEB-INF/classes/
+javac -cp servlet-api.jar ViolationParser.java -d ../website/WEB-INF/classes/
 
 #javac -classpath ${TOMCAT}/lib/servlet-api.jar ViolationParser.java -d ../website/WEB-INF/classes/

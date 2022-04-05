@@ -3,9 +3,12 @@
 # $2 = MODEL XML STRING (IN TEXT/XML FORMAT)
 
 #Locaction of rover binary files, prism library, and the working directory(where user files are written to and resources are stored) which is all required to run rover
-binLoc="/home/new/Documents/git/checker2/Rover/bin"
-prismLoc="/opt/resources/prism-library"  #/opt/resources/prism-library     /srv/rover/lib/prism-library
-workingDir="/home/new/rover2";  #  "/home/new/rover2"
+#update me if source code changed/recompiled and you dont want to run ./deploy.sh everytime, move me to the working directory, probably /home/{user}/Documents/{path-to-checker2}/Rover/bin
+binLoc="/srv/rover/lib/bin/"
+
+#defaults
+prismLoc="/srv/rover/lib/prism-library"  #/opt/resources/prism-library     /srv/rover/lib/prism-library
+workingDir="/srv/rover";  #  "/home/new/rover2"
 
 #To run this in the command line type this, ./runRoVer.sh 123 ModelFileString (the modelfilestring should be an xml string of the interaction, ideally generated from the client, reference interaction.xml for example)
 #All this program does is print to stdout the violations in xml format which is then supposed to be parsed by another program (process output redirection) such as apache tomcat which calls this by a process

@@ -116,7 +116,7 @@ public class ViolationParser extends HttpServlet {
 
 			System.out.println("recieved request");
 			ProcessBuilder pb = new ProcessBuilder("./runRover.sh", randNum, modelXMLString);
-			File runRoVerPath = new File("/home/new/Documents/git/checker2/Rover/");
+			File runRoVerPath = new File("/srv/rover/main/");
 			pb.directory(runRoVerPath);
 			Process proc = pb.start();
 			String violations = "";

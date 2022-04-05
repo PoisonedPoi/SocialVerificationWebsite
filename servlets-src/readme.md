@@ -1,7 +1,7 @@
-Command to compile, run this in current directory to compile and write the servlets .class file into the website, renember to make it into a war and redeploy afterwards.
+This is where the source code for the servlets (.java files) should go, use compileServlet.sh to compile and move the .class files to website/WEB-INF/classes
 
+Update the compileServlet.sh if you add more servlets and update web.xml in WEB-INF
 
-commmand
-
+the servlet-api.jar is from tomcat version 10 (uses jakarta imports)
 
 
