@@ -6,11 +6,13 @@ javac -cp "./bin:prism-library/prism/lib/colt.jar:prism-library/prism/lib/jhoafp
 export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:prism-library/prism/lib/
 # LD_LIBRARY_PATH if linux
 
+workingDir="/srv/rover";
+
 echo 
 echo DONE PARSING
 echo 
 #-Djava.library.path=prism-library/prism/lib/ -Dfile.encoding=UTF-8
-java -Djava.library.path=prism-library/prism/lib/ -Dfile.encoding=UTF-8 -cp "./bin:prism-library/prism/lib/colt.jar:prism-library/prism/lib/jhoafparser.jar:prism-library/prism/lib/pepa.zip:prism-library/prism/lib/prism.jar" aCheck.CheckingDriver 96 
+java -Djava.library.path=prism-library/prism/lib/ -Dfile.encoding=UTF-8 -cp "./bin:prism-library/prism/lib/colt.jar:prism-library/prism/lib/jhoafparser.jar:prism-library/prism/lib/pepa.zip:prism-library/prism/lib/prism.jar" aCheck.CheckingDriver 96 ${workingDir}
 
 
 
