@@ -31,7 +31,7 @@ body {
 
 /*css for main interaction canvas where DND(drag and drop) boxes are placed*/
 .interaction-canvas {
-  min-height: 200px;
+
   flex: 1;
   border: 5px solid #cccccc;
   position: relative;
@@ -69,6 +69,14 @@ body {
   z-index: 8;
 }
 
+.group-box-title{
+  background: lightgray;
+  width: 90%;
+  margin-right: 2px;
+  margin-left: 4px;
+  border: .5px solid lightgray;
+  text-align: center;
+}
 .group-box-selected {
   background: lightyellow;
 }
@@ -217,6 +225,12 @@ body {
   background-color: #ecebeb;
   border: 2px solid black;
   overflow: scroll;
+}
+
+.terminal-text{
+  width: 100%;
+  height: 100%;
+  font-size: 14px;
 }
 
 .ask-item-box {

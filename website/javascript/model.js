@@ -6,7 +6,7 @@
 // model classes
 class Interaction {
     /*
-    errors;
+
     trackedMicroTypes = [];
     groups = [];
     transitions = [];
@@ -20,7 +20,7 @@ class Interaction {
         this.groupIDNum = 0;
         this.transitionIDNum = 0;
         this.microIDNum = 0;
-        this.errors = new Errors();
+        this.violations = []
         this.trackedMicroTypes = [];
         this.groups = [];
         this.transitions = [];
@@ -112,8 +112,16 @@ class Interaction {
         return xmlString;
     }
 
-    addViolations(){
-        //todo figure out how to add in errors
+    addViolation(violation){
+        this.violations.push(violation);
+    }
+
+    setViolations(violations){
+        this.violations = violations;
+    }
+
+    getViolations(){
+        return this.violations;
     }
 
     loadMicroTypes(newMicroTypes){
@@ -138,6 +146,7 @@ class Interaction {
     
 
     getGroup(id){
+        //console.log(this.groups);
         for (let i = 0; i < this.groupIDNum;i++){
             if(this.groups[i].id == id){
                 return this.groups[i];
@@ -359,39 +368,36 @@ class Parameter {
 
 
 
-
-class Errors {
-   // flubs;
+//the "model" representation of an error or mistake a user made
+class Violation {
+    //category   -either "group" or "interaction"  --whether this is a group level violation (has associated group) or an interaction level violation (is violated somewhere in the interaction but exact location cant be pinpointed)
+    //type    -- the type of property being violated
+    //description --the description of the property being violated
+    //violator groups   --[Group ID]   list of group ids violating this property, will be empty if category is violation
     
-    constructor(){
-        this.flubs = [];
-    }
-
-    addFlub(flub){
-        this.flubs.push(flub);
-    }
-
-    getFlubs(){
-        return this.flubs;
-    }
-
-
-}
-
-class Flub{
-    /*
-    category;
-    targetID;
-    description;
-    */
-
-    constructor(targetID, category, description){
-        this.targetID = targetID;
+    constructor(category, type, description){
         this.category = category;
+        this.type = type;
         this.description = description;
+        this.violatorGroups = [];
     }
 
+    addGroupViolating(group){
+        this.violatorGroups.push(group);
+    }
+
+    setGroupsViolating(groups){
+    this.violatorGroups = groups;
+    }
+
+    getGroupsViolating(){
+        return this.violatorGroups;
+    }
+
+
 }
+
+
 
 //export {Interaction, Group, Transition, MicroInteraction, MicroType, Parameter };
 

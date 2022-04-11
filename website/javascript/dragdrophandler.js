@@ -6,11 +6,10 @@
 
 
 
-var IC; //Interaction Controller
+var IC; //Interaction Controller, this holds the model and relevant controller functions
 document.addEventListener("DOMContentLoaded", () => {
     IC = new controller();
     console.log("testing");
-
     var xml = "<?xml version='1.0'?><query><author>John Steinbeck</author></query>";
     console.log(xml);
     console.log("end testing");
@@ -59,18 +58,6 @@ class controller {
     //sends xml model to database in the request and gets back the violations in the response
     sendModelToDatabase(xmlString){
 
-        // let data = this.exportToXML();
-        // console.log(data);
-        // var http = new XMLHttpRequest();
-        // http.open("POST", "\location", true);
-        // http.setRequestHeader("content-type", "application/x-www-form-urlencoded");
-        // http.onreadystatechange = function(){
-        //     if(this.readyState == 4 && this.status == 200){
-        //         console.log(this.responseText);
-        //         console.log("I think that http worked!!");
-        //     }
-        // }
-        
 
         $.ajax({
             type: "POST",
@@ -86,37 +73,36 @@ class controller {
             }
         });
         
-        // //TODO automate
-        // var xml = '<?xml version="1.0" encoding="utf-8"?><nta> <name>interaction</name> <group id="0" init="true"><name>init</name><micro><name>greeter</name><parameter type="bool" val="true">Greet_with_speech</parameter><parameter type="bool" val="true">Greet_with_handshake</parameter><parameter type="bool" val="true">Wait_for_response</parameter></micro></group><design>copy</design></nta>';
-
-        // var xmlhttp = new XMLHttpRequest();
-        // xmlhttp.open("POST", "api/checker");///
-        // var xmlDoc;
-        // xmlhttp.onreadystatechange = function () {
-        //     if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {
-        //         console.log("returned with full");
-        //         console.log(xmlhttp);
-        //         xmlDoc = xmlhttp.responseXML;
-        //         console.log(xmlDoc);
-        //     }
-        // };
-        // xmlhttp.setRequestHeader('Content-Type', 'text/xml');
-        
-        // xmlhttp.send(xml);
-
-
-        // //send model to database via post request
-
         // //get back response, if 200 it should give back a list of violations
         // //parse violations
-        // let violations = []
-        // //this.interaction.storeViolations(violations); //model
-        // this.makeConflicts(violations); //view
+        let violations = []
+
+        let testViolation = new Violation("group", "waiting flub", "The interaction should wait for things to work out");
+        testViolation.addGroupViolating("0");
+
+        violations.push(testViolation)
+        this.interaction.setViolations(violations); //model
+        this.makeConflicts(this.interaction.getViolations()); //view
     }
 
-
+    //update terminal to display all social norm violations
     makeConflicts(violations){
-        //for each violation update view to show a conflict in conflicts div
+        let terminalString = "";
+        violations.forEach(violation =>{
+            if (violation.category == "interaction"){
+                terminalString += "Interaction is violating " + violation.type + " DESC: " + violation.description + "\n";
+            }
+            if (violation.category == "group") {
+                let groupString = "";
+                violation.violatorGroups.forEach(groupID=>{
+                    groupString += this.interaction.getGroup(groupID).name + " ";
+                })
+
+                terminalString += "Group(s) " + groupString + " are violating property " + violation.type + " DESC: " + violation.description + "\n";
+            }
+        })
+        document.getElementById('terminal-textarea').textContent = terminalString;
+
     }
     
     exportToXML() {
@@ -357,8 +343,16 @@ function addGroupToView(ev, groupID){
         newGroup.classList.add('group-box-initial');
     }
     newGroup.oncontextmenu = rightClickGroup;
-    var title = document.createElement("div");
-    title.innerText = IC.interaction.getGroup(groupID).name;
+    //<input type="text" value="asdf" readonly="true" ondblclick="this.readOnly='';">
+    var title = document.createElement("input");
+    title.setAttribute("readonly","true");
+    title.setAttribute("type", "text");
+    title.setAttribute("ondblclick", "this.readOnly='';");
+    title.classList.add("group-box-title");
+    title.value = IC.interaction.getGroup(groupID).name;
+    title.addEventListener('keyup', function () {
+        IC.interaction.getGroup(groupID).name = title.value; //TODO sterilize input
+    });
     newGroup.appendChild(title);
     numBoxes++;
     var interactionCanvas = document.getElementById('interaction-group-canvas');
@@ -369,7 +363,12 @@ function addGroupToView(ev, groupID){
 
 function clickedGroup(ev){
     //are we adding transition between two line?
+    console.log("clicked group");
     if (lineBtnPressed) {
+        console.log(ev.target);
+        if(ev.target.getAttribute("data-type") != "group-box"){
+            return;
+        }
         if (firstGroupInLine === null) {
             firstGroupInLine = ev.target;
             ev.target.classList.add('group-box-selected');
