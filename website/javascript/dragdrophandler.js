@@ -74,11 +74,15 @@ class controller {
 
                 // //get back response, if 200 it should give back a list of violations
                 // //parse violations
+
+                //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
+
                 let violations = []
                 let testViolation = new Violation("group", "waiting flub", "The interaction should wait for things to work out");
                 testViolation.addGroupViolating("0");
                 let violationList = xmlDoc.getElementsByTagName("violation_list")[0].childNodes;
                 for (let i = 0; i < violationList.length;i++){
+                    console.log("going to test here");
                     console.log(violationList);
                     console.log(violationList[0]);
                     let violationChild = violationList[i];
