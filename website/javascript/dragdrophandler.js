@@ -90,7 +90,8 @@ class controller {
                     if(type == "group"){
                         let violatorGroups = violationChild.getElementsByTagName("violator_groups")[0].childNodes;
                         for(let j=0;j<violatorGroups.length;j++){
-                            let violaterGroupName = violatorGroups[i].getElementsByTagName("group")[0].textContent;
+                            let violaterGroupName = violatorGroups[j].getElementsByTagName("group")[0].textContent;
+                            console.log("added group " + violatorGroupName);
                             violationObject.addGroupViolating(violaterGroupName);
                         }
                     }
@@ -115,6 +116,7 @@ class controller {
             }
             if (violation.category == "group") {
                 let groupString = "";
+                console.log(violation.getGroupsViolating());
                 violation.violatorGroups.forEach(groupName=>{
                     groupString += groupName + " ";
                 })
