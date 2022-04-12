@@ -254,7 +254,7 @@ class Interaction {
 
     removeTransition(id){
         for(let i=0;i<this.transitions.length;i++){
-            if(this.transitions[i].id === id){
+            if(this.transitions[i].id == id){
                 this.transitions.splice(i, 1);
                 return;
             }

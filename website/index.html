@@ -186,6 +186,23 @@ migrating a social robot verification application to a web app
 
       <!-- context menues and other hidden elements -->
       <div
+        id="contextMenuTransition"
+        class="context-menu context-box"
+        style="z-index: 200; display: none; position: absolute;"
+        hideable="true"
+        data-currentGroup=""
+      >
+        <button
+          id="removeTransitionBtn"
+          class="button-unpressed"
+          value=""
+          hideable="true"
+          onclick="removeTransition(this.value)"
+        >
+          Remove Transition
+        </button>
+      </div>
+      <div
         id="contextMenuGroup"
         class="context-menu context-box"
         style="z-index: 200; display: none; position: absolute;"

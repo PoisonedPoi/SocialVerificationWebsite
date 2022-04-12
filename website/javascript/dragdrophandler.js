@@ -51,7 +51,31 @@ class controller {
         let parameter7 = new Parameter(7, "Allow the human to respond", "Allow_human_to_respond", "Whether the robot gives the human any time to respond after the robot's remark before moving on", "bool");
         let microRemark = new MicroType("Remark", [parameter5, parameter6, parameter7]);
         microTypes.push(microRemark);
+        
+        //instruction
+        let parameter8 = new Parameter(8, "Instruction", "Instruction", "The instruction that the robot will provide the human","str");
+        let microInstruct = new MicroType("Instruction",[parameter8]);
+        microTypes.push(microInstruct);
 
+        //handoff
+        let microHandoff = new MicroType("Handoff",[]);
+        microTypes.push(microHandoff);
+
+        //answer
+        let parameter9 = new Parameter(9, "Introduction", "Introduction", "Robot begins microinteraction by saying I can answer your question", "bool");
+        let microAnswer = new MicroType("Answer", [parameter9]);
+        microTypes.push(microAnswer);
+
+        //wait
+        let parameter10 = new Parameter(10, "Wait Time (seconds)", "wait time (seconds)", "Number of seconds for the robot to wait", "int");
+        let parameter11 = new Parameter(11, "Allow Speech", "allow_speech", "Allows a human to say something to the robot to override its wait time", "bool");
+        let parameter12 = new Parameter(12, "Look At People", "look_at_people", "Enable face tracking, which allows the robot to met the gaze of anyone in its vicinity", "bool");
+        let microWait = new MicroType("Wait", [parameter10, parameter11, parameter12]);
+        microTypes.push(microWait);
+
+        //farwell
+         let microFarewell = new MicroType("Farewell", []);
+         microTypes.push(microFarewell);
         return microTypes;
     }
 
@@ -90,22 +114,15 @@ class controller {
                     var violationObject = new Violation(category, type, description);
 
                     if (category == 'group'){
-                        console.log(violationChild);
                         let violatorGroups = violationChild.getElementsByTagName("violator_groups")[0].childNodes;
-                        console.log("this is violation groups");
-                        console.log(violatorGroups);
                         for(let j=0;j<violatorGroups.length;j++){
-                            console.log(violatorGroups[j]);
-                            console.log(violatorGroups[j].textContent)
                             let violaterGroupName = violatorGroups[j].textContent; //getElementsByTagName("group")[0].
-                            console.log("added group " + violaterGroupName);
                             violationObject.addGroupViolating(violaterGroupName);
                         }
                     }
                     violations.push(violationObject);
                 }
-                console.log("adding violations to interaction");
-                console.log(violations);
+
                 IC.interaction.setViolations(violations); //model
                 IC.makeConflicts(IC.interaction.getViolations()); //view
                 $('#verificationStatusText').text("Complete");
@@ -171,7 +188,8 @@ function addMicroToGroup(groupBox, type){
 
 function removeMicro(microBoxID){
     var micro = document.getElementById(microBoxID);
-    var microID = micro.getAttribute("microid").replace(/\D/g, '');;
+    console.log(micro);
+    var microID = micro.getAttribute("data-microid");;
     let group = micro.parentNode;
     let groupID = group.getAttribute("group-num");
     IC.interaction.removeMicroFromGroup(groupID ,microID);//model
@@ -197,6 +215,13 @@ function removeGroup(groupBoxID) {
 function addTransition(firstGroup, secondGroup){
     let id = IC.interaction.addTransition(firstGroup.getAttribute("data-groupid"), secondGroup.getAttribute("data-groupid"));//model
     drawTransition(id, firstGroup, secondGroup);//view
+}
+
+function removeTransition(htmlTransitionid) {
+    let transition = document.getElementById(htmlTransitionid);
+
+    IC.interaction.removeTransition(transition.getAttribute("data-transid"));//model
+    document.getElementById("interaction-group-canvas").removeChild(transition); //view
 }
 
 
@@ -445,6 +470,8 @@ function drawTransition(id, firstGroup, secondGroup) {
     var canvas = document.getElementById('interaction-group-canvas');
     var newLine = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     canvas.appendChild(newLine);
+    let transitionlineID = uuidv4();
+    newLine.setAttribute("id", transitionlineID);
     newLine.classList.add('svg-arrow');
     newLine.setAttribute("data-type", "transition");
     newLine.setAttribute("data-transid",id);
@@ -496,9 +523,11 @@ function drawTransition(id, firstGroup, secondGroup) {
     var text = document.createElementNS("http://www.w3.org/2000/svg", "text");
     text.classList.add("arrow-text");
     text.setAttribute("id", uuidv4());
+    text.setAttribute("data-lineid", transitionlineID);
     text.setAttribute("x", ((smallest.p2.x + smallest.p1.x) / 2).toString());
     text.setAttribute("y", (((smallest.p2.y + smallest.p1.y) / 2) + 15).toString());
     text.setAttribute("text-anchor", "middle");
+    text.oncontextmenu = rightClickTransition;
     let transState = IC.interaction.getTransitionState(id);
     newLine.appendChild(text);
     let ttm = ""; //transition text message
@@ -762,20 +791,26 @@ function updateTransition(){
 //right clicks
 
 function hideMenu(e) {
-    //console.log($('div[hideable="true"]'));
-    //$('div[hideable="true"]').hide();
-    //left click menu doesnt hide if clicked on
-    /*
-    if (e.srcElement != undefined && (itemLeftClicked == e.srcElement)){
-        document.getElementById("contextMenuTransition").style.display = "block";
-    }
-    */
-    
     //right click menues hide
     document.getElementById("contextMenuGroup").style.display = "none";
     document.getElementById("contextMenuMicro").style.display = "none";   
+    document.getElementById("contextMenuTransition").style.display = "none";
 }
 
+function rightClickTransition(e) {
+    e.preventDefault();
+    if (document.getElementById("contextMenuTransition")
+        .style.display == "block")
+        hideMenu();
+    else {
+        var menu = document.getElementById("contextMenuTransition");
+        let parentid = e.target.getAttribute("data-lineid");
+        document.getElementById("removeTransitionBtn").setAttribute('value', parentid);
+        menu.style.display = 'block';
+        menu.style.left = e.pageX + "px";
+        menu.style.top = e.pageY + "px";
+    }
+}
 
 function rightClickGroup(e) {
     e.preventDefault();
