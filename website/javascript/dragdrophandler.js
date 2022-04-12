@@ -68,7 +68,7 @@ class controller {
             cache: false,
             error: function () { alert("No data found or error occured."); },
             success: function (xml) {
-                alert("got data");
+               //alert("got data");
                 console.log(xml);
                 xmlDoc = xml;
 
