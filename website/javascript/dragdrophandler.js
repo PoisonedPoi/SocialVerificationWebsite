@@ -59,7 +59,7 @@ class controller {
     sendModelToDatabase(xmlString){
         
         let xmlDoc;
-        $('#verificationStatusText').text("validating...");
+        $('#verificationStatusText').text("Validating...");
         $.ajax({
             type: "POST",
             url: "/SocialVerificationWebsite/ViolationParser",
@@ -131,6 +131,7 @@ class controller {
 
                 terminalString += "Group(s) " + groupString + " are violating property: " + violation.type + " Desc: " + violation.description + "\n";
             }
+            terminalString += "\n"
         })
         document.getElementById('terminal-textarea').textContent = terminalString;
 

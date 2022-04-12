@@ -68,6 +68,7 @@ class Interaction {
                         xmlString += '<parameter type="array">';
                         xmlString += '<name>answers robot can recognize</name>'
                         if (micro.parameterResults.find(x => x.paramID == parameter.id).curResult == ''){
+                            xmlString += '</parameter>'
                             return;
                         }
                         micro.parameterResults.find(x => x.paramID == parameter.id).curResult.forEach(res => {
