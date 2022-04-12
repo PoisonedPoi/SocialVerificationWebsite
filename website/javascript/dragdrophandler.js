@@ -77,11 +77,14 @@ class controller {
                 let violations = []
                 let testViolation = new Violation("group", "waiting flub", "The interaction should wait for things to work out");
                 testViolation.addGroupViolating("0");
-                let violationList = xmlDoc.getElementsByTagName("violation_list")[0];
-                for(let i=0;i<violationList.childNodes.length;i++){
-                    let violationChild = violationList.childNodes[i];
+                let violationList = xmlDoc.getElementsByTagName("violation_list")[0].childNodes;
+                for (let i = 0; i < violationList.length;i++){
+                    console.log(violationList);
+                    console.log(violationList.childNodes[0]);
+                    let violationChild = violationList[i];
              
                     console.log("violation testing");
+                    console.log(violationChild);
                     let category = violationChild.getElementsByTagName("category")[0].textContent;
                     let type = violationChild.getElementsByTagName("type")[0].textContent;
                     let description = violationChild.getElementsByTagName("description")[0].textContent;
