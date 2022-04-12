@@ -82,20 +82,17 @@ class controller {
                 console.log(xmlDoc.getElementsByTagName("violation_list")[0].childNodes);
                 xmlDoc.getElementsByTagName("violation_list")[0].childNodes.forEach(violationChild => {
                     console.log("violation");
-                    let category = violation.getElementsByTagName("category")[0].childNodes[0].value;
-                    let type = violation.getElementByTagName("type")[0].childNodes[0].value;
-                    let description = violation.getElementByTagName("description")[0].childNodes[0].value;
+                    let category = violationChild.getElementsByTagName("category")[0].childNodes[0].value;
+                    let type = violationChild.getElementByTagName("type")[0].childNodes[0].value;
+                    let description = violationChild.getElementByTagName("description")[0].childNodes[0].value;
+                    console.log(violationChild);
                     console.log("000");
                     console.log(category);
                     console.log(type);
                     console.log(description);
-                    let newViolation = new Violation("group", "waiting flub", "The interaction should wait for things to work out");
-                    console.log(violationChild);
-                    [0].nodeValue;
+                    violations.push(new Violation(category, type, description));
                 });
 
-
-                violations.push(testViolation);
                 IC.interaction.setViolations(violations); //model
                 IC.makeConflicts(this.interaction.getViolations()); //view
             }
