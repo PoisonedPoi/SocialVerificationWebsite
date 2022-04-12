@@ -118,7 +118,7 @@ class controller {
         let terminalString = "";
         violations.forEach(violation =>{
             if (violation.category == "interaction"){
-                terminalString += "Interaction is violating " + violation.type + " DESC: " + violation.description + "\n";
+                terminalString += "Interaction is violating property: " + violation.type + " Desc: " + violation.description + "\n";
             }
             if (violation.category == "group") {
                 let groupString = "";
@@ -127,7 +127,7 @@ class controller {
                     groupString += groupName + " ";
                 })
 
-                terminalString += "Group(s) " + groupString + " are violating property " + violation.type + " DESC: " + violation.description + "\n";
+                terminalString += "Group(s) " + groupString + " are violating property: " + violation.type + " Desc: " + violation.description + "\n";
             }
         })
         document.getElementById('terminal-textarea').textContent = terminalString;
