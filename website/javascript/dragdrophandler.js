@@ -6,7 +6,7 @@
 
 
 
-var IC; //Interaction Controller, this holds the model and relevant controller functions
+var IC; //Interaction Controller instance, this holds the model and relevant controller functions
 document.addEventListener("DOMContentLoaded", () => {
     IC = new controller();
     console.log("testing");
@@ -57,7 +57,7 @@ class controller {
 
     //sends xml model to database in the request and gets back the violations in the response
     sendModelToDatabase(xmlString){
-
+        
         let xmlDoc;
         $.ajax({
             type: "POST",
@@ -82,14 +82,22 @@ class controller {
                 console.log(xmlDoc.getElementsByTagName("violation_list")[0].childNodes);
                 xmlDoc.getElementsByTagName("violation_list")[0].childNodes.forEach(violationChild => {
                     console.log("violation");
+                    let category = violation.getElementsByTagName("category")[0].childNodes[0].value;
+                    let type = violation.getElementByTagName("type")[0].childNodes[0].value;
+                    let description = violation.getElementByTagName("description")[0].childNodes[0].value;
+                    console.log("000");
+                    console.log(category);
+                    console.log(type);
+                    console.log(description);
+                    let newViolation = new Violation("group", "waiting flub", "The interaction should wait for things to work out");
                     console.log(violationChild);
                     [0].nodeValue;
                 });
 
 
-                violations.push(testViolation)
-                this.interaction.setViolations(violations); //model
-                this.makeConflicts(this.interaction.getViolations()); //view
+                violations.push(testViolation);
+                IC.interaction.setViolations(violations); //model
+                IC.makeConflicts(this.interaction.getViolations()); //view
             }
         });
         
