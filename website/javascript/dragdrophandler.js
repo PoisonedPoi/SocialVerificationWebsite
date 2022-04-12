@@ -77,11 +77,6 @@ class controller {
                 let violations = []
                 let testViolation = new Violation("group", "waiting flub", "The interaction should wait for things to work out");
                 testViolation.addGroupViolating("0");
-                console.log("testing");
-                console.log(xmlDoc);
-                console.log(xmlDoc.getElementsByTagName("violation_list")[0]);
-                console.log(xmlDoc.getElementsByTagName("violation_list")[0]).value;
-                console.log(xmlDoc.getElementsByTagName("violation_list")[0].childNodes);
                 xmlDoc.getElementsByTagName("violation_list")[0].childNodes.forEach(violationChild => {
                     console.log("violation testing");
                     let category = violationChild.getElementsByTagName("category")[0].childNodes[0].value;
