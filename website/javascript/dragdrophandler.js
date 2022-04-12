@@ -79,7 +79,7 @@ class controller {
                 testViolation.addGroupViolating("0");
                 let violationList = xmlDoc.getElementsByTagName("violation_list")[0];
                 for(let i=0;i<violationList.childNodes.length;i++){
-                    let violationChild = violationList.childNodes.length[i];
+                    let violationChild = violationList.childNodes[i];
              
                     console.log("violation testing");
                     let category = violationChild.getElementsByTagName("category")[0].textContent;
