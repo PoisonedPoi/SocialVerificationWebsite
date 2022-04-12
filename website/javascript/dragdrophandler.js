@@ -58,7 +58,7 @@ class controller {
     //sends xml model to database in the request and gets back the violations in the response
     sendModelToDatabase(xmlString){
 
-
+        let xmlDoc;
         $.ajax({
             type: "POST",
             url: "/SocialVerificationWebsite/ViolationParser",
@@ -68,8 +68,9 @@ class controller {
             cache: false,
             error: function () { alert("No data found or error occured."); },
             success: function (xml) {
-                alert(xml);
+                alert("got data");
                 console.log(xml);
+                xmlDoc = xml;
             }
         });
         
@@ -79,6 +80,15 @@ class controller {
 
         let testViolation = new Violation("group", "waiting flub", "The interaction should wait for things to work out");
         testViolation.addGroupViolating("0");
+        console.log(xmlDoc);
+        console.log(xmlDoc.getElementsByTagName("violation_list")[0]);
+        console.log(xmlDoc.getElementsByTagName("violation_list")[0].childNodes);
+        xmlDoc.getElementsByTagName("violation_list")[0].childNodes.forEach(violationChild =>{
+            console.log("violation");
+            console.log(violationChild);
+            [0].nodeValue;
+        });
+
 
         violations.push(testViolation)
         this.interaction.setViolations(violations); //model
