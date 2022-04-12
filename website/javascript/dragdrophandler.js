@@ -87,7 +87,11 @@ class controller {
                     let type = violationChild.getElementsByTagName("type")[0].textContent;
                     let description = violationChild.getElementsByTagName("description")[0].textContent;
                     var violationObject = new Violation(category, type, description);
-                    if(type == "group"){
+                    console.log("comparing " + type + " to " + 'group');
+                    if(type === group){
+                        console.log("7yes");
+                    }
+                    if(type == 'group'){
                         console.log(violationChild);
                         let violatorGroups = violationChild.getElementsByTagName("violator_groups")[0].childNodes;
                         console.log("this is violation groups");
