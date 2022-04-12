@@ -77,7 +77,10 @@ class controller {
                 let violations = []
                 let testViolation = new Violation("group", "waiting flub", "The interaction should wait for things to work out");
                 testViolation.addGroupViolating("0");
-                xmlDoc.getElementsByTagName("violation_list")[0].childNodes.forEach(violationChild => {
+                let violationList = xmlDoc.getElementsByTagName("violation_list")[0];
+                for(let i=0;i<violationList.childNodes.length;i++){
+                    let violationChild = violationList.childNodes.length[i];
+             
                     console.log("violation testing");
                     let category = violationChild.getElementsByTagName("category")[0].childNodes[0].value;
                     console.log(violationChild.getElementsByTagName("category")[0].childNodes[0]);
@@ -91,8 +94,8 @@ class controller {
                     console.log(type);
                     console.log(description);
                     violations.push(new Violation(category, type, description));
-                });
 
+                }
                 IC.interaction.setViolations(violations); //model
                 IC.makeConflicts(this.interaction.getViolations()); //view
             }
