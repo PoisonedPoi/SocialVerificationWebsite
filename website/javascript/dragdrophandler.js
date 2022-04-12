@@ -71,28 +71,29 @@ class controller {
                 alert("got data");
                 console.log(xml);
                 xmlDoc = xml;
+
+                // //get back response, if 200 it should give back a list of violations
+                // //parse violations
+                let violations = []
+                let testViolation = new Violation("group", "waiting flub", "The interaction should wait for things to work out");
+                testViolation.addGroupViolating("0");
+                console.log(xmlDoc);
+                console.log(xmlDoc.getElementsByTagName("violation_list")[0]);
+                console.log(xmlDoc.getElementsByTagName("violation_list")[0].childNodes);
+                xmlDoc.getElementsByTagName("violation_list")[0].childNodes.forEach(violationChild => {
+                    console.log("violation");
+                    console.log(violationChild);
+                    [0].nodeValue;
+                });
+
+
+                violations.push(testViolation)
+                this.interaction.setViolations(violations); //model
+                this.makeConflicts(this.interaction.getViolations()); //view
             }
         });
         
-        // //get back response, if 200 it should give back a list of violations
-        // //parse violations
-        let violations = []
 
-        let testViolation = new Violation("group", "waiting flub", "The interaction should wait for things to work out");
-        testViolation.addGroupViolating("0");
-        console.log(xmlDoc);
-        console.log(xmlDoc.getElementsByTagName("violation_list")[0]);
-        console.log(xmlDoc.getElementsByTagName("violation_list")[0].childNodes);
-        xmlDoc.getElementsByTagName("violation_list")[0].childNodes.forEach(violationChild =>{
-            console.log("violation");
-            console.log(violationChild);
-            [0].nodeValue;
-        });
-
-
-        violations.push(testViolation)
-        this.interaction.setViolations(violations); //model
-        this.makeConflicts(this.interaction.getViolations()); //view
     }
 
     //update terminal to display all social norm violations
