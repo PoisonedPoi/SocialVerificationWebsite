@@ -115,8 +115,8 @@ class controller {
             }
             if (violation.category == "group") {
                 let groupString = "";
-                violation.violatorGroups.forEach(groupID=>{
-                    groupString += this.interaction.getGroup(groupID).name + " ";
+                violation.violatorGroups.forEach(groupName=>{
+                    groupString += groupName + " ";
                 })
 
                 terminalString += "Group(s) " + groupString + " are violating property " + violation.type + " DESC: " + violation.description + "\n";
