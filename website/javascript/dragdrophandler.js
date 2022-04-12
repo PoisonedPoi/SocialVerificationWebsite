@@ -80,6 +80,7 @@ class controller {
                 xmlDoc.getElementsByTagName("violation_list")[0].childNodes.forEach(violationChild => {
                     console.log("violation testing");
                     let category = violationChild.getElementsByTagName("category")[0].childNodes[0].value;
+                    console.log(category);
                     let type = violationChild.getElementsByTagName("type")[0].childNodes[0].value;
                     let description = violationChild.getElementsByTagName("description")[0].childNodes[0].value;
                     console.log(violationChild);
