@@ -88,7 +88,10 @@ class controller {
                     let description = violationChild.getElementsByTagName("description")[0].textContent;
                     var violationObject = new Violation(category, type, description);
                     if(type == "group"){
+                        console.log(violationChild);
                         let violatorGroups = violationChild.getElementsByTagName("violator_groups")[0].childNodes;
+                        console.log("this is violation groups");
+                        console.log(violatorGroups);
                         for(let j=0;j<violatorGroups.length;j++){
                             let violaterGroupName = violatorGroups[j].getElementsByTagName("group")[0].textContent;
                             console.log("added group " + violatorGroupName);
