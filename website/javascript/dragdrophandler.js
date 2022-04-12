@@ -98,7 +98,7 @@ class controller {
                             console.log(violatorGroups[j].textContent)
                             let violaterGroupName = violatorGroups[j].textContent; //getElementsByTagName("group")[0].
                             console.log("added group " + violatorGroupName);
-                            violationObject.addGroupViolating(violaterGroupName);
+                            violationObject.addGroupViolating(violatorGroupName);
                         }
                     }
                     violations.push(violationObject);
