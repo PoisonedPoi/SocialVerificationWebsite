@@ -326,7 +326,16 @@ class MicroInteraction{
         this.id = id;
         this.parameterResults = [];
         this.parameters.forEach(parameter => {
-            this.parameterResults.push({'paramID' : parameter.id ,  'curResult' : ''})
+            if(parameter.type == "bool"){
+                this.parameterResults.push({ 'paramID': parameter.id, 'curResult': 'false' })
+            } else if(parameter.type == "str"){
+                this.parameterResults.push({ 'paramID': parameter.id, 'curResult': '' })
+            } else if(parameter.type == "int"){
+                this.parameterResults.push({ 'paramID': parameter.id, 'curResult': '0' })
+            } else if(parameter.type == "array"){
+                this.parameterResults.push({ 'paramID': parameter.id, 'curResult': '' })
+            }
+            
         });
     }
 

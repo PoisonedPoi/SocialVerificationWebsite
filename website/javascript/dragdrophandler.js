@@ -59,6 +59,7 @@ class controller {
     sendModelToDatabase(xmlString){
         
         let xmlDoc;
+        $('#verificationStatusText').text("validating...");
         $.ajax({
             type: "POST",
             url: "/SocialVerificationWebsite/ViolationParser",
@@ -66,7 +67,7 @@ class controller {
             contentType: "text/xml",
             //dataType: "text/xml",
             cache: false,
-            error: function () { alert("No data found or error occured."); },
+            error: function (err) { $('#verificationStatusText').text("Error"); console.error("err response below"); console.error(err); },
             success: function (xml) {
                //alert("got data");
                 console.log(xml);
@@ -107,6 +108,7 @@ class controller {
                 console.log(violations);
                 IC.interaction.setViolations(violations); //model
                 IC.makeConflicts(IC.interaction.getViolations()); //view
+                $('#verificationStatusText').text("Complete");
             }
         });
         
@@ -545,6 +547,7 @@ function redrawConnectedLines(group) { //gets lines connected to this group and 
 document.onclick = hideMenu;
 
 //left clicks
+var curParameterSaved=false; //updates the ui text
 function leftCLickGroupMicro(){ 
     //display properties on property sidebar
     $('#parameters-panel').show();
@@ -578,9 +581,10 @@ function leftCLickGroupMicro(){
             let btnNo = $('<input type="radio"  name="p-bool-' + param.id + '" value="false">');
             curDispParam.append(btnNo);
             curDispParam.append($('<label for="p-bool-' + param.id +'">No</label><br>'));
-            if (parameterResults.find(x => x.paramID == param.id).curResult == "yes"){
+
+            if (parameterResults.find(x => x.paramID == param.id).curResult == "true"){
                 btnYes.attr("checked", true);
-            } else if (parameterResults.find(x => x.paramID == param.id).curResult == "no"){
+            } else if (parameterResults.find(x => x.paramID == param.id).curResult == "false"){
                 btnNo.attr("checked", true);
             }
         }else if(param.type == "str"){
@@ -686,6 +690,15 @@ function saveParameters(formId) {
         results.push({paramID, curResult});
     }
     IC.interaction.setMicroResults(microID, results);
+    let savedLabel = $('<label id="savedLabel" class="save-label mt-2"> Saved </label>');
+    console.log("testing");
+    console.log($('#parameters-panel').find('#savedLabel'));
+    if ($('#parameters-panel').find('#savedLabel').length){
+        console.log("contains");
+        return;
+    }
+    $('#parameters-panel').append(savedLabel);
+    setTimeout(() => { savedLabel.remove()}, 3000)
 }
 
 /*

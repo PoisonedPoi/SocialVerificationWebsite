@@ -49,6 +49,10 @@ body {
   background-color: rgb(240, 217, 208);
 }
 
+.save-label{
+    background: lightgreen;
+}
+
 .micro-box {
   background: lightgoldenrodyellow;
   height: 30px;
