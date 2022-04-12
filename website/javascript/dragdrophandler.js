@@ -82,27 +82,24 @@ class controller {
                 testViolation.addGroupViolating("0");
                 let violationList = xmlDoc.getElementsByTagName("violation_list")[0].childNodes;
                 for (let i = 0; i < violationList.length;i++){
-                    console.log("going to test here");
-                    console.log(violationList);
-                    console.log(violationList[0]);
                     let violationChild = violationList[i];
-             
-                    console.log("violation testing");
-                    console.log(violationChild);
                     let category = violationChild.getElementsByTagName("category")[0].textContent;
                     let type = violationChild.getElementsByTagName("type")[0].textContent;
                     let description = violationChild.getElementsByTagName("description")[0].textContent;
-                    console.log(violationChild);
-                    console.log("000");
-                    console.log(violationChild.getElementsByTagName("category")[0].value);
-                    console.log(category);
-                    console.log(type);
-                    console.log(description);
-                    violations.push(new Violation(category, type, description));
-
+                    var violationObject = new Violation(category, type, description);
+                    if(type == "group"){
+                        let violatorGroups = violationChild.getElementsByTagName("violator_groups")[0].childNodes;
+                        for(let j=0;j<violatorGroups.length;j++){
+                            let violaterGroupName = violatorGroups[i].getElementsByTagName("group")[0].textContent;
+                            violationObject.addGroupViolating(violaterGroupName);
+                        }
+                    }
+                    violations.push(violationObject);
                 }
+                console.log("adding violations to interaction");
+                console.log(violations);
                 IC.interaction.setViolations(violations); //model
-                IC.makeConflicts(this.interaction.getViolations()); //view
+                IC.makeConflicts(IC.interaction.getViolations()); //view
             }
         });
         

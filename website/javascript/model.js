@@ -373,7 +373,7 @@ class Violation {
     //category   -either "group" or "interaction"  --whether this is a group level violation (has associated group) or an interaction level violation (is violated somewhere in the interaction but exact location cant be pinpointed)
     //type    -- the type of property being violated
     //description --the description of the property being violated
-    //violator groups   --[Group ID]   list of group ids violating this property, will be empty if category is violation
+    //violator groups   --[groupName]   list of name of the group (or groups) violating this property, will be empty if category is violation
     
     constructor(category, type, description){
         this.category = category;
@@ -382,12 +382,12 @@ class Violation {
         this.violatorGroups = [];
     }
 
-    addGroupViolating(group){
-        this.violatorGroups.push(group);
+    addGroupViolating(groupName){
+        this.violatorGroups.push(groupName);
     }
 
-    setGroupsViolating(groups){
-    this.violatorGroups = groups;
+    setGroupsViolating(groupIDs){
+    this.violatorGroups = groupIDs;
     }
 
     getGroupsViolating(){
