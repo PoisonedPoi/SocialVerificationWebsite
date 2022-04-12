@@ -82,11 +82,9 @@ class controller {
                     let violationChild = violationList.childNodes.length[i];
              
                     console.log("violation testing");
-                    let category = violationChild.getElementsByTagName("category")[0].childNodes[0].value;
-                    console.log(violationChild.getElementsByTagName("category")[0].childNodes[0]);
-                    console.log(violationChild.getElementsByTagName("category")[0].value);
-                    let type = violationChild.getElementsByTagName("type")[0].childNodes[0].value;
-                    let description = violationChild.getElementsByTagName("description")[0].childNodes[0].value;
+                    let category = violationChild.getElementsByTagName("category")[0].textContent;
+                    let type = violationChild.getElementsByTagName("type")[0].textContent;
+                    let description = violationChild.getElementsByTagName("description")[0].textContent;
                     console.log(violationChild);
                     console.log("000");
                     console.log(violationChild.getElementsByTagName("category")[0].value);
