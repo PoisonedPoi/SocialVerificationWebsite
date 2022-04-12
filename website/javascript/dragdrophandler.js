@@ -80,7 +80,7 @@ class controller {
                 let violationList = xmlDoc.getElementsByTagName("violation_list")[0].childNodes;
                 for (let i = 0; i < violationList.length;i++){
                     console.log(violationList);
-                    console.log(violationList.childNodes[0]);
+                    console.log(violationList[0]);
                     let violationChild = violationList[i];
              
                     console.log("violation testing");
