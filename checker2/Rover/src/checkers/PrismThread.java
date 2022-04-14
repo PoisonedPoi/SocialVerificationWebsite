@@ -6,7 +6,6 @@ import model.Group;
 import model.GroupTransition;
 import model.Interaction;
 import model.Microinteraction;
-import javafx.application.Platform;
 
 public class PrismThread implements Runnable {
 	
