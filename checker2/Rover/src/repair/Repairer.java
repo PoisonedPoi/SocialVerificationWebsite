@@ -155,13 +155,13 @@ public class Repairer {
 			//mt.setPoly(poly);
 			//mt.getStrokeDashArray().addAll(25d, 10d);
 		//	mc.addMacroTransShell(mt);
-			previewer.add(mt);
+			// previewer.add(mt);
 			
-			// for (Circle node : mt.getIndicatorComponents()) 
-			// 	previewer.add(node);
+			// // for (Circle node : mt.getIndicatorComponents()) 
+			// // 	previewer.add(node);
 			
-			//previewer.add(mt.getPoly());
-			previewer.add(mt.getConditions());
+			// //previewer.add(mt.getPoly());
+			// previewer.add(mt.getConditions());
 			
 			// align the dummy nodes
 			ArrayList<Group> groupsToRealign = new ArrayList<Group>();
