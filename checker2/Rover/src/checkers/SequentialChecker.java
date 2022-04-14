@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import controller.ConsoleCT;
 import enums.StateClass;
 import enums.StateCompatabilityLookup;
 import parser.ast.*;
@@ -30,7 +29,6 @@ public class SequentialChecker {
 	private Boolean isNonAssisted;
 	
 	// gui stuff
-	//private ConsoleCT console;
 	
 	// bug tracking
 	private BugTracker bt;

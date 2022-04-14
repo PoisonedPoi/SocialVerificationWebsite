@@ -17,7 +17,7 @@ import aCheck.*;
 import checkers.Checker;
 import checkers.PrismThread;
 import checkers.Property;
-import controller.ConsoleCT;
+
 import aCheck.ModelFileChecker;
 import controller.NetworkPropagator;
 import model_ctrl.Decoder;

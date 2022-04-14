@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import javafx.scene.image.Image;
 
 import repair.Fix;
 
@@ -18,7 +17,7 @@ public class Property implements Comparable{
 	private String description;
 	private ArrayList<Fix> fixes;
 	private String context;
-	private Image icon;
+	// private Image icon;
 	private String category;
 	
 	public Property(int ID, String property, String ties, String bugtrackID, boolean initVal, String description, String category, String context, String iconName) {
@@ -31,7 +30,7 @@ public class Property implements Comparable{
 		this.category = category;
 		this.context = context;
 		this.fixes = new ArrayList<Fix>();
-		this.icon = null; //TODO safely remove
+	//	this.icon = null; //TODO safely remove
 		
 		/*
 		try {
@@ -82,9 +81,9 @@ public class Property implements Comparable{
 		return category;
 	}
 	
-	public Image getIcon() {
-		return icon;
-	}
+	// public Image getIcon() {
+	// 	return icon;
+	// }
 	
 	public String getContext() {
 		return context;

@@ -16,7 +16,7 @@ import checkers.ModBehPair;
 import checkers.PrismThread;
 import checkers.PropModsBeh;
 import checkers.Property;
-import controller.ConsoleCT;
+
 import aCheck.ModelFileChecker;
 import enums.StateClass;
 

@@ -1,7 +1,6 @@
 package checkers;
 import java.util.ArrayList;
 
-import controller.ConsoleCT;
 import aCheck.ModelFileChecker;
 import model.Group;
 import model.GroupTransition;
@@ -16,7 +15,6 @@ public class PrismThread implements Runnable {
 	
 	// necessary references
 	private Checker c;
-	private ConsoleCT console;
 	private Interaction ia;
 	private ModelFileChecker mc;
 	private Microinteraction micro;

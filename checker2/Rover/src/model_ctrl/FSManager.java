@@ -122,29 +122,7 @@ public class FSManager {
 	}
 	
 	//Get all the microinteractions in the lib folder as microboxes. Used in the lib tab
-	public ArrayList<MicroBox> getAllMicros(ImportMicrosCT imct){
-		
-		ArrayList<MicroBox> allMicros = new ArrayList<>();
-		
-		File mainDir = new File(WORKSPACE + File.separator + "Lib");
-		int pos = 0;
-		
-		for(File file : mainDir.listFiles()){
-			if(file.isDirectory() && !file.getName().equals("Supreme") && !file.getName().contains("Proc")){
-				allMicros.addAll(getMicrosInDir(file, imct.colorPick(pos)));
-				pos++;
-			}
-		}
-		
-		for(File file : mainDir.listFiles()){
-			if(file.getName().contains("Proc")){
-				allMicros.addAll(getMicrosInDir(file, imct.colorPick(pos)));
-				pos++;
-			}
-		}
-		
-		return allMicros;
-	}
+
 
 	//TODO Implement this method so it can write to the properties file before the program shuts down
 	//Save any changes such as new font, fontsize, base state size, grid status

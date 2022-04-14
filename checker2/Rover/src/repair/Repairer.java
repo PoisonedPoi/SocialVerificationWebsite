@@ -8,7 +8,6 @@ import aCheck.ModelFileChecker;
 
 import model.*;
 import model.Group;
-import javafx.scene.control.TextArea;
 import java.awt.geom.Point2D;
 
 public class Repairer {
@@ -41,7 +40,7 @@ public class Repairer {
 			ia.addGroup(group);
 			
 			// find the greeter microinteraction and add it
-			mc.addMicroToGroup(group, imct.getMBFileByKeyword("Greeter"));
+			mc.addMicroToGroup(group, null);//imct.getMBFileByKeyword("Greeter")
 			
 			GroupTransition mtran = new GroupTransition(group, prevInit, ia.getBugTracker());
 			//Polygon poly = new Polygon();
@@ -135,7 +134,7 @@ public class Repairer {
 			prevInit.resetGraphPropertyValues();
 			
 			// find the greeter microinteraction and add it
-			mc.addMicroToGroup(group, imct.getMBFileByKeyword("Greeter"));
+			mc.addMicroToGroup(group, null); //imct.getMBFileByKeyword("Greeter")
 			
 			GroupTransition mtran = new GroupTransition(group, prevInit, ia.getBugTracker());
 			//mtran.setPoly(poly);
@@ -189,7 +188,7 @@ public class Repairer {
 		addGroup(group, mtran, null); //group, placement, ...
 		
 		// add the microinteraction
-		mc.addMicroToGroup(group2, imct.getMBFileByKeyword("Remark"));
+		mc.addMicroToGroup(group2, null);//imct.getMBFileByKeyword("Remark")
 		
 		// access the microinteraction and pre-set the parameter           --removed while removing javafx, could be important
 		Microinteraction remark = group2.getMicrointeractions().get(0);
@@ -206,7 +205,7 @@ public class Repairer {
 		 */
 		// add the wait
 		Group waitGroup = new Group(false, ia.getBugTracker());
-		mc.addMicroToGroup(waitGroup, imct.getMBFileByKeyword("Wait"));
+		mc.addMicroToGroup(waitGroup, null);//imct.getMBFileByKeyword("Wait")
 		GroupTransition mtranWait = new GroupTransition(group2, waitGroup, ia.getBugTracker());
 		boolean[] humanBranchingWait = {false, true, false};
 		mtranWait.setAllHumanBranching(humanBranchingWait);
