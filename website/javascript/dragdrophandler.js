@@ -100,7 +100,7 @@ class controller {
                 // //get back response, if 200 it should give back a list of violations
                 // //parse violations
 
-                //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
+            
 
                 let violations = []
                 let testViolation = new Violation("group", "waiting flub", "The interaction should wait for things to work out");

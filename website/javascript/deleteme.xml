@@ -17,16 +17,18 @@
             <parameter type="str" val="">question</parameter>
             <parameter type="array">
                 <name>answers robot can recognize</name>
-            </micro>
-        </group>
-        <group id="2" init="false" x="4.0" y="4.0">
-            <name>untitled2</name>
-            <micro>
-                <name>Remark</name>
-                <parameter type="str" val="">content</parameter>
-                <parameter type="bool" val="false">use_gesture</parameter>
-                <parameter type="bool" val="false">Allow_human_to_respond</parameter>
-            </micro>
-        </group>
-        <design>copy</design>
-    </nta>
+            </parameter>
+        </micro>
+        <micro>
+            <name>Farewell</name>
+        </micro>
+    </group>
+    <transition>
+        <source ref="0"/>
+        <target ref="1"/>
+        <guard condition="human_ready"/>
+        <guard condition="human_busy"/>
+        <guard condition="human_ignore"/>
+    </transition>
+    <design>copy</design>
+</nta>
