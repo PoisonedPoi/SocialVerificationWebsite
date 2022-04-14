@@ -19,7 +19,6 @@ public class Microinteraction {
 	private ArrayList<Variable> globals;
 	private ArrayList<Module> modules;
 	private Microinteraction builtMicro;
-	private MicroBox mb;    // microinteractions that are initialized should have a microbox -- aka its graphical form
 	private HashMap<String,ArrayList<Variable>> orLabels;
 	private HashMap<String,ArrayList<Variable>> andLabels;
 	private MicroParameterizer params;
@@ -53,7 +52,6 @@ public class Microinteraction {
 		globals = new ArrayList<Variable>();
 		modules = new ArrayList<Module>();
 		builtMicro = null;
-		mb = null;   // no microbox initially
 		orLabels = null;
 		andLabels = null;
 		params = null;
@@ -103,15 +101,7 @@ public class Microinteraction {
 		this.id = id;
 	}
 	
-	public void linkMicroBox(MicroBox mb) {
-		this.mb = mb;
-		mb.setMicrointeraction(this);
-	}
-	
-	
-	public MicroBox getMicroBox() {
-		return mb;
-	}
+
 	
 	public MicroParameterizer getParameterizer() {
 		return params;
@@ -253,7 +243,6 @@ public class Microinteraction {
 		// deal with name and description
 		microCopy.setName(name);
 		microCopy.addDescription(description);
-		microCopy.linkMicroBox(mb);
 		
 		// deal with this stuff but DON'T WORRY ABOUT OR/AND LABELS
 		/*
