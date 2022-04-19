@@ -68,6 +68,7 @@ class Interaction {
                         xmlString += '<parameter type="array">';
                         xmlString += '<name>answers robot can recognize</name>'
                         if (micro.parameterResults.find(x => x.paramID == parameter.id).curResult == ''){
+                            xmlString += '</parameter>'
                             return;
                         }
                         micro.parameterResults.find(x => x.paramID == parameter.id).curResult.forEach(res => {
@@ -253,7 +254,7 @@ class Interaction {
 
     removeTransition(id){
         for(let i=0;i<this.transitions.length;i++){
-            if(this.transitions[i].id === id){
+            if(this.transitions[i].id == id){
                 this.transitions.splice(i, 1);
                 return;
             }
@@ -326,7 +327,16 @@ class MicroInteraction{
         this.id = id;
         this.parameterResults = [];
         this.parameters.forEach(parameter => {
-            this.parameterResults.push({'paramID' : parameter.id ,  'curResult' : ''})
+            if(parameter.type == "bool"){
+                this.parameterResults.push({ 'paramID': parameter.id, 'curResult': 'false' })
+            } else if(parameter.type == "str"){
+                this.parameterResults.push({ 'paramID': parameter.id, 'curResult': '' })
+            } else if(parameter.type == "int"){
+                this.parameterResults.push({ 'paramID': parameter.id, 'curResult': '0' })
+            } else if(parameter.type == "array"){
+                this.parameterResults.push({ 'paramID': parameter.id, 'curResult': '' })
+            }
+            
         });
     }
 
@@ -373,7 +383,7 @@ class Violation {
     //category   -either "group" or "interaction"  --whether this is a group level violation (has associated group) or an interaction level violation (is violated somewhere in the interaction but exact location cant be pinpointed)
     //type    -- the type of property being violated
     //description --the description of the property being violated
-    //violator groups   --[Group ID]   list of group ids violating this property, will be empty if category is violation
+    //violator groups   --[groupName]   list of name of the group (or groups) violating this property, will be empty if category is violation
     
     constructor(category, type, description){
         this.category = category;
@@ -382,12 +392,12 @@ class Violation {
         this.violatorGroups = [];
     }
 
-    addGroupViolating(group){
-        this.violatorGroups.push(group);
+    addGroupViolating(groupName){
+        this.violatorGroups.push(groupName);
     }
 
-    setGroupsViolating(groups){
-    this.violatorGroups = groups;
+    setGroupsViolating(groupIDs){
+    this.violatorGroups = groupIDs;
     }
 
     getGroupsViolating(){

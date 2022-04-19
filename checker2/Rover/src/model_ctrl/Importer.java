@@ -5,7 +5,6 @@ import model.Interaction;
 import java.io.File;
 
 import aCheck.ModelFileChecker;
-import javafx.stage.FileChooser;
 
 public class Importer {
 	
@@ -17,8 +16,6 @@ public class Importer {
 	public Importer(String absFilePath, Interaction ia, ModelFileChecker mc) {
 		this.ia = ia;
 		this.mc = mc;
-		FileChooser fc = new FileChooser();
-		inFile = fc.showOpenDialog(null);
 		this.absFilePath = absFilePath;
 	}
 	

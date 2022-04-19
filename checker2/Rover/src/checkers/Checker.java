@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import controller.ConsoleCT;
 import aCheck.Globals;
 import model.*;
 import model.Group;
@@ -31,9 +30,6 @@ public class Checker {
 	// prism stuff
 	PrismLog mainLog;
 	Prism prism;
-	
-	// gui stuff
-	//ConsoleCT console;
 	
 	// is nonassisted?
 	Boolean isNonAssisted;

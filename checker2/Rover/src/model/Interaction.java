@@ -17,7 +17,7 @@ import aCheck.*;
 import checkers.Checker;
 import checkers.PrismThread;
 import checkers.Property;
-import controller.ConsoleCT;
+
 import aCheck.ModelFileChecker;
 import controller.NetworkPropagator;
 import model_ctrl.Decoder;
@@ -84,8 +84,9 @@ public class Interaction {
 
 	//the violations the checker finds
 	private HashMap<Property, Violation> violations;
-	
-	//has the user folder location (NOTE SHOULD NOT BE CHANGED AFTER SET)
+	private HashMap<String, Violation> specialViolations; //indexed by string instead of property
+
+	//has the user folder location (SHOULD NOT BE CHANGED AFTER SET)
 	private String USERFOLDER;
 
 	public Interaction(ArrayList<Property> properties) {
@@ -116,7 +117,7 @@ public class Interaction {
 		staticEnders = new HashMap<String, java.lang.Boolean[]>();
 		
 		violations = new HashMap<Property, Violation>();
-
+		specialViolations = new HashMap<String, Violation>();
 		authProp = true;
 		farewellProp = true;
 		currDesign = null;
@@ -154,6 +155,7 @@ public class Interaction {
 		}
 	}
 
+	//this is the main class used for violation parsing
 	public Document getXMLViolationDocument(){
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder;
@@ -163,8 +165,8 @@ public class Interaction {
 			Element rootElement = document.createElement("violation_list");
 			document.appendChild(rootElement);
 			
-			//print violation list
-			for(Property prop : graphProperties){
+			//print violation list, go through all the property categores and if a violation exists for that category then we add a violation xml object 
+			for(Property prop : graphProperties){ //parsing all properties, the special violations are below
 				if(prop.getTies().equals("group") || prop.getTies().equals("init")){
 					if(violations.get(prop) != null){
 						Element violationElement = document.createElement("violation");
@@ -211,6 +213,49 @@ public class Interaction {
 					}
 				}
 			}
+			specialViolations.forEach((violationType, violation) -> {
+				if(violation.isViolatingAtGroupLevel()){
+					Element violationElement = document.createElement("violation");
+
+					Element category = document.createElement("category");
+					category.appendChild(document.createTextNode("group"));
+					violationElement.appendChild(category);
+
+					Element type = document.createElement("type");
+					
+					type.appendChild(document.createTextNode(violationType));
+					violationElement.appendChild(type);
+
+					Element description = document.createElement("description");
+					description.appendChild(document.createTextNode(violation.getDescription()));
+					violationElement.appendChild(description);
+
+					Element violationGroupsElement = document.createElement("violator_groups");
+					ArrayList<Group> violatorGroups = violation.getGroupsViolating();
+					for(int i=0;i<violatorGroups.size();i++){
+						Element curGroupElement = document.createElement("group");
+						curGroupElement.appendChild(document.createTextNode(violatorGroups.get(i).getName()));
+						violationGroupsElement.appendChild(curGroupElement);
+					}
+					violationElement.appendChild(violationGroupsElement);
+					rootElement.appendChild(violationElement);
+				}else if(violation.isViolatingAtInteractionLevel()){
+					Element violationElement = document.createElement("violation");
+
+					Element category = document.createElement("category");
+					category.appendChild(document.createTextNode("interaction"));
+					violationElement.appendChild(category);
+
+					Element type = document.createElement("type");
+					type.appendChild(document.createTextNode(violationType));
+					violationElement.appendChild(type);
+
+					Element description = document.createElement("description");
+					description.appendChild(document.createTextNode(violation.getDescription()));
+					violationElement.appendChild(description);
+					rootElement.appendChild(violationElement);
+				}
+			});
 			return document;
 		}catch(Exception e){
 			e.printStackTrace();
@@ -347,6 +392,18 @@ public class Interaction {
 	public void clearViolations(){
 		//TODO clear violations
 		//violations.clear();
+	}
+
+	public void addSpecialViolation(Violation v){
+		specialViolations.put(v.getType(), v);
+	}
+
+	public boolean hasSpecialViolation(String type){
+		return specialViolations.containsKey(type);
+	}
+
+	public Violation getSpecialViolation(String type){
+		return specialViolations.get(type);
 	}
 
 	public void addViolation(Violation v){

@@ -47,7 +47,7 @@ migrating a social robot verification application to a web app
   <body>
     <nav id="" class="navbar bg-dark navbar-dark px-2">
       <label class="navbar-brand" style="color: white;" href="#">
-        Website Logo
+        Social Verification Interaction
       </label>
       <button class="btn btn-primary">navbar stuff</button>
     </nav>
@@ -59,7 +59,7 @@ migrating a social robot verification application to a web app
         </div>
         <div class="col-4">
           <label class="h5">Verification Status:</label>
-          <label class="h5">Complete</label>
+          <label id="verificationStatusText" class="h5">Not Verified</label>
         </div>
       </div>
 
@@ -96,7 +96,7 @@ migrating a social robot verification application to a web app
             value="export"
             onclick="verifyModel()"
           >
-            Test Verify
+            Verify Model
           </button>
         </div>
       </div>
@@ -173,7 +173,7 @@ migrating a social robot verification application to a web app
 
       <div class="row">
         <div class = "col-9  interaction-output mt-2 mh-25">
-          <textarea id="terminal-textarea" class="terminal-text py=" ></textarea>
+          <textarea id="terminal-textarea" class="terminal-text" ></textarea>
         </div>
         <div class = "col-3  robot-viewer mt-2 mh-25">
            
@@ -185,6 +185,23 @@ migrating a social robot verification application to a web app
 
 
       <!-- context menues and other hidden elements -->
+      <div
+        id="contextMenuTransition"
+        class="context-menu context-box"
+        style="z-index: 200; display: none; position: absolute;"
+        hideable="true"
+        data-currentGroup=""
+      >
+        <button
+          id="removeTransitionBtn"
+          class="button-unpressed"
+          value=""
+          hideable="true"
+          onclick="removeTransition(this.value)"
+        >
+          Remove Transition
+        </button>
+      </div>
       <div
         id="contextMenuGroup"
         class="context-menu context-box"

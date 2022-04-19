@@ -2,7 +2,6 @@ package aCheck;
 
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 
-import javafx.embed.swing.SwingFXUtils;
 import javax.imageio.ImageIO;
 import java.io.*;
 import java.io.FileInputStream;
@@ -24,34 +23,6 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.StringWriter;
-
-import javafx.scene.*;
-import javafx.scene.control.*;
-import javafx.scene.input.*;
-import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
-import javafx.geometry.Point2D;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.image.WritableImage;
-import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
-import javafx.scene.shape.Polygon;
-import javafx.scene.text.Text;
-import javafx.util.Duration;
-import javafx.animation.KeyFrame;
-import javafx.animation.Timeline;
-import javafx.scene.text.Font;
-import javafx.stage.WindowEvent;
 
 
 import checkers.Checker;
@@ -127,7 +98,7 @@ public class ModelFileChecker{
     private final String SID; //session id, gives the user folder name as "user + SID", it should not be changed once set 
     private final String USERFOLDER;//the actual folder path for this user
     
-        public ModelFileChecker(String sid,  String xmlString, String workingDirectory ){
+    public ModelFileChecker(String sid,  String xmlString, String workingDirectory ){
         this.SID = sid;
         Globals.ROOT_FP = workingDirectory;
         Globals.USERPATH =  workingDirectory + "/users/";
@@ -150,8 +121,9 @@ public class ModelFileChecker{
         //System.out.println("Done Loading interaction and now about to start check");
         performCheck();
         //System.out.println("now about to load violations");
-        loadViolations();
 
+        loadViolations();
+     
         printXMLViolationDocument();
 
         destroyUserFolder();
@@ -175,6 +147,7 @@ public class ModelFileChecker{
     }
     
     public ModelFileChecker(String sid,  String workingDirectory){
+        //this is called by RoVer.sh
         this.SID = sid;
         Globals.ROOT_FP = workingDirectory;
         Globals.USERPATH =  workingDirectory + "/users/";
@@ -197,6 +170,8 @@ public class ModelFileChecker{
         //System.out.println("Done Loading interaction and now about to start check");
         performCheck();
         //System.out.println("now about to load violations");
+
+        
         loadViolations();
 
         printXMLViolationDocument();
@@ -624,7 +599,7 @@ public boolean[] getEndStates(Node node) {
 
  public void addMicroToGroup(Group node, File file) {
      //not used
-
+        System.out.println("ERROR ADDD MICRO TO GROUP CALLED (WRONG VERSION) SEE MODELFILECHECKER CLASS");
         Microinteraction newMicro = new Microinteraction();
         (new Decoder(this, isNonAssisted)).readMicrointeraction(file, file.getAbsolutePath(), newMicro);
 
@@ -632,8 +607,6 @@ public boolean[] getEndStates(Node node) {
         newMicro.addParameterizer(new MicroParameterizer(newMicro.getGlobalVars(), this));
 
         newMicro.build();
-        if (isNonAssisted)
-            newMicro.setStaticTooltip(staticTooltips.get(newMicro.getName()));
 
         /*
          * don't do anything if this microinteraction already exists!

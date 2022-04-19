@@ -10,14 +10,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import controller.ConsoleCT;
 import enums.StateClass;
 import enums.StateCompatabilityLookup;
 import parser.ast.*;
 import prism.*;
 import study.BugTracker;
-import javafx.scene.control.Tooltip;
-import javafx.scene.paint.Color;
 import aCheck.Globals;
 public class SequentialChecker {
 	
@@ -30,7 +27,6 @@ public class SequentialChecker {
 	private Boolean isNonAssisted;
 	
 	// gui stuff
-	//private ConsoleCT console;
 	
 	// bug tracking
 	private BugTracker bt;

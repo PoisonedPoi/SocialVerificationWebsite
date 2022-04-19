@@ -2,16 +2,12 @@ package model;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
-import javafx.scene.canvas.Canvas;
-import javafx.scene.paint.Color;
-import javafx.scene.SnapshotParameters;
 
 import enums.StateClass;
 import model_ctrl.Builder;
 import model_ctrl.MicroParameterizer;
 import model_ctrl.TooltipViz;
-import javafx.scene.control.Tooltip;
-import javafx.scene.image.WritableImage;
+
 
 //TODO URGENT: Merge with MicroBox
 
@@ -23,7 +19,6 @@ public class Microinteraction {
 	private ArrayList<Variable> globals;
 	private ArrayList<Module> modules;
 	private Microinteraction builtMicro;
-	private MicroBox mb;    // microinteractions that are initialized should have a microbox -- aka its graphical form
 	private HashMap<String,ArrayList<Variable>> orLabels;
 	private HashMap<String,ArrayList<Variable>> andLabels;
 	private MicroParameterizer params;
@@ -36,9 +31,8 @@ public class Microinteraction {
 	ArrayList<ArrayList<State>> startStates;
 	
 	// tooltip
-	Canvas tooltipCanvas;
-	Tooltip tt;
-	private boolean staticTooltip;
+
+	
 	
 	// stuff to do with concurrent microinteractions
 
@@ -58,7 +52,6 @@ public class Microinteraction {
 		globals = new ArrayList<Variable>();
 		modules = new ArrayList<Module>();
 		builtMicro = null;
-		mb = null;   // no microbox initially
 		orLabels = null;
 		andLabels = null;
 		params = null;
@@ -108,36 +101,7 @@ public class Microinteraction {
 		this.id = id;
 	}
 	
-	public void linkMicroBox(MicroBox mb) {
-		this.mb = mb;
-		mb.setMicrointeraction(this);
-	}
-	
-	public void setTooltip(Tooltip tt) {
-		// this.tt = tt;
-	}
-	
-	public Tooltip getTooltip() {
-		return null; //tt
-	}
-	
-	public void setStaticTooltip(TooltipViz tool) {
-		// staticTooltip = true;
-		
-		// SnapshotParameters params = new SnapshotParameters();
-		// params.setFill(Color.TRANSPARENT);         
-		// WritableImage image = tool.snapshot(params, null);
-		// this.tooltipCanvas.getGraphicsContext2D().drawImage(image, 0, 0);
-		
-	}
-	
-	public void setIsStaticTooltip(boolean val) {
-		// staticTooltip = val;
-	}
-	
-	public MicroBox getMicroBox() {
-		return mb;
-	}
+
 	
 	public MicroParameterizer getParameterizer() {
 		return params;
@@ -173,10 +137,7 @@ public class Microinteraction {
 		// 	((TooltipViz) tooltipCanvas).draw(isNonAssisted);
 		
 	}
-	
-	public Canvas getTooltipViz() {
-		return tooltipCanvas;
-	}
+
 	
 	public ArrayList<ArrayList<State>> getStartStates() {
 		return startStates;
@@ -282,8 +243,6 @@ public class Microinteraction {
 		// deal with name and description
 		microCopy.setName(name);
 		microCopy.addDescription(description);
-		MicroBox mb = new MicroBox(new File("none.None"), "none", Color.BLACK);
-		microCopy.linkMicroBox(mb);
 		
 		// deal with this stuff but DON'T WORRY ABOUT OR/AND LABELS
 		/*

@@ -9,10 +9,12 @@ public class Violation{
 
     private Property prop; //the property that is violated
     private ArrayList<Group> groupsViolating; // if this property is violated by a group, this stores the list of groups violating this property
-    private boolean tiesToInteraction; //properties are either related to groups or to an interaction, this is saying true if the prop is an interaction property f
-    private String type;
+    private boolean tiesToInteraction; //properties are either related to groups or to an interaction, this is saying true if the prop is an interaction property
+    private String type; // the class of violation it falls under
+    private String description; //description of this violation
+
     public Violation(Property prop){
-        this.prop = prop;
+        this.prop = prop;//the property contains the type, category and description
         groupsViolating = new ArrayList<Group>();
         type = prop.getCategory();
         if(prop.getTies().equals("interaction")){
@@ -22,7 +24,23 @@ public class Violation{
         }
     }
 
-        public String getType(){
+    public Violation(String type, boolean tiesToInteraction, String description){  //a special violation indexed by the type and has no property
+        this.prop = null;//since we dont tie this to a property, we have to add type and description
+        groupsViolating = new ArrayList<Group>();
+        this.type = type;
+        this.description = description;
+        if(tiesToInteraction){
+            this.tiesToInteraction = true;
+        }else{
+            this.tiesToInteraction = false;
+        }
+    }
+
+    public String getDescription(){
+        return description;
+    }
+
+    public String getType(){
         return type;
     }
 
@@ -36,7 +54,7 @@ public class Violation{
 
     public String toString(){
         String returnString = "";
-        returnString += "TYPE: " + type + "\n" + prop.toString() + " \nDesc: " + prop.getDescription() ;
+        returnString += "TYPE: " + type + "\n" + " \nDesc: " + description + "\n";
         if(!tiesToInteraction){
             for(Group g : groupsViolating){
                    returnString += "\nGROUP: " + g.toString() ;
