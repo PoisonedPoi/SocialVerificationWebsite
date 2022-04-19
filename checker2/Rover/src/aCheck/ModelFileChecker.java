@@ -147,7 +147,7 @@ public class ModelFileChecker{
     }
     
     public ModelFileChecker(String sid,  String workingDirectory){
-        System.out.println("DELETEME but this is main");
+        //this is called by RoVer.sh
         this.SID = sid;
         Globals.ROOT_FP = workingDirectory;
         Globals.USERPATH =  workingDirectory + "/users/";

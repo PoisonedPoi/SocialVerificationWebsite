@@ -98,8 +98,8 @@ public class ViolationParser{ //this class parses the interaction and the groups
 					//root.getChildren().add(propertyCategories.get("Branching Errors"));
 				}
 				if(!ia.hasSpecialViolation("Branching Errors")){ //unknown how this works
-						Violation speechViolation = new Violation("Branching Errors", true, "Branch conditions insufficient");
-
+						Violation branchViolation = new Violation("Branching Errors", true, "Branch conditions insufficient");
+						ia.addSpecialViolation(branchViolation);
 					}else{
 						//violation already added
 					}	
@@ -112,8 +112,8 @@ public class ViolationParser{ //this class parses the interaction and the groups
 				//	root.getChildren().add(propertyCategories.get("Jams"));
 				}
 					if(!ia.hasSpecialViolation("Jams")){
-						Violation speechViolation = new Violation("Jams", true, "Sequential composition of groups insufficient (see transitions with red or yellow indicators)");
-
+						Violation jamViolation = new Violation("Jams", true, "Sequential composition of groups insufficient (see transitions with red or yellow indicators)");
+						ia.addSpecialViolation(jamViolation);
 					}else{
 						//violation already added
 					}	
@@ -138,6 +138,7 @@ public class ViolationParser{ //this class parses the interaction and the groups
 					if(!ia.hasSpecialViolation("Speech Flubs")){
 						Violation speechViolation = new Violation("Speech Flubs", false, "Robot may interrupt the human's speech");
 						speechViolation.addGroupViolating(group);
+						ia.addSpecialViolation(speechViolation);
 					}else{
 						ia.getSpecialViolation("Speech Flubs").addGroupViolating(group);
 					}	
