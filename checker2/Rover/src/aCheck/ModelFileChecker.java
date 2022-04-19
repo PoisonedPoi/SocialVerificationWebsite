@@ -98,7 +98,7 @@ public class ModelFileChecker{
     private final String SID; //session id, gives the user folder name as "user + SID", it should not be changed once set 
     private final String USERFOLDER;//the actual folder path for this user
     
-        public ModelFileChecker(String sid,  String xmlString, String workingDirectory ){
+    public ModelFileChecker(String sid,  String xmlString, String workingDirectory ){
         this.SID = sid;
         Globals.ROOT_FP = workingDirectory;
         Globals.USERPATH =  workingDirectory + "/users/";
@@ -121,8 +121,9 @@ public class ModelFileChecker{
         //System.out.println("Done Loading interaction and now about to start check");
         performCheck();
         //System.out.println("now about to load violations");
-        loadViolations();
 
+        loadViolations();
+     
         printXMLViolationDocument();
 
         destroyUserFolder();
@@ -146,6 +147,7 @@ public class ModelFileChecker{
     }
     
     public ModelFileChecker(String sid,  String workingDirectory){
+        System.out.println("DELETEME but this is main");
         this.SID = sid;
         Globals.ROOT_FP = workingDirectory;
         Globals.USERPATH =  workingDirectory + "/users/";
@@ -168,6 +170,8 @@ public class ModelFileChecker{
         //System.out.println("Done Loading interaction and now about to start check");
         performCheck();
         //System.out.println("now about to load violations");
+
+        
         loadViolations();
 
         printXMLViolationDocument();
