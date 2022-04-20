@@ -67,6 +67,7 @@ body {
   width: 100px;
   height: 150px;
   border: 2px solid black;
+  border-radius: .5rem;
   background: lightgray;
   left: 0;
   top: 0;
