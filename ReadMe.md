@@ -63,7 +63,7 @@ http://138.49.185.222:8080/SocialVerificationWebsite/
 
 --making changes to source code and redeploying
 pull new changes into the SocialVerificationWebsite folder,
-then run ./deploy.sh as ubuntu (it will switch to tomcat using sudo -u tomcat and make the war file and deploy it to the server, wait 5 seconds and your changes should be applied if tomcat is running)
+then run ./deploy.sh for front end changes and ./update.sh for source code changes in the checker2 folder
 
 Notes and suggestions,
 
