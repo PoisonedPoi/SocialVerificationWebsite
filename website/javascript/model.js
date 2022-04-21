@@ -6,7 +6,6 @@
 // model classes
 class Interaction {
     /*
-
     trackedMicroTypes = [];
     groups = [];
     transitions = [];
@@ -52,13 +51,13 @@ class Interaction {
     exportModelToXML(){
         let JSONModel = JSON.parse(JSON.stringify(this));
         let xmlString = '';
-        xmlString += '<?xml version="1.0" encoding="utf-8"?>'
+        //xmlString += '<?xml version="1.0" encoding="utf-8"?>'
         xmlString += '<nta>';
         xmlString += '<name>interaction</name>';
 
         //add groups
         JSONModel.groups.forEach(group => {
-            xmlString +='<group id="'+group.id+'" init="' + group.initialGroup + '" x="4.0" y="4.0">';
+            xmlString +='<group id="'+group.id+'" init="' + group.initialGroup + '" x="'+ group.x + '" y="'+group.y+'">';
             xmlString +='<name>'+group.name+'</name>';
             group.micros.forEach(micro => {
                 xmlString += '<micro>';
@@ -125,8 +124,23 @@ class Interaction {
         return this.violations;
     }
 
+    setMicroParamValByVariable(microID, variableName, val){
+        let micro = this.getMicro(microID);
+        let paramID = null
+        micro.parameters.forEach(param => {
+            if(param.variableName == variableName){
+                paramID = param.id;
+            }
+        })
+        if(paramID == null){
+            console.log("Error, unable to set micro param val by variable, Variable name " + variableName + " not found");
+            return
+        }
+        micro.parameterResults.find(x => x.paramID == paramID).curResult = val;
+
+    }
+
     loadMicroTypes(newMicroTypes){
-        //TODO load all micro types automatically by controller
         for(let i=0;i< newMicroTypes.length;i++){
             this.trackedMicroTypes.push(newMicroTypes[i]);
         }
@@ -134,7 +148,7 @@ class Interaction {
 
     createGroup(){
         let newGroup;
-        if (this.groupIDNum === 0){
+        if (this.groupIDNum == 0){
             newGroup = new Group(0, true);
         }else{
             newGroup = new Group(this.groupIDNum, false); 
@@ -144,17 +158,31 @@ class Interaction {
         this.groupIDNum++;
         return newGroup.id;
     }
+
+    makeGroup(x, y, id, isInitial, name){ //mainly used when loading interactions
+        this.groupIDNum = parseInt(this.groupIDNum) + parseInt(id); //simple way to make sure id isn't repeated when dynamically adding groups
+        console.log("updated " + this.groupIDNum);
+        let newGroup = new Group(id,isInitial);
+        newGroup.name = name;
+        newGroup.setXY(x,y);
+        this.groups.push(newGroup);
+        return id;
+    }
     
 
     getGroup(id){
         //console.log(this.groups);
-        for (let i = 0; i < this.groupIDNum;i++){
+        for (let i = 0; i < this.groups.length; i++){
             if(this.groups[i].id == id){
                 return this.groups[i];
             }
         }
         console.log("couldnt find id " + id + " in getGroup");
         return;
+    }
+
+    setGroupXY(id, x , y){
+        this.getGroup(id).setXY(x,y);
     }
 
 
@@ -231,8 +259,6 @@ class Interaction {
         return newMicro.id;
     }
 
-    
-
     removeMicroFromGroup(groupid, microid){
         let group = this.getGroup(groupid);
         for(let i=0;i<this.micros.length;i++){
@@ -246,6 +272,13 @@ class Interaction {
     addTransition(group1id, group2id){
         let group1 = this.getGroup(group1id);
         let group2 = this.getGroup(group2id);
+        //check for an existing transition between these two groups, there should only be on transition between two specific groups
+        for(let i=0;i<this.transitions.length;i++){
+            if(this.transitions[i].firstGroup == group1 && this.transitions[i].secondGroup == group2){
+                console.error("Two specific groups can only have one transition")
+                return -1; //error
+            }
+        }
         let newTransition = new Transition(this.transitionIDNum, group1, group2);
         this.transitions.push(newTransition);
         this.transitionIDNum++;
@@ -266,28 +299,37 @@ class Interaction {
 
 class Group{
     /*
-    initialGroup;
+    initialGroup; --is this the initial group or no? (bool)
     id;
     name;
+    x; 
+    y;
     micros = [];
 */
     constructor(id, isFirst){
         this.initialGroup = isFirst;
         this.id = id;
         this.micros = [];
+        this.x = 5;
+        this.y = 5;
     }
 
+    setXY(x,y){
+        this.x = x;
+        this.y = y;
+    }
     addMicro(micro){
         this.micros.push(micro);
     }
 
     removeMicro(microid){
         for (let i = 0; i < this.micros.length; i++) {
-            if (this.micros[i].id === microid) {
+            if (this.micros[i].id == microid) {
                 this.micros.splice(i, 1);
                 return;
             }
         }
+        console.log("error, did not find and remove micro " + microid + " from group " + this.id)
     }
     getMicros(){
         return this.micros;
@@ -318,8 +360,7 @@ class MicroInteraction{
     id;
     type;
     parameters = [];
-    parameterResults = [];
-    Note: results are stored as follows: {parameter id: resultString} (or list instead of result string case of array) so parameterResults looks like [{0,"yes"},{20,"option1"}] --these will be passed to backend along with the variable name(which is stored in parameter)
+    parameterResults = [];  Note: results are stored as follows: {parameter id: resultString} (or list instead of result string case of type=array) so parameterResults looks like [{0,"yes"},{20,"option1"}] --these will be passed to backend along with the variable name(which is stored in parameter)
     */
     constructor(id, microType){ //micros are built off a microType defined
         this.type = microType.type;
@@ -348,7 +389,7 @@ class MicroInteraction{
 
 class MicroType{
     /*
-    parameters = [];
+    parameters = []; 
     type;
     */
     constructor(type,parameters){

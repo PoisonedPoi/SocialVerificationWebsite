@@ -1,32 +1,48 @@
-//TODOS and possible addons,
-//add canvas "push" buttons to increase screen width/height
-//add error flub handlers to display violations
-//-----------------------------------------------------------------------------------------------------------------
+/* Notes
+Attributes data-transid, data-groupid, data-microid are reserved 
+for the group, micro and transition elements as they are used to link the
+database element ids to their respective ui elements
 
-
+So dont name other attributes by those names!
+*/
 
 
 var IC; //Interaction Controller instance, this holds the model and relevant controller functions
 document.addEventListener("DOMContentLoaded", () => {
-    IC = new controller();
-    console.log("testing");
-    var xml = "<?xml version='1.0'?><query><author>John Steinbeck</author></query>";
-    console.log(xml);
-    console.log("end testing");
+    $('#interactionFileUpload').change(loadInteractionFromUploadXMLFile);
 
+    IC = new controller();//create new instance of our interaction controller and store int in IC
+    let xmlText = localStorage.getItem("interactionXML");
+    if(xmlText != null){
+        
+        loadInteractionFromXML(xmlText);
+    }
 });
 
-class controller {
-    //interaction;
+window.onbeforeunload = function () {
+    IC.saveGroupPositions();
+    localStorage.setItem("interactionXML", IC.interaction.exportModelToXML());
+}
 
+class controller {
+    //interaction; -- interaction instance is stored in this class
+    //microTypes; --list of available micro interactions and their parameters
     constructor(){
         //load the interaction model
         this.interaction = new Interaction();
-        var initialTypes = this.gatherMicrosFromDatabase();
-        this.interaction.loadMicroTypes(initialTypes); //load types of microinteractions into the model
+        this.microTypes = this.gatherMicrosFromDatabase();
+        this.interaction.loadMicroTypes(this.microTypes); //load types of microinteractions into the model
         loadMicrointeractions(this.interaction.trackedMicroTypes); //view loads micro interaction types on left sidebar
     }
 
+    clear(){
+        this.interaction = new Interaction();
+        this.interaction.loadMicroTypes(this.microTypes);
+        $('#interaction-group-canvas').empty();
+        $('#transition-states-panel').hide();
+        $('#parameters-panel').hide();
+        document.getElementById("interactionFileUpload").value = null;
+    }
 
     gatherMicrosFromDatabase(){
         //TODO access serverlet to get all micros and store them as micro types, for now these are the hard coded versions
@@ -81,7 +97,6 @@ class controller {
 
     //sends xml model to database in the request and gets back the violations in the response
     sendModelToDatabase(xmlString){
-        
         let xmlDoc;
         $('#verificationStatusText').text("Validating...");
         $.ajax({
@@ -89,22 +104,15 @@ class controller {
             url: "/SocialVerificationWebsite/ViolationParser",
             data: xmlString,
             contentType: "text/xml",
-            //dataType: "text/xml",
             cache: false,
             error: function (err) { $('#verificationStatusText').text("Error"); console.error("err response below"); console.error(err); },
             success: function (xml) {
-               //alert("got data");
+               //get back response, if 200 it should give back a list of violations
                 console.log(xml);
                 xmlDoc = xml;
 
-                // //get back response, if 200 it should give back a list of violations
-                // //parse violations
-
-            
-
+                //parse violations
                 let violations = []
-                let testViolation = new Violation("group", "waiting flub", "The interaction should wait for things to work out");
-                testViolation.addGroupViolating("0");
                 let violationList = xmlDoc.getElementsByTagName("violation_list")[0].childNodes;
                 for (let i = 0; i < violationList.length;i++){
                     let violationChild = violationList[i];
@@ -128,8 +136,6 @@ class controller {
                 $('#verificationStatusText').text("Complete");
             }
         });
-        
-
     }
 
     //update terminal to display all social norm violations
@@ -141,11 +147,10 @@ class controller {
             }
             if (violation.category == "group") {
                 let groupString = "";
-                console.log(violation.getGroupsViolating());
+                //console.log(violation.getGroupsViolating());
                 violation.violatorGroups.forEach(groupName=>{
                     groupString += groupName + " ";
                 })
-
                 terminalString += "Group(s) " + groupString + " are violating property: " + violation.type + " Desc: " + violation.description + "\n";
             }
             terminalString += "\n"
@@ -153,14 +158,218 @@ class controller {
         document.getElementById('terminal-textarea').textContent = terminalString;
 
     }
+
+    saveGroupPositions(){
+        let allGroups = $("[data-type='group-box']");
+        if (allGroups.length == 0) {
+            return
+        }
+        for (let i = 0; i < allGroups.length; i++) {
+            let group = allGroups[i];
+            IC.interaction.setGroupXY(group.getAttribute("data-groupid"), parseInt(group.style.left), parseInt(group.style.top));
+        }
+    }
     
     exportToXML() {
-    let JSONInteraction = IC.interaction.exportModelToJSON();
-    return JSONInteraction;
+        let JSONInteraction = IC.interaction.exportModelToJSON();
+        return JSONInteraction;
+    }
 }
 
+function saveToFile() {
+    //update group positions in model
+    IC.saveGroupPositions();
 
+    //save to file
+    let file = "interaction.xml";
+    let text = IC.interaction.exportModelToXML();
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8, '+ encodeURIComponent(text));
+    element.setAttribute('download', file);
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
+}
 
+function loadFromFile(){
+    
+    $('#interactionFileUpload').click(); //see loadInteractionFromXMLFile as thats the function called with the xml file
+}
+function loadInteractionFromUploadXMLFile(e){
+    
+    let file = e.target.files[0];
+    IC.clear();
+    var reader = new FileReader();
+    reader.readAsText(file);
+    reader.onloadend = function () {
+        let text = reader.result;
+        console.log(reader.result);
+        parser = new DOMParser();
+        let xmlDoc = parser.parseFromString(text, "text/xml");;
+        let root = xmlDoc.getElementsByTagName('nta');
+        let groups = xmlDoc.getElementsByTagName("group");
+        let transitions = xmlDoc.getElementsByTagName("transition");
+
+        for(let i=0;i<groups.length;i++){
+            let curGroup = groups[i];
+            let groupID = curGroup.getAttribute("id");
+            let isInitialGroup = curGroup.getAttribute("init");
+            if(isInitialGroup == "true"){
+                isInitialGroup = true;
+            }else{
+                isInitialGroup = false;
+            }
+
+            let x = curGroup.getAttribute("x");
+            let y = curGroup.getAttribute("y");
+            let name = curGroup.getElementsByTagName("name")[0].textContent;
+            //load group
+            addGroup(x, y, groupID,isInitialGroup,name);
+            let micros = curGroup.getElementsByTagName("micro");
+            //load micros
+            for(let j=0;j<micros.length;j++){
+                let curMicro = micros[j];
+                let microName = curMicro.getElementsByTagName("name")[0].textContent;
+                //load template of micro into group
+                let microID = addMicroToGroup(groupID, microName);
+
+                //load saved values of micro into group
+                let parameters = curMicro.getElementsByTagName("parameter");
+                for(let k = 0; k< parameters.length; k++){
+                    let curParameter = parameters[k];
+                    let curType = curParameter.getAttribute("type");
+                    if(curType == "array"){
+                        let arrayItems = curParameter.getElementsByTagName('item');
+                        let arrayVariable = curParameter.getElementsByTagName('name')[0].textContent;
+                        let arrayResults = [];
+                        for(let m=0;m<arrayItems.length;m++){
+                            let curItem = arrayItems[m];
+                            let itemVal = curItem.getAttribute('val');
+                            let itemLink = curItem.getAttribute('link');
+                            if(itemLink == 'human_ready'){
+                                itemLink = 'Human Ready';
+                            } else if (itemLink == 'human_ignore'){
+                                itemLink = 'Human Suspended';
+                            }
+                            arrayResults.push({val: itemVal, linkTitle: itemLink});
+                        }
+                        IC.interaction.setMicroParamValByVariable(microID, arrayVariable, arrayResults);
+
+                    }else{
+                        let curVal = curParameter.getAttribute("val");
+                        let paramVariable = curParameter.textContent;
+                        IC.interaction.setMicroParamValByVariable(microID, paramVariable, curVal);
+                    }
+                }
+            }
+        }
+        for (let i = 0; i < transitions.length;i++){
+            let curTransition = transitions[i];
+            let group1ID = curTransition.getElementsByTagName("source")[0].getAttribute("ref");
+            let group2ID = curTransition.getElementsByTagName("target")[0].getAttribute("ref");
+            let guards = curTransition.getElementsByTagName("guard");
+            let humanReady = false;
+            let humanBusy = false;
+            let humanIgnored=false;
+            for(let j=0;j<guards.length;j++){
+                let curGuard = guards[j];
+                if(curGuard.getAttribute("condition") == "human_ready"){
+                    humanReady = true;
+                } else if (curGuard.getAttribute("condition") == "human_busy"){
+                    humanBusy = true;
+                } else if (curGuard.getAttribute("condition") == "human_ignore"){
+                    humanIgnored= true;
+                }
+            }
+            let newTransID = addTransitionByID(group1ID,group2ID);
+            updateTransitionStates(newTransID, humanReady, humanBusy, humanIgnored);
+            
+        }
+    };
+}
+
+function loadInteractionFromXML(xmlText) {
+    let text = xmlText;
+    parser = new DOMParser();
+    let xmlDoc = parser.parseFromString(text, "text/xml");;
+    let root = xmlDoc.getElementsByTagName('nta');
+    let groups = xmlDoc.getElementsByTagName("group");
+    let transitions = xmlDoc.getElementsByTagName("transition");
+
+    for (let i = 0; i < groups.length; i++) {
+        let curGroup = groups[i];
+        let groupID = curGroup.getAttribute("id");
+        let isInitialGroup = curGroup.getAttribute("init");
+        if (isInitialGroup == "true") {
+            isInitialGroup = true;
+        } else {
+            isInitialGroup = false;
+        }
+
+        let x = curGroup.getAttribute("x");
+        let y = curGroup.getAttribute("y");
+        let name = curGroup.getElementsByTagName("name")[0].textContent;
+        //load group
+        addGroup(x, y, groupID, isInitialGroup, name);
+        let micros = curGroup.getElementsByTagName("micro");
+        //load micros
+        for (let j = 0; j < micros.length; j++) {
+            let curMicro = micros[j];
+            let microName = curMicro.getElementsByTagName("name")[0].textContent;
+            //load template of micro into group
+            let microID = addMicroToGroup(groupID, microName);
+
+            //load saved values of micro into group
+            let parameters = curMicro.getElementsByTagName("parameter");
+            for (let k = 0; k < parameters.length; k++) {
+                let curParameter = parameters[k];
+                let curType = curParameter.getAttribute("type");
+                if (curType == "array") {
+                    let arrayItems = curParameter.getElementsByTagName('item');
+                    let arrayVariable = curParameter.getElementsByTagName('name')[0].textContent;
+                    let arrayResults = [];
+                    for (let m = 0; m < arrayItems.length; m++) {
+                        let curItem = arrayItems[m];
+                        let itemVal = curItem.getAttribute('val');
+                        let itemLink = curItem.getAttribute('link');
+                        if (itemLink == 'human_ready') {
+                            itemLink = 'Human Ready';
+                        } else if (itemLink == 'human_ignore') {
+                            itemLink = 'Human Suspended';
+                        }
+                        arrayResults.push({ val: itemVal, linkTitle: itemLink });
+                    }
+                    IC.interaction.setMicroParamValByVariable(microID, arrayVariable, arrayResults);
+
+                } else {
+                    let curVal = curParameter.getAttribute("val");
+                    let paramVariable = curParameter.textContent;
+                    IC.interaction.setMicroParamValByVariable(microID, paramVariable, curVal);
+                }
+            }
+        }
+    }
+    for (let i = 0; i < transitions.length; i++) {
+        let curTransition = transitions[i];
+        let group1ID = curTransition.getElementsByTagName("source")[0].getAttribute("ref");
+        let group2ID = curTransition.getElementsByTagName("target")[0].getAttribute("ref");
+        let guards = curTransition.getElementsByTagName("guard");
+        let humanReady = false;
+        let humanBusy = false;
+        let humanIgnored = false;
+        for (let j = 0; j < guards.length; j++) {
+            let curGuard = guards[j];
+            if (curGuard.getAttribute("condition") == "human_ready") {
+                humanReady = true;
+            } else if (curGuard.getAttribute("condition") == "human_busy") {
+                humanBusy = true;
+            } else if (curGuard.getAttribute("condition") == "human_ignore") {
+                humanIgnored = true;
+            }
+        }
+        let newTransID = addTransitionByID(group1ID, group2ID);
+        updateTransitionStates(newTransID, humanReady, humanBusy, humanIgnored);
+    }
 }
 
 function verifyModel(){
@@ -168,8 +377,6 @@ function verifyModel(){
     console.log(modelXML);
     IC.sendModelToDatabase(modelXML);
 }
-
-
 //------- important event handlers and functions related to the controller --------------------------------
 
 function exportToXML(){
@@ -177,45 +384,70 @@ function exportToXML(){
     console.log(JSONInteraction);
 }
 
-//called by
-function addMicroToGroup(groupBox, type){
-    let groupID = groupBox.getAttribute("data-groupid");
-    let newMicroID = IC.interaction.addMicroToGroup(groupID, type);//model
-    let microBox = newMicroBox(type);
-    microBox.setAttribute("data-microid", newMicroID);
-    addMicroBoxToGroupView(groupBox, microBox);//view
+function addGroupByClick(x, y) {
+    let groupID = IC.interaction.createGroup(); //model
+    addGroupToView(x, y, groupID); //view
 }
 
-function removeMicro(microBoxID){
-    var micro = document.getElementById(microBoxID);
-    console.log(micro);
-    var microID = micro.getAttribute("data-microid");;
-    let group = micro.parentNode;
-    let groupID = group.getAttribute("group-num");
-    IC.interaction.removeMicroFromGroup(groupID ,microID);//model
-    group.removeChild(micro);//view
-}
-
-
-function addGroup(ev){
-    groupID = IC.interaction.createGroup(); //model
-    addGroupToView(ev, groupID); //view
+function addGroup(x, y, id, isInitialGroup, name) {
+    let groupID = IC.interaction.makeGroup(x, y, id, isInitialGroup, name); //model
+    addGroupToView(x, y, groupID); //view
+    return groupID;
 }
 
 function removeGroup(groupBoxID) {
     let group = document.getElementById(groupBoxID);
     let groupID = group.getAttribute("data-groupid"); //model stores group id as whole numbers
     let deleted = IC.interaction.removeGroup(groupID);//model (also removes transitions that are connected to it)
-    if (deleted){ //there may be a reason this cant be deleted
+    if (deleted) { //there may be a reason this cant be deleted
         removeGroupFromView(group); //view
     }
-    
+    return groupID;
 }
+
+function addMicroToGroup(groupID, type){
+    let groupBox = $("[data-groupid="+groupID+"]")[0] //get group box representing this group
+    let newMicroID = IC.interaction.addMicroToGroup(groupID, type);//model
+    let microBox = newMicroBox(newMicroID,type);
+    microBox.setAttribute("data-microid", newMicroID);
+    addMicroBoxToGroupView(groupBox, microBox);//view
+    return newMicroID;
+}
+
+function removeMicro(microBoxID){
+    var micro = document.getElementById(microBoxID);
+    var microID = micro.getAttribute("data-microid");;
+    let group = micro.parentNode;
+    let groupID = group.getAttribute("data-groupid");
+    IC.interaction.removeMicroFromGroup(groupID ,microID);//model
+    group.removeChild(micro);//view
+}
+
+
 
 function addTransition(firstGroup, secondGroup){
     let id = IC.interaction.addTransition(firstGroup.getAttribute("data-groupid"), secondGroup.getAttribute("data-groupid"));//model
+    if(id == -1){
+        return -1;
+    }
     drawTransition(id, firstGroup, secondGroup);//view
+    return id;
 }
+
+function addTransitionByID(firstGroupID, secondGroupID) {
+    let id = IC.interaction.addTransition(firstGroupID, secondGroupID);//model
+    let firstGroup = $("[data-groupid=" + firstGroupID + "]")[0];
+    let secondGroup = $("[data-groupid=" + secondGroupID + "]")[0];
+    drawTransition(id, firstGroup, secondGroup);//view
+    return id;
+}
+
+function updateTransitionStates(newTransID, humanReady, humanBusy, humanIgnored){
+    let transitionState = { 'ready': humanReady, 'busy': humanBusy, 'suspended': humanIgnored } //humanReady,humanBusy,and humanIgnored should be bools
+    IC.interaction.setTransitionState(newTransID, transitionState);
+    updateTransitionByModelTransID(newTransID);
+}
+
 
 function removeTransition(htmlTransitionid) {
     let transition = document.getElementById(htmlTransitionid);
@@ -242,6 +474,10 @@ function loadMicrointeractions(microTypes) {
         newMicroBox.innerText = microTypes[i].type;
         sidebar.appendChild(newMicroBox);
     }
+}
+
+function clearAll(){
+    IC.clear();
 }
 
 
@@ -306,11 +542,13 @@ function dropOnGroup(event) {
         return false;
     }
     let groupBox = event.target;
-    addMicroToGroup(groupBox, micro.getAttribute("data-micro-type"));
+    let groupid = groupBox.getAttribute("data-groupid")
+    addMicroToGroup(groupid, micro.getAttribute("data-micro-type"));
 }
 
 //used for moving groups only at the moment
 function dropOnInteractionCanvas(event) {
+    $('#transition-states-panel').hide();
     let dragged = JSON.parse(event.dataTransfer.getData("text"));
     let dm = document.getElementById(dragged.target); //this is the group box element, we check this below
     if (dm === null || !(dm.getAttribute("data-type") == "group-box")) {
@@ -352,7 +590,10 @@ function setupInteractionCanvas(){
     canvas.addEventListener("click", function(ev){
         if (controlBtnPressed) {
             //if we click in the canvas and not on a box
-            addGroup(ev);
+            let x = (ev.clientX - canvas.offsetLeft);
+            let y = (ev.clientY - canvas.offsetTop);
+
+            addGroupByClick(x,y);
         }
         return false;
     });
@@ -365,11 +606,11 @@ function uuidv4() { //unique id generator
     );
 }
 
-function newMicroBox(type) {
+function newMicroBox(id, type) {
     let microBox = document.createElement("div");
     microBox.classList.add("micro-box");
     microBox.oncontextmenu = rightClickMicro;
-    microBox.setAttribute("id", ("microbox" + numMicros));
+    microBox.setAttribute("id", ("microbox" + id));
     microBox.setAttribute("data-type", "micro-box");
     microBox.setAttribute("data-microid", "")//reminder this must be set later for whatever object this box relates to in the database
     microBox.setAttribute("micro-type:", type);
@@ -382,13 +623,12 @@ function addMicroBoxToGroupView(group, microBox){
     group.appendChild(microBox);
 }
 
-function addGroupToView(ev, groupID){
+function addGroupToView(x,y, groupID){
     var canvas = document.getElementById('interaction-group-canvas');
     var newGroup = document.createElement("div"); 
-    newGroup.setAttribute("style", "left: " + (ev.clientX-canvas.offsetLeft) + "px; top: " +  (ev.clientY-canvas.offsetTop) + "px;");       //
+    newGroup.setAttribute("style", "left: " + x + "px; top: " +  y + "px;");       //
     newGroup.setAttribute("data-type", "group-box");
     newGroup.setAttribute("data-groupid",groupID);
-    newGroup.setAttribute("group-num",groupID);
     newGroup.setAttribute("draggable", true);
     newGroup.setAttribute("onDragStart","dragStart(event)");
     newGroup.setAttribute("onDrop","dropOnGroup(event)");
@@ -406,9 +646,10 @@ function addGroupToView(ev, groupID){
     title.setAttribute("type", "text");
     title.setAttribute("ondblclick", "this.readOnly='';");
     title.classList.add("group-box-title");
-    title.value = IC.interaction.getGroup(groupID).name;
+    title.value = IC.interaction.getGroup(groupID).name.replace(/[\W_]+/g, ' ');
     title.addEventListener('keyup', function () {
         IC.interaction.getGroup(groupID).name = title.value; //TODO sterilize input
+        title.value=title.value.replace(/[\W_]+/g, ' ');
     });
     newGroup.appendChild(title);
     numBoxes++;
@@ -420,7 +661,6 @@ function addGroupToView(ev, groupID){
 
 function clickedGroup(ev){
     //are we adding transition between two line?
-    console.log("clicked group");
     if (lineBtnPressed) {
         console.log(ev.target);
         if(ev.target.getAttribute("data-type") != "group-box"){
@@ -547,7 +787,6 @@ function drawTransition(id, firstGroup, secondGroup) {
     rect.setAttribute("height", bbox.height);
     rect.setAttribute("fill", "yellow");
     newLine.insertBefore(rect,text);
-    
 }
 
 function redrawConnectedLines(group) { //gets lines connected to this group and redraws them
@@ -571,6 +810,29 @@ function redrawConnectedLines(group) { //gets lines connected to this group and 
         document.getElementById("interaction-group-canvas").removeChild(linesToRemove[i]);
     }
 }
+
+//updating by the model id not
+function updateTransitionByModelTransID(id) { //this is called by the panel controlling transition states
+    let transitionText = $("[data-transid=" + id + "]").children('text');
+    let transState = IC.interaction.getTransitionState(id);
+    let ttm = ""; //transition text message
+    ttm += transState.ready ? "Ready " : "";
+    ttm += transState.busy ? "Busy " : "";
+    ttm += transState.suspended ? "Suspended" : "";
+    transitionText.text(ttm);
+
+    // console.log(transitionText);
+    // var width = transitionText.width();
+    // console.log(width);
+    // let bbox = transitionText.getBBox();
+    // rect.setAttribute("x", (bbox.x).toString());
+    // rect.setAttribute("y", (bbox.y).toString());
+    // rect.setAttribute("width", bbox.width);
+    // rect.setAttribute("height", bbox.height);
+    // rect.setAttribute("fill", "yellow");
+}
+
+
 
 
 //--------------------------------left and right click on items in canvas=========================
@@ -601,6 +863,7 @@ function leftCLickGroupMicro(){
     parametersPanel.append(displayedParams);
 
     //parse through each parameter and build a gui representation
+    
     parameters.forEach(function(param){
         let curDispParam = $('<div class="parameter" data-type="param" data-paramid = "'+ param.id + '" data-paramType="'+ param.type + '" id="' + selectedMicro.id + "-param" + param.id+ '"></div>');
         if(param.type == "bool"){
@@ -660,7 +923,12 @@ function leftCLickGroupMicro(){
         }
         displayedParams.append(curDispParam);
     });
-    displayedParams.append($('<button class="mt-2" type="submit">Save</button>'));
+    if (parameters.length == 0) {
+        parametersPanel.append("<label> No parameters for this micro-interaction</label>")
+    }else{
+        displayedParams.append($('<button class="mt-2" type="submit">Save</button>'));
+    }
+   
 }
 
 function createAskListBox(response, link){
@@ -757,7 +1025,7 @@ function leftCLickTransition(e) {
 }
 
 //see 431 todo
-function updateTransition(){
+function updateTransition(){ //this is called by the panel controlling transition states
     let transitionText = $('#' + $('#transition-states-panel').attr('data-cur-text-id'));
     let transitionModelID = $('#transition-states-panel').attr('data-cur-trans-id');
     let transitionModelBackground = transitionText.parent().find('rect');
@@ -788,7 +1056,9 @@ function updateTransition(){
 
 
 
-//right clicks
+
+
+//right clicks==========
 
 function hideMenu(e) {
     //right click menues hide
@@ -827,6 +1097,7 @@ function rightClickGroup(e) {
 }
 
 function rightClickMicro(e) {
+        console.log(e);
         e.preventDefault();
             if (document.getElementById("contextMenuMicro")
                     .style.display == "block")
