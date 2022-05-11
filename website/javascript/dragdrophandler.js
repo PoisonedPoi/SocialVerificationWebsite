@@ -717,9 +717,7 @@ function removeGroupFromView(groupToRemove) {
 
 //--------drawing/redrawing lines and transitions
 function drawTransition(id, firstGroup, secondGroup) {
-    if (firstGroup === secondGroup) {
-        return; //TODO not supported yet
-    }
+
     var canvas = document.getElementById('interaction-group-canvas');
     var newLine = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     canvas.appendChild(newLine);
@@ -732,74 +730,126 @@ function drawTransition(id, firstGroup, secondGroup) {
     newLine.setAttribute("data-group1", firstGroup.id);
     newLine.setAttribute("data-group2", secondGroup.id);
 
-    var line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-    //draw line from nearest edge of first box to nearest edge of second box
-    //transitions go from an out point a third of the way down a side of a box to an in point two thirds of the way down the side of a box, with an in point an out point rotated in similar fashion
-    let x1 = parseInt(firstGroup.style.left, 10);
-    let x2 = parseInt(secondGroup.style.left, 10);
-    let y1 = parseInt(firstGroup.style.top, 10);
-    let y2 = parseInt(secondGroup.style.top, 10);
+    if (firstGroup === secondGroup) {
+        //draw self referencing transition
+        let x1 = parseInt(firstGroup.style.left, 10);
+        let y1 = parseInt(firstGroup.style.top, 10);
+        NOutX = x1 + firstGroup.offsetWidth / 3
+        EInY = y1 + firstGroup.offsetHeight / 3
+        let path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+        path.setAttribute("fill", "none");
+        path.setAttribute("stroke", "#000")
+        path.setAttribute("stroke-width", "2px")
+        path.setAttribute("d",
+            "M" + NOutX + "," + y1 + "C" + (x1 - 0) + "," + (y1 - 50) + " " + (x1 - 60) + "," + (y1 - 0) + "  " + x1 + "," + EInY);
+        path.classList.add('arrow');
+        newLine.appendChild(path);
 
-    let NOut = { x: x1 + firstGroup.offsetWidth / 3, y: y1 };
-    let EOut = { x: x1 + firstGroup.offsetWidth, y: y1 + firstGroup.offsetHeight / 3 };
-    let SOut = { x: x1 + (firstGroup.offsetWidth / 3) * 2, y: y1 + firstGroup.offsetHeight };
-    let WOut = { x: x1, y: y1 + (firstGroup.offsetHeight / 3) * 2 }
 
-    let NIn = { x: x2 + (secondGroup.offsetWidth / 3) * 2, y: y2 };
-    let EIn = { x: x2 + secondGroup.offsetWidth, y: y2 + (secondGroup.offsetHeight / 3) * 2 };
-    let SIn = { x: x2 + (secondGroup.offsetWidth / 3), y: y2 + secondGroup.offsetHeight };
-    let WIn = { x: x2, y: y2 + (secondGroup.offsetHeight / 3) }
+        var text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        text.classList.add("arrow-text");
+        text.setAttribute("id", uuidv4());
+        text.setAttribute("data-lineid", transitionlineID);
+        text.setAttribute("x", x1 - 20);
+        text.setAttribute("y", y1 - 20);
+        text.setAttribute("text-anchor", "middle");
+        text.oncontextmenu = rightClickTransition;
+        let transState = IC.interaction.getTransitionState(id);
+        newLine.appendChild(text);
+        let ttm = ""; //transition text message
+        ttm += transState.ready ? "Ready " : "";
+        ttm += transState.busy ? "Busy " : "";
+        ttm += transState.suspended ? "Suspended" : "";
+        text.textContent = ttm;
+        text.classList.add("svg-arrow-text");
+        text.addEventListener("click", leftCLickTransition);
 
-    let outs = [NOut, EOut, SOut, WOut];
-    let ins = [NIn, EIn, SIn, WIn];
-    let distances = [];
-    outs.forEach(function (point1) {
-        ins.forEach(function (point2) {
-            let d = Math.sqrt(Math.pow(point2.x - point1.x, 2) + Math.pow(point2.y - point1.y, 2), 2);
-            distances.push({ p1: point1, p2: point2, distance: d });
+
+        let bbox = text.getBBox();
+        var rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+        rect.setAttribute("x", (bbox.x).toString());
+        rect.setAttribute("y", (bbox.y).toString());
+        rect.setAttribute("width", bbox.width);
+        rect.setAttribute("height", bbox.height);
+        rect.setAttribute("fill", "yellow");
+        newLine.insertBefore(rect, text);
+
+
+        console.log("self gropu reference");
+        return; //TODO not supported yet
+    } else {
+        //draw normal line transition
+        var line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+        //draw line from nearest edge of first box to nearest edge of second box
+        //transitions go from an out point a third of the way down a side of a box to an in point two thirds of the way down the side of a box, with an in point an out point rotated in similar fashion
+        let x1 = parseInt(firstGroup.style.left, 10);
+        let x2 = parseInt(secondGroup.style.left, 10);
+        let y1 = parseInt(firstGroup.style.top, 10);
+        let y2 = parseInt(secondGroup.style.top, 10);
+
+        let NOut = { x: x1 + firstGroup.offsetWidth / 3, y: y1 };
+        let EOut = { x: x1 + firstGroup.offsetWidth, y: y1 + firstGroup.offsetHeight / 3 };
+        let SOut = { x: x1 + (firstGroup.offsetWidth / 3) * 2, y: y1 + firstGroup.offsetHeight };
+        let WOut = { x: x1, y: y1 + (firstGroup.offsetHeight / 3) * 2 }
+
+        let NIn = { x: x2 + (secondGroup.offsetWidth / 3) * 2, y: y2 };
+        let EIn = { x: x2 + secondGroup.offsetWidth, y: y2 + (secondGroup.offsetHeight / 3) * 2 };
+        let SIn = { x: x2 + (secondGroup.offsetWidth / 3), y: y2 + secondGroup.offsetHeight };
+        let WIn = { x: x2, y: y2 + (secondGroup.offsetHeight / 3) }
+
+        let outs = [NOut, EOut, SOut, WOut];
+        let ins = [NIn, EIn, SIn, WIn];
+        let distances = [];
+        outs.forEach(function (point1) {
+            ins.forEach(function (point2) {
+                let d = Math.sqrt(Math.pow(point2.x - point1.x, 2) + Math.pow(point2.y - point1.y, 2), 2);
+                distances.push({ p1: point1, p2: point2, distance: d });
+            });
         });
-    });
-    let smallest = distances.pop();
-    distances.forEach(function (line) {
-        if (line.distance < smallest.distance) {
-            smallest = line;
-        }
-    });
-    line.setAttribute("x1", smallest.p1.x + "px");
-    line.setAttribute("x2", smallest.p2.x + "px");
-    line.setAttribute("y1", smallest.p1.y + "px");
-    line.setAttribute("y2", smallest.p2.y + "px");
-    line.classList.add('arrow');
-    newLine.appendChild(line);
-
-    //todo https://stackoverflow.com/questions/16701522/how-to-linebreak-an-svg-text-within-javascript
-    var text = document.createElementNS("http://www.w3.org/2000/svg", "text");
-    text.classList.add("arrow-text");
-    text.setAttribute("id", uuidv4());
-    text.setAttribute("data-lineid", transitionlineID);
-    text.setAttribute("x", ((smallest.p2.x + smallest.p1.x) / 2).toString());
-    text.setAttribute("y", (((smallest.p2.y + smallest.p1.y) / 2) + 15).toString());
-    text.setAttribute("text-anchor", "middle");
-    text.oncontextmenu = rightClickTransition;
-    let transState = IC.interaction.getTransitionState(id);
-    newLine.appendChild(text);
-    let ttm = ""; //transition text message
-    ttm += transState.ready ? "Ready " : "";
-    ttm += transState.busy ? "Busy " : "";
-    ttm += transState.suspended ? "Suspended" : "";
-    text.textContent = ttm;
-    text.classList.add("svg-arrow-text");
-    text.addEventListener("click", leftCLickTransition);
+        let smallest = distances.pop();
+        distances.forEach(function (line) {
+            if (line.distance < smallest.distance) {
+                smallest = line;
+            }
+        });
+        line.setAttribute("x1", smallest.p1.x + "px");
+        line.setAttribute("x2", smallest.p2.x + "px");
+        line.setAttribute("y1", smallest.p1.y + "px");
+        line.setAttribute("y2", smallest.p2.y + "px");
+        line.classList.add('arrow');
+        newLine.appendChild(line);
 
 
-    let bbox = text.getBBox();
-    var rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
-    rect.setAttribute("x", (bbox.x).toString());
-    rect.setAttribute("y", (bbox.y).toString());
-    rect.setAttribute("width", bbox.width);
-    rect.setAttribute("height", bbox.height);
-    rect.setAttribute("fill", "yellow");
-    newLine.insertBefore(rect, text);
+
+        //todo https://stackoverflow.com/questions/16701522/how-to-linebreak-an-svg-text-within-javascript
+        var text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+        text.classList.add("arrow-text");
+        text.setAttribute("id", uuidv4());
+        text.setAttribute("data-lineid", transitionlineID);
+        text.setAttribute("x", ((smallest.p2.x + smallest.p1.x) / 2).toString());
+        text.setAttribute("y", (((smallest.p2.y + smallest.p1.y) / 2) + 15).toString());
+        text.setAttribute("text-anchor", "middle");
+        text.oncontextmenu = rightClickTransition;
+        let transState = IC.interaction.getTransitionState(id);
+        newLine.appendChild(text);
+        let ttm = ""; //transition text message
+        ttm += transState.ready ? "Ready " : "";
+        ttm += transState.busy ? "Busy " : "";
+        ttm += transState.suspended ? "Suspended" : "";
+        text.textContent = ttm;
+        text.classList.add("svg-arrow-text");
+        text.addEventListener("click", leftCLickTransition);
+
+
+        let bbox = text.getBBox();
+        var rect = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+        rect.setAttribute("x", (bbox.x).toString());
+        rect.setAttribute("y", (bbox.y).toString());
+        rect.setAttribute("width", bbox.width);
+        rect.setAttribute("height", bbox.height);
+        rect.setAttribute("fill", "yellow");
+        newLine.insertBefore(rect, text);
+    }
 }
 
 function redrawConnectedLines(group) { //gets lines connected to this group and redraws them

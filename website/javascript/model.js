@@ -286,7 +286,7 @@ class Interaction {
         //check for an existing transition between these two groups, there should only be on transition between two specific groups
         for (let i = 0; i < this.transitions.length; i++) {
             if (this.transitions[i].firstGroup == group1 && this.transitions[i].secondGroup == group2) {
-                console.error("Two specific groups can only have one transition")
+                console.error("Transition already exists")
                 return -1; //error
             }
         }
