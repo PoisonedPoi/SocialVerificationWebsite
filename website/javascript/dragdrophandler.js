@@ -1,9 +1,11 @@
 /* Notes
+
 Attributes data-transid, data-groupid, data-microid are reserved 
 for the group, micro and transition elements as they are used to link the
 database element ids to their respective ui elements
 
 So dont name other attributes by those names!
+
 */
 
 
@@ -151,7 +153,7 @@ class controller {
                 violation.violatorGroups.forEach(groupName => {
                     groupString += groupName + " ";
                 })
-                terminalString += "Group(s) " + groupString + " are violating property: " + violation.type + " Desc: " + violation.description + "\n";
+                terminalString += "Group(s):  " + groupString + " are violating property: " + violation.type + "\n Desc: " + violation.description + "\n";
             }
             terminalString += "\n"
         })
@@ -200,7 +202,6 @@ function loadFromFile() {
 }
 
 function loadInteractionFromUploadXMLFile(e) {
-
     let file = e.target.files[0];
     IC.clear();
     var reader = new FileReader();
