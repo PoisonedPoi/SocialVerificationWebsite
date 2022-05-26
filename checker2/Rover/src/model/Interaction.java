@@ -84,7 +84,7 @@ public class Interaction {
 
 	//the violations the checker finds
 	private HashMap<Property, Violation> violations;
-	private HashMap<String, Violation> specialViolations; //indexed by string instead of property
+	private HashMap<String, Violation> specialViolations; //indexed by string instead of property, some types of violations arent associated to a property
 
 	//has the user folder location (SHOULD NOT BE CHANGED AFTER SET)
 	private String USERFOLDER;

@@ -12,9 +12,12 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+/*
+* This class is no longer used and can be removed if desired, it was originally used in place of the Decoder but eventually the decoder was just refactored
+*/
+
 public class InteractionFileLoader {
   HashMap<Integer, Group> addedGroups = new HashMap<Integer, Group>();
-
   //loads interaction data into the interaction model from Document
   public InteractionFileLoader(
     Document conDoc,

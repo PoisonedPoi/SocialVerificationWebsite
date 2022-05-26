@@ -33,16 +33,15 @@ public class NetworkPropagator {
 			/*
 			 * Get and remove the relevant microcollection
 			 */
-			//System.out.println(" DOING CEHCK ON ANOTHER GROUP11111111111911991919919191991919");
 			Group group = groupsToUpdate.get(0);
 			groupsToUpdate.remove(group);
 			
 			/*
-			 * Zeroth thing's zeroth! Get the current enabled/disabled inits
+			 *Get the current enabled/disabled inits
 			 */
 			
 			Iterator it = group.getEnabledStartStates().entrySet().iterator();
-			// will require SOOOO many changes in the future!
+			// will require SOOOO many changes in the future!   (this was left from RoVer)
 		    boolean ready = true;
 		    boolean busy = true;
 		    boolean ignore = true;
@@ -145,7 +144,6 @@ public class NetworkPropagator {
 			
 			ArrayList<GroupTransition> links = group.getAllMacroTransitions();
 			for (GroupTransition mt : links) {
-				//console.updateText(mt.toString());
 				PrismThread pt = new PrismThread( ia, mc, mt);
 				Thread t = pt.getThread();
 				pt.start("sequential");
@@ -179,7 +177,7 @@ public class NetworkPropagator {
 			//System.out.println("Done with concurrennt checking");
 			
 			/*
-			 * update the indicator lights
+			 * update the indicator lights  This was all ROVER GUI stuff, I left it in as a reference to how the application itself worked
 			 */
 			/*
 			if (!mc.getNonAssistedSwitch()) {
@@ -233,7 +231,8 @@ public class NetworkPropagator {
 			/*
 			 * compare the new end states to the old end states. If they differ, and the branching conditions allow for it, then add target microcollection to arraylist!
 			 */
-			//System.out.println("part 2 of checking");
+
+
 			boolean[] newEnds = group.getHumanEndStates();
 			// if the old ends differ from the new ends
 			if (newEnds[0] != currEndStates[0] || newEnds[1] != currEndStates[1] || newEnds[2] != currEndStates[2] || group.getMarking()) {
