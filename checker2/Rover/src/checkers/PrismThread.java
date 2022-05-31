@@ -113,14 +113,14 @@ public class PrismThread implements Runnable {
 			else if (type.equals("allConcurrent")) {
 				for (Group group : ia.getGroups()) {
 					if (!group.getMicrointeractions().isEmpty()) {
-						group.createReducedMergedMacrointeraction(c,  ia, mc); //gota do it
+						group.createReducedMergedMacrointeraction(c,  ia, mc); 
 						c.generatePrismFile(group.getMacrointeraction());
 						c.checkConcurrent(group);
 					}
 				}
 			}
 			else if (type.equals("concurrentAndGraph")) {
-				// TODO: THIS SHOULD NOT NEED TO BE A THING
+				// TODO: THIS SHOULD NOT NEED TO BE A THING 
 				ArrayList<Group> copy = new ArrayList<Group>(ia.getGroups());
 				for (Group group : copy) {
 					if (!group.getMicrointeractions().isEmpty()) {

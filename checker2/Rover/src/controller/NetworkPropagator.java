@@ -12,6 +12,12 @@ import model.*;
 import model.GroupTransition;
 import study.BugTracker;
 
+
+/*
+* This class is essential to checking and should probably be renamed
+*/
+
+
 public class NetworkPropagator {
 	
 	private  BugTracker bt;
@@ -41,7 +47,7 @@ public class NetworkPropagator {
 			 */
 			
 			Iterator it = group.getEnabledStartStates().entrySet().iterator();
-			// will require SOOOO many changes in the future!   (this was left from RoVer)
+			// will require SOOOO many changes in the future!   
 		    boolean ready = true;
 		    boolean busy = true;
 		    boolean ignore = true;

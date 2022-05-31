@@ -23,7 +23,7 @@ public class Conflict {
 	
 	private String describe;
 	
-
+	//This was kept as other functional code needed references to conflicts, this is now replaced by violations
 	
 	@SuppressWarnings({ "restriction", "unchecked" })
 	public Conflict(Property prop, String describe, String type, ArrayList<String> choices, ModBehPair mbp, Group group, ModelFileChecker mc) {

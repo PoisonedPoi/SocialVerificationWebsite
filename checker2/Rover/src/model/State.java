@@ -9,8 +9,6 @@ import enums.StateClass;
  * 
  * What type of state it is, i.e. start state and so on
  * 
- * Variable to hold the color of the state
- * 
  * Should hold all all the logical statements of the state
  */
 public class State  {

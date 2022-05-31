@@ -26,6 +26,10 @@ public class ImportMicrosCT{
 	private ArrayList<MicroBox> allMicros;
 	private String currItem = null;
 
+	/*
+	* This can probably be removed
+	*/ 
+
 	public ImportMicrosCT(ModelFileChecker mc) {
 
 	}

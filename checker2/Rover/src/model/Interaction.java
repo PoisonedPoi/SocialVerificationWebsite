@@ -155,7 +155,6 @@ public class Interaction {
 		}
 	}
 
-	//this is the main class used for violation parsing
 	public Document getXMLViolationDocument(){
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder;

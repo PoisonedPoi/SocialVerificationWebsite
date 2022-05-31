@@ -30,16 +30,8 @@ public class Property implements Comparable{
 		this.category = category;
 		this.context = context;
 		this.fixes = new ArrayList<Fix>();
-	//	this.icon = null; //TODO safely remove
-		
-		/*
-		try {
-			this.icon = new Image(new FileInputStream("Icons" + File.separator + "property_icons" + File.separator + "specific" + File.separator + iconName));
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		*/
+
+
 	}
 
 	public String toString(){

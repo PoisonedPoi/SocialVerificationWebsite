@@ -86,6 +86,7 @@ public class ModelFileChecker{
     private final String SID; //session id, gives the user folder name as "user + SID", it should not be changed once set 
     private final String USERFOLDER;//the actual folder path for this user
     
+    //This constructor is the one used in the current checking process
     public ModelFileChecker(String sid,  String xmlString, String workingDirectory ){
         this.SID = sid;
         Globals.ROOT_FP = workingDirectory;
@@ -102,6 +103,7 @@ public class ModelFileChecker{
             //setup a blank prism folder
             new File(USERFOLDER + "prism").mkdir();
         }
+
         initialize();
 
         loadModelXMLString(xmlString, interaction);
@@ -115,8 +117,8 @@ public class ModelFileChecker{
         destroyUserFolder();
     }
     
+    //this is called by RoVer.sh, useful for testing in the RoVer directory with an interaction.xml saved in the checker
     public ModelFileChecker(String sid,  String workingDirectory){
-        //this is called by RoVer.sh, useful for testing in the RoVer directory with an interaction.xml saved 
         this.SID = sid;
         Globals.ROOT_FP = workingDirectory;
         Globals.USERPATH =  workingDirectory + "/users/";

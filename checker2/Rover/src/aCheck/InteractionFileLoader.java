@@ -55,7 +55,7 @@ public class InteractionFileLoader {
         Microinteraction newMicro = new Microinteraction();
 
         String currentPath = System.getProperty("user.dir");
-        File microFile = new File(currentPath + "/Lib2/" + microName + ".xml");
+        File microFile = new File(currentPath + "/Lib/" + microName + ".xml");
 
         System.out.println("decoding micro");
         (new Decoder(mc, false)).readMicrointeraction(

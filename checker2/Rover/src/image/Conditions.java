@@ -1,3 +1,10 @@
+
+/*
+    This can be removed
+*/
+
+
+
 // package image;
 
 // import java.io.File;

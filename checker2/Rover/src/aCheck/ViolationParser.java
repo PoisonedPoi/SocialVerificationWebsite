@@ -39,13 +39,7 @@ public class ViolationParser{
 			}
 		}
 		this.addedPropertyCategories = new ArrayList<String>();
-		
-		// //System.out.println(" printing property categories");
-		// for (String str : propertyCategories) {
-		// 	//System.out.println("read " + str + " in propertyCategories violation pane");
-		// }
 
-       
 
 	}
 		
@@ -62,7 +56,7 @@ public class ViolationParser{
 		//System.out.println("starting to look at property violations");
 		// look at all property violations
 		if (ia.getInit().getMicrointeractions().isEmpty()) {
-            //System.out.println("early violation");
+            //System.out.println("no micros violation");
 
 		}
 		else {
@@ -71,6 +65,7 @@ public class ViolationParser{
 			if (!ia.getAuthProp() && ia.getCurrDesign().equals("Delivery")) {
 				//Note for delivery focused designs we should create a violation here
 				//This is an example of what it may look like
+
 				//Violation deliveryViolation = new Violation("delivery Errors", true, " conditions insufficient");
 				//ia.addSpecialViolation(branchViolation);
 
@@ -111,7 +106,7 @@ public class ViolationParser{
 			 * Group-specific proeprties
 			 */
 
-            //System.out.println("checking group propertie");
+            //System.out.println("checking group property");
 
 			for (Group group : ia.getGroups()) { //this is how original code was ported, this should be refactored to allow other special violations in the future
 				if (group.getViolating()) {

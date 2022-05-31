@@ -145,7 +145,7 @@ class controller {
         let terminalString = "";
         violations.forEach(violation => {
             if (violation.category == "interaction") {
-                terminalString += "Interaction is violating property: " + violation.type + " Desc: " + violation.description + "\n";
+                terminalString += "Interaction is violating property: " + violation.type + "\n Desc: " + violation.description + "\n";
             }
             if (violation.category == "group") {
                 let groupString = "";
