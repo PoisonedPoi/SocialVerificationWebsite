@@ -1,13 +1,9 @@
-Please note that this is code has not been cleaned up yet, future changes should be done by the end of May 2022 and will include the final version.
-At the moment the functionality is all working but there is some redundant functions and incorrect comments that need to be removed.
+General Description
 
+TODO
 
+-------------------------------------------------Installation Instructions-------------------------------------------------------------------
 
-
-
-
-
-Installation Instructions
 
 Installing rover on a server
 
