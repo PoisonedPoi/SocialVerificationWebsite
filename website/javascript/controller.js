@@ -1,6 +1,6 @@
 /* Notes
 
-Attributes data-transid, data-groupid, data-microid are reserved 
+The HTML Attributes data-transid, data-groupid, data-microid are reserved 
 for the group, micro and transition elements as they are used to link the
 database element ids to their respective ui elements
 
@@ -10,19 +10,23 @@ So dont name other attributes by those names!
 
 
 var IC; //Interaction Controller instance, this holds the model and relevant controller functions
+
 document.addEventListener("DOMContentLoaded", () => {
     $('#interactionFileUpload').change(loadInteractionFromUploadXMLFile);
 
-    IC = new controller();//create new instance of our interaction controller and store int in IC
+    //create new instance of our interaction controller and store int in IC
+    IC = new controller();
+
+    //load existing interaction if one exists in localstorage
     let xmlText = localStorage.getItem("interactionXML");
     if (xmlText != null) {
-
         loadInteractionFromXML(xmlText);
     }
 });
 
+//save interaction when user exits page
 window.onbeforeunload = function () {
-    IC.saveGroupPositions();
+    IC.saveGroupPositions();//update positions in model
     localStorage.setItem("interactionXML", IC.interaction.exportModelToXML());
 }
 
@@ -47,7 +51,7 @@ class controller {
     }
 
     gatherMicrosFromDatabase() {
-        //TODO access serverlet to get all micros and store them as micro types, for now these are the hard coded versions
+        //TODO access serverlet to get all microinteraction types from server and store them as micro types, for now these are the hard coded versions
         let microTypes = [];
 
         //greeter
@@ -776,8 +780,7 @@ function drawTransition(id, firstGroup, secondGroup) {
         newLine.insertBefore(rect, text);
 
 
-        console.log("self gropu reference");
-        return; //TODO not supported yet
+        return; 
     } else {
         //draw normal line transition
         var line = document.createElementNS("http://www.w3.org/2000/svg", "line");
@@ -875,7 +878,7 @@ function redrawConnectedLines(group) { //gets lines connected to this group and 
     }
 }
 
-//updating by the model id not
+//updating by the model id 
 function updateTransitionByModelTransID(id) { //this is called by the panel controlling transition states
     let transitionText = $("[data-transid=" + id + "]").children('text');
     let transState = IC.interaction.getTransitionState(id);
@@ -885,15 +888,6 @@ function updateTransitionByModelTransID(id) { //this is called by the panel cont
     ttm += transState.suspended ? "Suspended" : "";
     transitionText.text(ttm);
 
-    // console.log(transitionText);
-    // var width = transitionText.width();
-    // console.log(width);
-    // let bbox = transitionText.getBBox();
-    // rect.setAttribute("x", (bbox.x).toString());
-    // rect.setAttribute("y", (bbox.y).toString());
-    // rect.setAttribute("width", bbox.width);
-    // rect.setAttribute("height", bbox.height);
-    // rect.setAttribute("fill", "yellow");
 }
 
 
@@ -1107,15 +1101,7 @@ function updateTransition() { //this is called by the panel controlling transiti
     IC.interaction.setTransitionState(transitionModelID, transitionState);
     transitionText.text(ttm);
 
-    // console.log(transitionText);
-    // var width = transitionText.width();
-    // console.log(width);
-    // let bbox = transitionText.getBBox();
-    // rect.setAttribute("x", (bbox.x).toString());
-    // rect.setAttribute("y", (bbox.y).toString());
-    // rect.setAttribute("width", bbox.width);
-    // rect.setAttribute("height", bbox.height);
-    // rect.setAttribute("fill", "yellow");
+
 }
 
 
