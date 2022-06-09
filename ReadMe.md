@@ -47,10 +47,10 @@ D:\school\capstone\certs> ssh -i .\rover.pem ubuntu@138.49.185.129
 
 13. `sudo chown -R tomcat:tomcat /opt/tomcat/` -- set ownership of the tomcat folder contents to tomcat (they are originally root as we used sudo to unpack it)
 
-14. sudo chmod -R u+x /opt/tomcat/bin` -- set permissions of tomcat bin folder (the bin contains the shell scripts to start/stop the server)
+14. `sudo chmod -R u+x /opt/tomcat/bin` -- set permissions of tomcat bin folder (the bin contains the shell scripts to start/stop the server)
 
 #### *Optional, set up auto run on server initilaize*
-sudo nano /opt/tomcat/conf/tomcat-users.xml ((optional if you want to setup an admin dashboard, see this for instructions on how: https://www.linuxshelltips.com/install-apache-tomcat-ubuntu/))
+`sudo nano /opt/tomcat/conf/tomcat-users.xml` -- optional if you want to setup an admin dashboard, see this for instructions on how: https://www.linuxshelltips.com/install-apache-tomcat-ubuntu/
 -- otherstuff to set up above
 
 *Note: at this point the tomcat manager should show up on at the server ip address with port 8080 (for example, http://138.49.185.129:8080/) from our local computer (see running tomcat)*
@@ -67,8 +67,9 @@ sudo nano /opt/tomcat/conf/tomcat-users.xml ((optional if you want to setup an a
 
 3. `./setup.sh` -- setup initial resources
 
-4. Make sure you are using java 8
+4. Make sure you are using java 8 and javac 8
     - `sudo update-alternatives --config java`
+    - `sudo update-alternatives --config javac`
 
 5. For java 8 you need to disable some accessability properties for prism to work properly, this script should do that
     - `sudo sed -i -e '/^assistive_technologies=/s/^/#/' /etc/java-\*-openjdk/accessibility.properties`
