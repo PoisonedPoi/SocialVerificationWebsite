@@ -33,7 +33,7 @@ D:\school\capstone\certs> ssh -i .\rover.pem ubuntu@138.49.185.129
 
 6. `sudo apt install gcc` -- install **C** compiler
 
-7. `sudo apt install g++ -- install **C++** compiler
+7. `sudo apt install g++` -- install **C++** compiler
 
 8. `sudo apt install libcanberra-gtk-module`
 
@@ -49,31 +49,31 @@ D:\school\capstone\certs> ssh -i .\rover.pem ubuntu@138.49.185.129
 
 14. sudo chmod -R u+x /opt/tomcat/bin` -- set permissions of tomcat bin folder (the bin contains the shell scripts to start/stop the server)
 
-#### optional, set up auto run on server initilaize
+#### *Optional, set up auto run on server initilaize*
 sudo nano /opt/tomcat/conf/tomcat-users.xml ((optional if you want to setup an admin dashboard, see this for instructions on how: https://www.linuxshelltips.com/install-apache-tomcat-ubuntu/))
 -- otherstuff to set up above
 
-*Note at this point the tomcat manager should show up on at the server ip address with port 8080 (for example, http://138.49.185.129:8080/) from our local computer (see running tomcat)*
+*Note: at this point the tomcat manager should show up on at the server ip address with port 8080 (for example, http://138.49.185.129:8080/) from our local computer (see running tomcat)*
 
 ### Install SocialVerificationWebsite website on tomcat server
 
-- note tomcat deploys websites from war files which are similar to jar files with a certain file structure.
+*Note: tomcat deploys websites from war files which are similar to jar files with a certain file structure.*
 
 1. Switch back to our normal user
-- Press control+d or type `exit` to switch back to normal user
-- Go to your home directory (cleaner to work in here)
+    - Press control+d or type `exit` to switch back to normal user
+    - Go to your home directory (cleaner to work in here)
 
 2. `git clone https://github.com/PoisonedPoi/SocialVerificationWebsite.git` -- clone the project
 
 3. `./setup.sh` -- setup initial resources
 
 4. Make sure you are using java 8
-- `sudo update-alternatives --config java`
+    - `sudo update-alternatives --config java`
 
 5. For java 8 you need to disable some accessability properties for prism to work properly, this script should do that
-- `sudo sed -i -e '/^assistive_technologies=/s/^/#/' /etc/java-\*-openjdk/accessibility.properties`
+    - `sudo sed -i -e '/^assistive_technologies=/s/^/#/' /etc/java-\*-openjdk/accessibility.properties`
 
-\*\* **Note: you still have to unset DISPLAY** \*\*
+\*\* ***Note: you still have to unset DISPLAY*** \*\*
 - `unset DISPLAY`
 - `echo $DISPLAY` -- should be empty
 
@@ -93,7 +93,7 @@ At this point the server should be all set up
 
 The tomcat manager should show up on at the server ip address with port 8080 
 
-- for example, http://138.49.185.129:8080/ from an external computer connected to uwl through cisgo
+- For example, http://138.49.185.129:8080/ from an external computer connected to uwl through cisgo
 
 Access the website at the following url
 
@@ -103,8 +103,8 @@ Access the website at the following url
 
 Pull new changes into the SocialVerificationWebsite folder
 
-- Run ./deploy.sh for front end changes
-- Run ./update.sh for source code changes in the checker2 folder
+- Run `./deploy.sh` for front end changes
+- Run `./update.sh` for source code changes in the checker2 folder
 
 ## Notes and suggestions
 
