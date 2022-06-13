@@ -112,12 +112,6 @@ public class FSManager {
 	
 	//Get all the microinteractions in the lib folder as microboxes. Used in the lib tab
 
-
-	//TODO Implement this method so it can write to the properties file before the program shuts down
-	//Save any changes such as new font, fontsize, base state size, grid status
-	public void setConfigFile() {
-
-	}
 	
 	//Get the current workspace
 	public String getPath(){

@@ -9,7 +9,6 @@ import model_ctrl.MicroParameterizer;
 import model_ctrl.TooltipViz;
 
 
-//TODO URGENT: Merge with MicroBox
 
 public class Microinteraction {
 
@@ -29,10 +28,6 @@ public class Microinteraction {
 	// stuff to do with sequential checking
 	ArrayList<ArrayList<State>> endStates;
 	ArrayList<ArrayList<State>> startStates;
-	
-	// tooltip
-
-	
 	
 	// stuff to do with concurrent microinteractions
 

@@ -3,9 +3,7 @@
 
 #Note, this is meant to be called by .sh files in parent dir
 
-
-#note must be user atm, this shold be changed
-#compile the servlet
+#compile the servlet, add any new servlets to this list as needed
 
 javac -cp servlet-api.jar ViolationParser.java -d ../website/WEB-INF/classes/
 

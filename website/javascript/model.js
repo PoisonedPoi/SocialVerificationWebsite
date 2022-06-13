@@ -1,6 +1,6 @@
 
 
-//TODO split into many separate classes
+//TODO (optional) split into many separate classes
 
 
 // model classes
@@ -409,7 +409,7 @@ class MicroType {
     }
 }
 
-//TODO add arrya to this
+
 class Parameter {
     /*
     id;
@@ -462,33 +462,3 @@ class Violation {
 
 
 //export {Interaction, Group, Transition, MicroInteraction, MicroType, Parameter };
-
-
-
-
-
-
-
-
-
-/*
-class Parameter {
-    /*
-    id;
-    variableName -- the variable name associated with this parameter as defined in back end
-    description;
-    value;   -- the value that will be passed to the variable name in the database
-    isBoolean;
-     isField;    --the three types identified and currently supported by rover backend and front end
-    isDropDown;  --this is called array in back end but functions like a drop down that the user adds to
-    dropDownSelections = [];
-constructor(id, label, variableName, description, isBoolean, isField, isDropdown, dropDownSelections) { //used to add dropDownSelections
-    this.id = id;
-    this.label = label;
-    this.description = description;
-    this.isBoolean = isBoolean;
-    this.isField = isField;
-    this.isDropDown = isDropdown;
-    this.dropDownSelections = dropDownSelections;//this may be null if not used
-}
-*/

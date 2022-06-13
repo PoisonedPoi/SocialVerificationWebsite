@@ -67,7 +67,7 @@ public class Violation{
 
     public void addGroupViolating(Group g){
         if(tiesToInteraction){
-            //System.out.println("WARNING: tried to add a group to an interaction only property, see Violation class");
+            //System.out.println("WARNING: tried to add a group to an interaction only property");
             return;
         }
         groupsViolating.add(g);

@@ -1,7 +1,5 @@
 package model;
 
-
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.lang.reflect.Field;
@@ -192,95 +190,22 @@ public class GroupTransition  {
 		target = group;
 		
 		//initializeIndicator();
-		if (bt != null)
-			bt.addCommand("set mt target");
-		
 		// grayOut if necessary
 		if (!source.checkBranchingPartition()[0]) {
 			source.greyAllMacroTransitionsOut();
 		}
+
+
 		
 		if (!source.checkBranchingPartition()[1]) {
 			if (source.getWasGoodPartition()) {
-				bt.addBug("branching", source);
 				source.setGoodPartition(false);
 			}
 		}
 
 	}
 	
-	// public void updateBreakpoint(double x, double y) {
-	// 	if (getPoints().size() == 4) {
-	// 		double endX = getPoints().get(getPoints().size() - 2);
-	// 		double endY = getPoints().get(getPoints().size() - 1);
-			
-	// 		getPoints().set(getPoints().size() - 2, x);
-	// 		getPoints().set(getPoints().size() - 1, y);
-	// 		getPoints().add(endX);
-	// 		getPoints().add(endY);
-	// 		broke = true;
-	// 	}
-	// 	else {
-	// 		getPoints().set(getPoints().size() - 4, x);
-	// 		getPoints().set(getPoints().size() - 3, y);
-	// 	}
-	// }
 	
-	// public void removeBreakpoint() {
-		
-	// 	if (getPoints().size() == 6) {
-	// 		double endX = getPoints().get(getPoints().size() - 2);
-	// 		double endY = getPoints().get(getPoints().size() - 1);
-			
-	// 		getPoints().remove(getPoints().size() - 1);
-	// 		getPoints().remove(getPoints().size() - 1);
-	// 		getPoints().remove(getPoints().size() - 1);
-	// 		getPoints().remove(getPoints().size() - 1);
-	// 		getPoints().add(endX);
-	// 		getPoints().add(endY);
-	// 		broke = false;
-	// 	}
-	// }
-	
-	// public String calculateOrientation(String io) {
-	// 	String result;
-		
-	// 	// treat problem as though io is source
-	// 	double sX = source.getLayoutX() + source.getWidth()/2.0;
-	// 	double sY = source.getLayoutY() + source.getHeight()/2.0;
-	// 	double tX = target.getLayoutX() + target.getWidth()/2.0;
-	// 	double tY = target.getLayoutY() + target.getHeight()/2.0;
-		
-	// 	// if the Y difference is less than the X difference
-	// 	if (Math.abs(sX - tX) >= Math.abs(sY - tY)) {
-	// 		// case source X is less than target X
-	// 		if (sX > tX)
-	// 			result = "left";
-	// 		// case target X is less than source X
-	// 		else
-	// 			result = "right";
-	// 	}
-			
-	// 	// if the X difference is less than the Y difference
-	// 	else {
-	// 	// case source X is less than target X and the Y difference is less than the X difference
-	// 		if (sY > tY)
-	// 			result = "top";
-	// 	// case target X is less than source X and the Y difference is less than the X difference
-	// 		else
-	// 			result = "bottom";
-	// 	}
-		
-	// 	// switch everything if io is target
-	// 	if (io.equals("input")) {
-	// 		if (result.equals("bottom")) result = "top";
-	// 		else if (result.equals("top")) result = "bottom";
-	// 		else if (result.equals("right")) result = "left";
-	// 		else result = "right";
-	// 	}
-		
-	// 	return result;
-	// }
 	
 	public Conditions getConditions() {
 		return conditions;
@@ -316,7 +241,6 @@ public class GroupTransition  {
 		
 		if (goodPartition[1]) {
 			if (!group.getWasGoodPartition()) {
-				//bt.removeBug("branching", group);
 				group.setGoodPartition(true);
 			}
 		}

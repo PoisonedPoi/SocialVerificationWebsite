@@ -53,7 +53,7 @@ public class Group  {
 	private HashMap<Microinteraction,ArrayList<Integer>> endStateIdxs;
 	
 	// macrointeraction stuff
-	private Microinteraction macrointeraction;
+	private Microinteraction macrointeraction; 
 	
 	// transitions
 	private ArrayList<GroupTransition> outputTrans;
@@ -94,11 +94,11 @@ public class Group  {
 	private ArrayList<ModBehPair> fixedBehaviorConflicts;
 	private ArrayList<ModBehPair> unresolvedBehaviorConflicts;
 	
-	// bug tracking
+	// bug tracking  --Can and should be removed at some point
 	private BugTracker bt;
 	private ArrayList<ArrayList<Microinteraction>> badPairs;
 	
-	// negative feedback allowance
+	// negative feedback allowance --can probalby be removed
 	private boolean allowNegativeFeedback;
 	private boolean allowBlinker;
 	
@@ -454,44 +454,12 @@ public class Group  {
 	
 
 	
-
-	/*
-	//TODO URGENT: once microbox code is integrated into microinteractions, add this code into the addMicro method
-	private void addMicroBox(MicroBox mb) {
-		//mb.makeSmaller();
-		
-		// add to the end of the grid
-		microList.add(mb, 0, pos);
-		pos++;
-	}
-	
-
-
-*/
 	public void removeMicro(Microinteraction m) {
-		// remove all, and then add all excluding the old one
-		/*
-		ArrayList<MicroBox> mbs = new ArrayList<MicroBox>();
-		for (int i = 0; i < microList.getChildren().size(); i++) {
-			if ( !((MicroBox) microList.getChildren().get(i)).getMicrointeraction().equals(m))
-				mbs.add((MicroBox) microList.getChildren().get(i));
-		}
-		
-		microList.getChildren().clear();
-		pos = 0;
-		
-		for (MicroBox microbox : mbs) {
-			microList.add(microbox, 0, pos);
-			pos++;
-		}
-		
-		MicroBox mb = m.getMicroBox();
-		//microList.getChildren().remove(mb);
-		*/
+	
 		microinteractions.remove(m);
 		micro2idx2states.remove(m);
 		endStateIdxs.remove(m);
-		//pos--;
+	
 	}
 	
 	public void addInputMacroTrans(GroupTransition input) {
@@ -557,9 +525,8 @@ public class Group  {
 		return markedForUpdate;
 	}
 	
-	//what does this all do?
 	public void createReducedMergedMacrointeraction(Checker c,  Interaction ia, ModelFileChecker mc) {
-		//System.out.println("Group: Creating reduced merged macroInteraction 222");
+		//System.out.println("Group: Creating reduced merged macroInteraction");
 		// create the microinteraction
 		macrointeraction = new Microinteraction();
 		
@@ -1063,7 +1030,7 @@ public class Group  {
 
 
 	
-	//Relocate the object. This code has been take from the node class in the javafx package
+	//Relocate the object. This code has been taken from the node class in the javafx package
 	
 	public boolean isInit() {
 		return init;

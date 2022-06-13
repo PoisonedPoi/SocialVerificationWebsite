@@ -17,6 +17,10 @@ import model.Update;
  * Processes and formats all the strings for the transitions
  */
 
+ /*
+ *  This can probably be removed as of now
+ */
+
 public class Annotation {
 
 	private double X, Y;

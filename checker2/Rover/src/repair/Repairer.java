@@ -18,6 +18,8 @@ public class Repairer {
 	
 	ArrayList<Object> previewer;
 
+	//This can probably be removed
+
 	public Repairer(Interaction ia, ModelFileChecker mc, ImportMicrosCT imct) {
 		this.ia = ia;
 		this.mc = mc;

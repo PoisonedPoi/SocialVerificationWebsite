@@ -9,6 +9,10 @@ import model.Microinteraction;
 import model.Module;
 import model.State;
 
+/*
+*	This can probably be removed
+*/
+
 public class TooltipViz{
 	
 	Microinteraction micro;

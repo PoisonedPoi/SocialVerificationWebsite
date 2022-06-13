@@ -1,7 +1,0 @@
-PRISM
-=====
-
-Version: 4.3.1.dev
-Date: Tue Mar 08 19:50:28 CST 2022
-Hostname: new-VirtualBox
-Memory limits: cudd=1g, java(heap)=2.0g

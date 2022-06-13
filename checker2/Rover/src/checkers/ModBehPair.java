@@ -13,7 +13,7 @@ public class ModBehPair {
 
   boolean nonProperty;
 
-  //how is this used? no one knows  (edit its probably for gaze guester conflicts)
+  //This is used for gaze guester conflicts
   public ModBehPair(HashMap<Module, String> modstr, boolean nonProperty) {
     this.nonProperty = nonProperty;
     mods = new ArrayList<Module>();

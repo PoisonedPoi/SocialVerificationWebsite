@@ -107,7 +107,7 @@ public class DotExporter {
 			
 			File fNew = new File(USERFOLDER+ "dot_files/" +  m.getName() + ".dot"); //Globals.ROOT_FP + File.separator + "users" + File.separator + "user"+Globals.SID + File.separator + "dot_files" + File.separator + m.getName() + ".dot"
 			PrintWriter writer = new PrintWriter(fNew);
-			try (BufferedReader br = new BufferedReader(new FileReader(f))) { //ocasionally not being found
+			try (BufferedReader br = new BufferedReader(new FileReader(f))) { 
 			    String line;
 			    while ((line = br.readLine()) != null) {
 			    	if (line.contains(" [label=")) {

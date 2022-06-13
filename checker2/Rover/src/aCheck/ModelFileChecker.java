@@ -17,20 +17,16 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.ResourceBundle;
-
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import java.io.StringWriter;
-
-
 import checkers.Checker;
 import checkers.PrismThread;
 import checkers.Property;
 import enums.StateClass;
 import image.Conditions;
-
 import model.*;
 import model.Group;
 import model.GroupTransition;
@@ -41,7 +37,6 @@ import study.GroupMBP;
 //stuff for document parsing
 import java.awt.Point;
 import java.io.File;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 
@@ -49,6 +44,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Node;
+
 //NOTE ALL MICRO-INTERACTION FILE PATHS ARE CURRENTLY HARD CODED IN INTERACTION'S SET CHECKER METHOD THIS MUST BE CHANGED TO ADD NEW MICRO-INTERACTIONS
 
 public class ModelFileChecker{
@@ -64,15 +60,13 @@ public class ModelFileChecker{
     private String absFilePath;
     // global variable to hold the MainController object
     private ModelFileChecker mainController;
-   // private ImportMicrosCT importMicrosCT;  a gui object?
-  //  private InteractionPane interactionPane; a gui object?
     // the current interactions, microinteraction and module in the editor
     private Interaction interaction;
     private ArrayList<Group> groups;
     private Module currModule;
     private GroupTransition currGroupTransition;
 
-    // if not assisted (the control)    //TODO find if this can be removed
+    // if not assisted (the control)    //can probbly be removed
     private Boolean isNonAssisted = false;
     private HashMap<String, TooltipViz> staticTooltips;
 
@@ -82,22 +76,17 @@ public class ModelFileChecker{
     private boolean canStopExp;
     private boolean canClearDesign;
 
-       // properties file
+    // properties file
     private File propsFile;
     private ArrayList<Property> graphProperties;
     // repairer
     private Repairer rep;
 
 
-
-    //others that could be useful
-    private final int BUTTON_SELECT = 'A';
-    private final int BUTTON_ADDGROUP = 'G';
-    private final int BUTTON_ADDTRANS = 'T';
-
     private final String SID; //session id, gives the user folder name as "user + SID", it should not be changed once set 
     private final String USERFOLDER;//the actual folder path for this user
     
+    //This constructor is the one used in the current checking process
     public ModelFileChecker(String sid,  String xmlString, String workingDirectory ){
         this.SID = sid;
         Globals.ROOT_FP = workingDirectory;
@@ -114,40 +103,22 @@ public class ModelFileChecker{
             //setup a blank prism folder
             new File(USERFOLDER + "prism").mkdir();
         }
+
         initialize();
-        //System.out.println("Done Initializing");
-        //System.out.println("getting interaction groups test " + interaction.getGroups());
+
         loadModelXMLString(xmlString, interaction);
-        //System.out.println("Done Loading interaction and now about to start check");
+
         performCheck();
-        //System.out.println("now about to load violations");
 
         loadViolations();
      
         printXMLViolationDocument();
 
         destroyUserFolder();
-        //System.out.println("printing all violations ---");
-        //interaction.printViolations();
-
-        //System.out.println("getting xml xoc");
-        //Document doc = getXMLViolationDocument();
-
-        /*
-        System.out.println("Root element" + doc.getDocumentElement().getNodeName());
-        NodeList nList = doc.getElementsByTagName("violation");
-        for(int temp = 0;temp<nList.getLength(); temp++){
-            Node nNode = nList.item(temp);
-            System.out.println(" Current Element " + nNode.getNodeName());
-            Element elem = (Element) nNode;
-            System.out.println("Type " + elem.getElementsByTagName("type").item(0).getTextContent());
-        }
-        
-    */
     }
     
+    //this is called by RoVer.sh, useful for testing in the RoVer directory with an interaction.xml saved in the checker
     public ModelFileChecker(String sid,  String workingDirectory){
-        //this is called by RoVer.sh
         this.SID = sid;
         Globals.ROOT_FP = workingDirectory;
         Globals.USERPATH =  workingDirectory + "/users/";
@@ -171,7 +142,6 @@ public class ModelFileChecker{
         performCheck();
         //System.out.println("now about to load violations");
 
-        
         loadViolations();
 
         printXMLViolationDocument();
@@ -190,11 +160,11 @@ public class ModelFileChecker{
             System.out.println(" Current Element " + nNode.getNodeName());
             Element elem = (Element) nNode;
             System.out.println("Type " + elem.getElementsByTagName("type").item(0).getTextContent());
-        }
-        
+        }  
     */
     }
 
+    //used for testing, can be removed
     public ModelFileChecker(String sid){
         //set global filepaths
        this.SID = sid;
@@ -248,7 +218,7 @@ public class ModelFileChecker{
         //destroyUserFolder();
     }
 
-    //note the current instance of this modelfilechecker should not be used again after calling this method
+    //the current instance of this modelfilechecker should not be used again after calling this method
     public void destroyUserFolder(){
         File folder = new File(USERFOLDER);
         deleteFolder(folder);
@@ -283,9 +253,7 @@ public class ModelFileChecker{
         Transformer transformer;
         try{
             transformer = tf.newTransformer();
-
             StringWriter writer = new StringWriter();
-
             transformer.transform(new DOMSource(xmlDocument), new StreamResult(writer));
             String xmlString = writer.getBuffer().toString();
             System.out.println(xmlString);
@@ -295,7 +263,7 @@ public class ModelFileChecker{
     }
 
 
-
+    //performs the check as RoVer would
     public void performCheck(){
             if (backgroundThread != null && backgroundThread.getThread().isAlive())
             try {
@@ -304,12 +272,8 @@ public class ModelFileChecker{
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             }
-               //System.out.println("getting interaction groups  after stopping background thread test " + interaction.getGroups());
-        
-       // Microinteraction newMicro = interaction.getMicros().get(interaction.getMicros().size()-1);
 
         new PrismThread(interaction, mainController); //used to include newMicro
-        //System.out.println("getting interaction groups test after new prism thread " + interaction.getGroups());
         if (interaction.testIsCyclic()) {
             // start over again by wiping the end states!
             //System.out.println("test was cyclic");
@@ -320,16 +284,13 @@ public class ModelFileChecker{
             for(Group g : interaction.getGroups()){
                 groupsToUpdate.add(g);
             }
-            
-           // groupsToUpdate.add((Group) node);
             interaction.getNetworkPropagator().propagateSequentialChanges(groupsToUpdate, interaction, mainController, false);
         }
         
-        //System.out.println("Done with network propagation");
-
         verifyConcurrentAndGraph();
     }
 
+    //after check is performed, this loads the violations into the interaction instance
     public void loadViolations(){
                 if (backgroundThread != null && backgroundThread.getThread().isAlive())
             try {
@@ -404,16 +365,16 @@ public class ModelFileChecker{
         interaction.setUSERFOLDER(this.USERFOLDER);
         currGroupTransition = null;
 
-        //TODO figure out way to safely remove
+        //TODO figure out way to safely remove, although it has no negative impact
         interaction.setTutorial(false);
         interaction.setNonAssistedSwitch(isNonAssisted);
 
         buttonFlag = 0;
         //importMicrosCT = new ImportMicrosCT(this);
-       // rep = new Repairer(interaction, this, importMicrosCT); //shouldnt or dont know how to use
 
         readInteraction();
         staticTooltips = new HashMap<>(); //probably could be removed
+
        // initialize the booleans that control starting, stopping, and clearing the designs
         canStartExp = true;
         canStopExp = false;
@@ -441,9 +402,6 @@ public class ModelFileChecker{
 
         public void startDesign() {
         if (canStartExp) {
-
-          //  selectButton.setSelected(true);
-
             interaction.startDesign( mainController);
 
            // interaction.reinitializeBugTracker();
