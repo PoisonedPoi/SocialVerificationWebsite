@@ -64,6 +64,7 @@ D:\school\capstone\certs> ssh -i .\rover.pem ubuntu@138.49.185.129
     - Go to your home directory (cleaner to work in here)
 
 2. `git clone https://github.com/PoisonedPoi/SocialVerificationWebsite.git` -- clone the project
+    - If git is not installed, install with `sudo apt install git`
 
 3. Make sure you are using java 8 and javac 8
     - `sudo update-alternatives --config java`
