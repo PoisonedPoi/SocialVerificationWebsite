@@ -65,14 +65,15 @@ D:\school\capstone\certs> ssh -i .\rover.pem ubuntu@138.49.185.129
 
 2. `git clone https://github.com/PoisonedPoi/SocialVerificationWebsite.git` -- clone the project
 
-3. `./setup.sh` -- setup initial resources
-
-4. Make sure you are using java 8 and javac 8
+3. Make sure you are using java 8 and javac 8
     - `sudo update-alternatives --config java`
     - `sudo update-alternatives --config javac`
 
+4. `./setup.sh` -- setup initial resources
+
 5. For java 8 you need to disable some accessability properties for prism to work properly, this script should do that
     - `sudo sed -i -e '/^assistive_technologies=/s/^/#/' /etc/java-\*-openjdk/accessibility.properties`
+    - Remove forward slash
 
 \*\* ***Note: you still have to unset DISPLAY*** \*\*
 - `unset DISPLAY`
