@@ -5,6 +5,8 @@
 
 #compile the servlet, add any new servlets to this list as needed
 
+mkdir -p ../website/WEB-INF/classes
+
 javac -cp servlet-api.jar ViolationParser.java -d ../website/WEB-INF/classes/
 
 #javac -classpath ${TOMCAT}/lib/servlet-api.jar ViolationParser.java -d ../website/WEB-INF/classes/
