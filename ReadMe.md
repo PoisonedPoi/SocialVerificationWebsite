@@ -73,8 +73,7 @@ D:\school\capstone\certs> ssh -i .\rover.pem ubuntu@138.49.185.129
 4. `./setup.sh` -- setup initial resources
 
 5. For java 8 you need to disable some accessability properties for prism to work properly, this script should do that
-    - `sudo sed -i -e '/^assistive_technologies=/s/^/#/' /etc/java-\*-openjdk/accessibility.properties`
-    - Remove forward slash
+    - sudo sed -i -e '/^assistive_technologies=/s/^/#/' /etc/java-*-openjdk/accessibility.properties
 
 \*\* ***Note: you still have to unset DISPLAY*** \*\*
 - `unset DISPLAY`

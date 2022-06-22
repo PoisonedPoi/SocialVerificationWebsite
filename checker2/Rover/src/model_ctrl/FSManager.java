@@ -10,9 +10,9 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Properties;
 
-import controller.ErrDController;
+//import controller.ErrDController;
 import controller.ImportMicrosCT;
-import model.MicroBox;
+//import model.MicroBox;
 import aCheck.Globals;
 
 /*
@@ -44,12 +44,12 @@ public class FSManager {
 			input = new FileInputStream(Globals.RESOURCEPATH + "Master" +File.separator+ "Configuration" +File.separator+ "config.properties");
 			prop.load(input);
 		} catch (FileNotFoundException e) {
-			ErrDController edc = new ErrDController();
-			edc.display("No Config File Found", e);
+			//ErrDController edc = new ErrDController();
+			//edc.display("No Config File Found", e);
 		}
 		catch (IOException e){
-			ErrDController edc = new ErrDController();
-			edc.display("Error loading Config File", e);
+			//ErrDController edc = new ErrDController();
+			//edc.display("Error loading Config File", e);
 		}
 	}
 
@@ -97,6 +97,7 @@ public class FSManager {
 	}
 	
 	//Get a list of microboxes from the current directory. Used to populate the Library tab
+    /*
 	public ArrayList<MicroBox> getMicrosInDir(File dir){
 		ArrayList<MicroBox> microConfigs = new ArrayList<>();
 		
@@ -109,6 +110,7 @@ public class FSManager {
 
 		return microConfigs;
 	}
+    */
 	
 	//Get all the microinteractions in the lib folder as microboxes. Used in the lib tab
 

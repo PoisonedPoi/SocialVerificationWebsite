@@ -26,7 +26,6 @@ import checkers.Checker;
 import checkers.PrismThread;
 import checkers.Property;
 import enums.StateClass;
-import image.Conditions;
 import model.*;
 import model.Group;
 import model.GroupTransition;
@@ -562,7 +561,7 @@ public boolean[] getEndStates(Node node) {
         (new Decoder(this, isNonAssisted)).readMicrointeraction(file, file.getAbsolutePath(), newMicro);
 
         // sets up a parameterizer specific to this GUI
-        newMicro.addParameterizer(new MicroParameterizer(newMicro.getGlobalVars(), this));
+        //newMicro.addParameterizer(new MicroParameterizer(newMicro.getGlobalVars(), this));
 
         newMicro.build();
 

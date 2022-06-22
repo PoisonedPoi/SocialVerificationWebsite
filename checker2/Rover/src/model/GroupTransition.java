@@ -5,20 +5,12 @@ import java.io.FileInputStream;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 
-import image.Conditions;
-
-
 import study.BugTracker;
-
-
 
 public class GroupTransition  {
 	private Group source;
 	private Group target;
 	
-
-	// branching conditions
-	Conditions conditions;
 	
 	// branching
 	boolean[] humanBranching;
@@ -205,16 +197,6 @@ public class GroupTransition  {
 
 	}
 	
-	
-	
-	public Conditions getConditions() {
-		return conditions;
-	}
-	
-	//public void displayElseCondition() {
-	//	this.conditions.getGraphicsContext2D().clearRect(0, 0, 62, 10);
-	//	this.conditions.getGraphicsContext2D().fillText("(else)", 0, 10);
-	//}
 	
 	public void updateAndDisplayConditions() {
 		Group group = getSource();

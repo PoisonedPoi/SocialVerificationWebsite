@@ -21,7 +21,6 @@ import checkers.Property;
 import aCheck.ModelFileChecker;
 import controller.NetworkPropagator;
 import model_ctrl.Decoder;
-import model_ctrl.MicroParameterizer;
 import model_ctrl.TooltipViz;
 import study.BugTracker;
 
