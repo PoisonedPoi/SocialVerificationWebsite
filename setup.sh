@@ -1,5 +1,7 @@
 #NOTE process assumes you have a user named tomcat and tomcat is installed in /opt/tomcat *no version id, it is as written* and is owned by the usertomcat
 
+#remove resources if they already exist
+sudo rm -rf /srv/rover
 
 #move rover resources from /setup-resources to /srv/rover  
 #(Note: website uses a subprocess which should should run from and use resources from srv/rover (as srv is proper place for server flies like these))
