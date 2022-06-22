@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import model.MicroBox;
 import model_ctrl.FSManager;
 import aCheck.Globals;
 
@@ -23,7 +22,6 @@ public class ImportMicrosCT{
 
 
 	private ModelFileChecker mc;
-	private ArrayList<MicroBox> allMicros;
 	private String currItem = null;
 
 	/*

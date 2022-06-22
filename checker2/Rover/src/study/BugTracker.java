@@ -20,7 +20,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 
 import checkers.Property;
-import image.BugStats;
 
 //I believe this was used for statistical analysis of RoVer, this can probably be removed
 

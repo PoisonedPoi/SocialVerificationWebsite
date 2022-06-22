@@ -5,7 +5,6 @@ import java.util.HashMap;
 
 import enums.StateClass;
 import model_ctrl.Builder;
-import model_ctrl.MicroParameterizer;
 import model_ctrl.TooltipViz;
 
 
@@ -20,7 +19,7 @@ public class Microinteraction {
 	private Microinteraction builtMicro;
 	private HashMap<String,ArrayList<Variable>> orLabels;
 	private HashMap<String,ArrayList<Variable>> andLabels;
-	private MicroParameterizer params;
+	//private MicroParameterizer params;
 	
 	// stuff to do with interaction
 	private int id;
@@ -49,7 +48,7 @@ public class Microinteraction {
 		builtMicro = null;
 		orLabels = null;
 		andLabels = null;
-		params = null;
+		//params = null;
 		
 		startStates = null;
 		endStates = null;
@@ -80,9 +79,11 @@ public class Microinteraction {
 		modules.addAll(mods);
 	}
 	
-	public void addParameterizer(MicroParameterizer params) {
+	/*
+    public void addParameterizer(MicroParameterizer params) {
 		this.params = params;
 	}
+    */
 	
 	public void addDescription(String descript) {
 		description = descript;
@@ -96,11 +97,11 @@ public class Microinteraction {
 		this.id = id;
 	}
 	
-
-	
+    /*
 	public MicroParameterizer getParameterizer() {
 		return params;
 	}
+    */
 	
 	public String getDescription() {
 		return description;
