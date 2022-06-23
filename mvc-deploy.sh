@@ -1,9 +1,8 @@
 #updates most recent copy of the checker to the src/rover/main/bin (which is used in the hardcoded path in checker2/Rover/runRover.sh)
-sudo -u tomcat cp checker2/Rover/bin -r /srv/rover/main
-#then make war file out of website and send it to /opt/tomcat/webapps where it will be automatically deployed by tomcat
-#NOTE, this assumes tomcat is running using the user tomcat, this should not be performed as root
+#sudo -u tomcat cp checker2/Rover/bin -r /srv/rover/main
 
+# make war file out of websit
 ./mvnw package
 
-echo "Moving war file to tomcat/webapps"
+# copy war file on to tomcat server
 sudo -u tomcat cp target/SocialVerificationWebsite.war /opt/tomcat/webapps
