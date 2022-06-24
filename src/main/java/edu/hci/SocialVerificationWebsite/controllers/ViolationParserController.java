@@ -5,12 +5,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-//@RequestMapping("/test")
-public class TestController {
+@RequestMapping("/ViolationParser")
+public class ViolationParserController {
 
-	@GetMapping("/hello")
-	public String hello() {
-		return "Hello there";
+	@GetMapping()
+	public String getViolationParser() {
+		return "Got the violation parser";
 	}
 
 }
