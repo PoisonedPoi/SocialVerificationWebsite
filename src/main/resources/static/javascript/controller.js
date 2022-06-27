@@ -119,7 +119,9 @@ class controller {
 
                 //parse violations
                 let violations = []
+                //let violationList = xmlDoc[0].getElementsByTagName("violation_list").childNodes;
                 let violationList = xmlDoc.getElementsByTagName("violation_list")[0].childNodes;
+                
                 for (let i = 0; i < violationList.length; i++) {
                     let violationChild = violationList[i];
                     let category = violationChild.getElementsByTagName("category")[0].textContent;
@@ -137,6 +139,7 @@ class controller {
                     violations.push(violationObject);
                 }
 
+                console.log(violations);
                 IC.interaction.setViolations(violations); //model
                 IC.makeConflicts(IC.interaction.getViolations()); //view
                 $('#verificationStatusText').text("Complete");
@@ -149,7 +152,7 @@ class controller {
         let terminalString = "";
         violations.forEach(violation => {
             if (violation.category == "interaction") {
-                terminalString += "Interaction is violating property: " + violation.type + "\n Desc: " + violation.description + "\n";
+                terminalString += "Interaction is violating property: " + violation.type + "\n<br> Desc: " + violation.description + "\n<br>";
             }
             if (violation.category == "group") {
                 let groupString = "";
@@ -157,9 +160,9 @@ class controller {
                 violation.violatorGroups.forEach(groupName => {
                     groupString += groupName + " ";
                 })
-                terminalString += "Group(s):  " + groupString + " are violating property: " + violation.type + "\n Desc: " + violation.description + "\n";
+                terminalString += "Group(s):  " + groupString + " are violating property: " + violation.type + "\n<br> Desc: " + violation.description + "\n<br>";
             }
-            terminalString += "\n"
+            terminalString += "\n<br>"
         })
         setTerminalText(terminalString);
 
@@ -183,7 +186,12 @@ class controller {
 }
 
 function setTerminalText(text) {
-    document.getElementById('terminal-textarea').textContent = text;
+    console.log("Should set terminal text with ...");
+    console.log(text);
+    // Add <br> at carriage returns
+
+    //document.getElementById('terminal-textarea').textContent = text;
+    document.getElementById('terminal-textarea').innerHTML = text;
 }
 
 function saveToFile() {
