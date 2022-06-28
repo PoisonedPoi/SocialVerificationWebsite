@@ -34,7 +34,8 @@ Restart()
    echo
    echo "Restart tomcat"
    echo
-   sudo -u tomcat /./opt/tomcat/restart.sh
+   sudo -u tomcat /./opt/tomcat/bin/shutdown.sh
+   sudo -u tomcat /./opt/tomcat/bin/startup.sh
 }
 
 Main()
