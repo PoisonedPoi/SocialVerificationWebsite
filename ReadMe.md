@@ -15,7 +15,7 @@ D:\school\capstone\certs> ssh -i .\rover.pem ubuntu@138.49.185.129
 
 ## Installation on blank ubuntu 20 server instance
 
-*did work on ubuntu 16 as lowest verison tested and was successfuly deployed using these instructions on eucalytpus ubuntu 20*
+*did work on ubuntu 16 as lowest version tested and was successfuly deployed using these instructions on eucalytpus ubuntu 20*
 
 ### Install tomcat
 
@@ -41,57 +41,52 @@ D:\school\capstone\certs> ssh -i .\rover.pem ubuntu@138.49.185.129
 
 10. `sudo apt install wget` -- wget for installing tomcat
 
-11. `wget https://dlcdn.apache.org/tomcat/tomcat-10/v10.0.20/bin/apache-tomcat-10.0.20.tar.gz` -- install tomcat (note, you may have to replace to version in the url to reflect the most recent verision of tomcat, see here https://tomcat.apache.org/download-10.cgi)
+11. `wget https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.64/bin/apache-tomcat-9.0.64.tar.gz` -- install tomcat (note, you may have to replace to version in the url to reflect the most recent version of tomcat 9, see here https://tomcat.apache.org/download-9.cgi)
+    - Must use tomcat 9 because that is the most recent version compatible with spring boot
 
-12. `sudo tar xzvf apache-tomcat-10.0.20.tar.gz -C /opt/tomcat --strip-components=1` -- unzip tomcat and move it to its home directory
+12. `sudo tar xzvf apache-tomcat-9.0.64.tar.gz -C /opt/tomcat --strip-components=1` -- unzip tomcat and move it to its home directory
 
 13. `sudo chown -R tomcat:tomcat /opt/tomcat/` -- set ownership of the tomcat folder contents to tomcat (they are originally root as we used sudo to unpack it)
 
 14. `sudo chmod -R u+x /opt/tomcat/bin` -- set permissions of tomcat bin folder (the bin contains the shell scripts to start/stop the server)
 
+15. Go into your .bashrc file and add `unset DISPLAY` to the end of the file
+
+16. `sudo cp .bashrc /opt/tomcat/`
+
+17. `sudo chown tomcat:tomcat /opt/tomcat/.bashrc`
+
 #### *Optional, set up auto run on server initilaize*
 `sudo nano /opt/tomcat/conf/tomcat-users.xml` -- optional if you want to setup an admin dashboard, see this for instructions on how: https://www.linuxshelltips.com/install-apache-tomcat-ubuntu/
--- otherstuff to set up above
+-- other stuff to set up above
 
 *Note: at this point the tomcat manager should show up on at the server ip address with port 8080 (for example, http://138.49.185.129:8080/) from our local computer (see running tomcat)*
 
 ### Install SocialVerificationWebsite website on tomcat server
-
 *Note: tomcat deploys websites from war files which are similar to jar files with a certain file structure.*
 
 1. Switch back to our normal user
     - Press control+d or type `exit` to switch back to normal user
     - Go to your home directory (cleaner to work in here)
 
-2. `git clone https://github.com/PoisonedPoi/SocialVerificationWebsite.git` -- clone the project
+2. `git clone https://github.com/logan-larson/SocialVerificationWebsite.git` -- clone the project
     - If git is not installed, install with `sudo apt install git`
 
 3. Make sure you are using java 8 and javac 8
     - `sudo update-alternatives --config java`
     - `sudo update-alternatives --config javac`
 
-4. `./setup.sh` -- setup initial resources
-
-5. For java 8 you need to disable some accessability properties for prism to work properly, this script should do that
+4. For java 8 you need to disable some accessibility properties for prism to work properly, this script should do that
     - sudo sed -i -e '/^assistive_technologies=/s/^/#/' /etc/java-*-openjdk/accessibility.properties
 
-\*\* ***Note: you still have to unset DISPLAY*** \*\*
-- `unset DISPLAY`
-- `echo $DISPLAY` -- should be empty
+5. `./project-setup.sh` -- This should compile everything and deploy the website to port 8080
 
-### Running tomcat
-
-1. `sudo -u tomcat bash` -- switch to tomcat user and run future commands as the tomcat user
-
-2. `unset DISPLAY`
-
-3. `cd /opt/tomcat/bin`
-
-4. `./startup.sh` -- starts the server
 
 ### Closing remarks
 
 At this point the server should be all set up
+    
+    - If not, run `./deploy-application.sh -h` script for help deploying
 
 The tomcat manager should show up on at the server ip address with port 8080 
 
@@ -103,11 +98,10 @@ Access the website at the following url
 
 ## Making changes to source code and redeploying
 
-Pull new changes into the SocialVerificationWebsite folder
+- `./deploy-application.sh` -- this compiles the spring boot application and deploys it if given proper flags
 
-- Run `./deploy.sh` for front end changes
-- Run `./update.sh` for source code changes in the checker2 folder
+- `./update-rover.sh` -- this compiles the back end and moves it to useful locations if given proper flags
 
 ## Notes and suggestions
 
-If you run into segfaults or permission errors use ls-l and sudo -u {user} bash to check permissions, in development many bugs were present due to improper installation using sudo to move files or g et around permissions but then erroring as sudo set the file created/moved to be owned by root and not tomcat, so when tomcat tried to access such files it would cause errors
+If you run into segfaults or permission errors use ls-l and sudo -u {user} bash to check permissions, in development many bugs were present due to improper installation using sudo to move files or get around permissions but then erroring as sudo set the file created/moved to be owned by root and not tomcat, so when tomcat tried to access such files it would cause errors
