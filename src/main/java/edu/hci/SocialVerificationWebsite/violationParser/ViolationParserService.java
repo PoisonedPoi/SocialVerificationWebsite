@@ -1,13 +1,9 @@
-package edu.hci.SocialVerificationWebsite;
+package edu.hci.SocialVerificationWebsite.violationParser;
 
 import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 
 import org.springframework.stereotype.Service;
 
-import org.springframework.web.multipart.MultipartFile;
 import java.io.InputStream;
 import java.io.ByteArrayInputStream;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -20,7 +16,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import java.io.BufferedReader;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 
 @Service
@@ -36,7 +31,7 @@ public class ViolationParserService {
         xmlDocument.getDocumentElement().normalize();
         TransformerFactory tf = TransformerFactory.newInstance();
         Transformer transformer;
-        String modelXMLString = "";
+
         try{
             transformer = tf.newTransformer();
             StringWriter writer = new StringWriter();

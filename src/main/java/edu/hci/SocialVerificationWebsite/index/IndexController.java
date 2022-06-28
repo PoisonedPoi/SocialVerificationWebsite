@@ -1,4 +1,4 @@
-package edu.hci.SocialVerificationWebsite;
+package edu.hci.SocialVerificationWebsite.index;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.stereotype.Controller;

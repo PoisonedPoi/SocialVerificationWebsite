@@ -1,4 +1,4 @@
-package edu.hci.SocialVerificationWebsite;
+package edu.hci.SocialVerificationWebsite.violationParser;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.beans.factory.annotation.Autowired;
