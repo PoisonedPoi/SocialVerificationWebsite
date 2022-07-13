@@ -3,16 +3,16 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { TitleBarComponent } from './title-bar/title-bar.component';
-import { DesignerComponent } from './designer/designer.component';
-import { AuthComponent } from './auth/auth.component';
-import { StatusBarComponent } from './designer/status-bar/status-bar.component';
-import { ActionsBarComponent } from './designer/actions-bar/actions-bar.component';
-import { MicrointeractionSelectorComponent } from './designer/microinteraction-selector/microinteraction-selector.component';
-import { InteractionCanvasComponent } from './designer/interaction-canvas/interaction-canvas.component';
-import { InteractionOptionsComponent } from './designer/interaction-options/interaction-options.component';
-import { ViolationOutputComponent } from './designer/violation-output/violation-output.component';
-import { RobotViewerComponent } from './designer/robot-viewer/robot-viewer.component';
+import { TitleBarComponent } from './components/title-bar/title-bar.component';
+import { DesignerComponent } from './components/designer/designer.component';
+import { AuthComponent } from './components/auth/auth.component';
+import { StatusBarComponent } from './components/designer/status-bar/status-bar.component';
+import { ActionsBarComponent } from './components/designer/actions-bar/actions-bar.component';
+import { MicrointeractionSelectorComponent } from './components/designer/microinteraction-selector/microinteraction-selector.component';
+import { InteractionCanvasComponent } from './components/designer/interaction-canvas/interaction-canvas.component';
+import { InteractionOptionsComponent } from './components/designer/interaction-options/interaction-options.component';
+import { ViolationOutputComponent } from './components/designer/violation-output/violation-output.component';
+import { RobotViewerComponent } from './components/designer/robot-viewer/robot-viewer.component';
 
 @NgModule({
   declarations: [
