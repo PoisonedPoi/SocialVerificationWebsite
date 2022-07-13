@@ -1,13 +1,11 @@
-<div class="container-fluid px-4 h-100">
-	<app-status-bar></app-status-bar>
-	<app-actions-bar></app-actions-bar>
-	<div>
-		<app-microinteraction-selector></app-microinteraction-selector>
-		<app-interaction-canvas></app-interaction-canvas>
-		<app-interaction-options></app-interaction-options>
-	</div>
-	<div class="h-40">
-		<app-violation-output class="border h-100"></app-violation-output>
-		<app-robot-viewer></app-robot-viewer>
+<div class="px-4 h-100">
+	<div class="grid grid-cols-9">
+		<app-status-bar class="col-span-9"></app-status-bar>
+		<app-actions-bar class="col-span-9"></app-actions-bar>
+		<app-microinteraction-selector class="col-span-2"></app-microinteraction-selector>
+		<app-interaction-canvas class="col-span-5"></app-interaction-canvas>
+		<app-interaction-options class="col-span-2"></app-interaction-options>
+		<app-violation-output class="col-span-6 border h-100"></app-violation-output>
+		<app-robot-viewer class="col-span-3"></app-robot-viewer>
 	</div>
 </div>
