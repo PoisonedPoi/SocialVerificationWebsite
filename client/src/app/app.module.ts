@@ -11,6 +11,8 @@ import { ActionsBarComponent } from './designer/actions-bar/actions-bar.componen
 import { MicrointeractionSelectorComponent } from './designer/microinteraction-selector/microinteraction-selector.component';
 import { InteractionCanvasComponent } from './designer/interaction-canvas/interaction-canvas.component';
 import { InteractionOptionsComponent } from './designer/interaction-options/interaction-options.component';
+import { ViolationOutputComponent } from './designer/violation-output/violation-output.component';
+import { RobotViewerComponent } from './designer/robot-viewer/robot-viewer.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +24,9 @@ import { InteractionOptionsComponent } from './designer/interaction-options/inte
     ActionsBarComponent,
     MicrointeractionSelectorComponent,
     InteractionCanvasComponent,
-    InteractionOptionsComponent
+    InteractionOptionsComponent,
+    ViolationOutputComponent,
+    RobotViewerComponent
   ],
   imports: [
     BrowserModule,

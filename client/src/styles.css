@@ -1,67 +1,12 @@
+
+/* Tailwind directives */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
 /* You can add global styles to this file, and also import other style files */
-body {
-  height: 100vh;
-}
 
-/*css for interaction design*/
-.interaction-container {
-  display: flex;
-  height: 50%;
-}
-
-.interaction-sidebar-left {
-  flex-basis: 170px;
-  min-width: 150px;
-  max-width: 150px;
-  border: 2px solid black;
-  margin-right: 0px;
-  row-gap: 0px;
-  background: white;
-}
-
-.interaction-sidebar-right {
-  flex-basis: 230px;
-  min-width: 150px;
-  max-width: 150px;
-  border: 2px solid black;
-  margin-right: 0px;
-  row-gap: 0px;
-  z-index: 100;
-  background: white;
-}
-
-/*css for main interaction canvas where DND(drag and drop) boxes are placed*/
-.interaction-canvas {
-
-  flex: 1;
-  border: 5px solid #cccccc;
-  position: relative;
-  overflow-y: scroll;
-  overflow-x: scroll;
-}
-
-.robot-viewer {
-  background-color: rgb(85, 125, 131);
-}
-
-.interaction-output {
-  min-height: 150px;
-  border: 2px solid black;
-  background-color: rgb(240, 217, 208);
-}
-
-.save-label{
-    background: lightgreen;
-}
-
-.micro-box {
-  background: lightgoldenrodyellow;
-  height: 30px;
-  border: 2px solid black;
-  text-align: center;
-  border-radius: 0.7rem;
-  z-index: 9;
-}
 
 .group-box {
   position: absolute;
@@ -229,11 +174,6 @@ body {
   overflow: scroll;
 }
 
-.terminal-text{
-  width: 100%;
-  height: 100%;
-  font-size: 14px;
-}
 
 .ask-item-box {
   overflow: scroll;

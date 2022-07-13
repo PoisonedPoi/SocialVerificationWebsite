@@ -1,62 +1,60 @@
-<div class="row form-inline">
-	<div class="col control-bar">
-		<button
-			id="newGroupBtn"
-			class="btn btn-primary"
-			value="newGroup"
-			onclick="newGroupBtnPressed(this)"
-		>
-			+ Group
-		</button>
-		<button
-			id="drawLineBtn"
-			class="btn btn-primary"
-			value="drawLine"
-			onclick="newLineBtnPressed(this)"
-		>
-			+ Line
-		</button>
-		<button
-			id="exportToXML"
-			class="btn btn-primary"
-			value="export"
-			onclick="exportToXML()"
-		>
-			Export
-		</button>
-							<button
-			id="exportToXML"
-			class="btn btn-primary"
-			value="export"
-			onclick="verifyModel()"
-		>
-			Verify Model
-		</button>
-		<button
-			id="saveToFile"
-			class="btn btn-primary"
-			value="saveToFile"
-			onclick="saveToFile()"
-		>
-			Save To File
-		</button>
+<div class="flex flex-wrap p-2 border-2 border-black bg-gray-300 box-border">
+	<button
+		id="newGroupBtn"
+		class="px-3 py-1.5 rounded-md text-white bg-blue-600 border-blue-600 mx-0.5"
+		value="newGroup"
+		onclick="newGroupBtnPressed(this)"
+	>
+		+ Group
+	</button>
+	<button
+		id="drawLineBtn"
+		class="btn btn-primary"
+		value="drawLine"
+		onclick="newLineBtnPressed(this)"
+	>
+		+ Line
+	</button>
+	<button
+		id="exportToXML"
+		class="btn btn-primary"
+		value="export"
+		onclick="exportToXML()"
+	>
+		Export
+	</button>
+						<button
+		id="exportToXML"
+		class="btn btn-primary"
+		value="export"
+		onclick="verifyModel()"
+	>
+		Verify Model
+	</button>
+	<button
+		id="saveToFile"
+		class="btn btn-primary"
+		value="saveToFile"
+		onclick="saveToFile()"
+	>
+		Save To File
+	</button>
 
-			<button
-			id="loadFromFile"
-			class="btn btn-primary"
-			value="saveToFile"
-			onclick="loadFromFile()"
-		>
-			Load From File
-		</button>
-		<input type="file" id="interactionFileUpload" style="display: none" /> 
 		<button
-			id="clearAllBtn"
-			class="btn btn-danger"
-			value="saveToFile"
-			onclick="clearAll()"
-		>
-			Clear
-		</button>
-	</div>
+		id="loadFromFile"
+		class="btn btn-primary"
+		value="saveToFile"
+		onclick="loadFromFile()"
+	>
+		Load From File
+	</button>
+	<input type="file" id="interactionFileUpload" style="display: none" /> 
+	<button
+		id="clearAllBtn"
+		class="btn btn-danger"
+		value="saveToFile"
+		onclick="clearAll()"
+	>
+		Clear
+	</button>
 </div>
