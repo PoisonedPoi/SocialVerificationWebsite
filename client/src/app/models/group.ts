@@ -3,13 +3,13 @@ import { MicroInteraction } from "./microInteraction";
 export class Group {
 
     initialGroup: boolean; //--is this the initial group or no? (bool)
-    id: string;
+    id: number;
     name?: string;
     x: number; 
     y: number;
     micros: MicroInteraction[] = [];
 
-    constructor(id: string, isFirst: boolean) {
+    constructor(id: number, isFirst: boolean) {
         this.initialGroup = isFirst;
         this.id = id;
         this.micros = [];
@@ -25,7 +25,7 @@ export class Group {
         this.micros.push(micro);
     }
 
-    removeMicro(microid: string) {
+    removeMicro(microid: number) {
         for (let i = 0; i < this.micros.length; i++) {
             if (this.micros[i].id == microid) {
                 this.micros.splice(i, 1);

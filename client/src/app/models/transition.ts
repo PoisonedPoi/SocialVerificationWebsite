@@ -6,10 +6,10 @@ export class Transition {
     firstGroup: Group;
     secondGroup: Group;
     state: State;
-    id: string;
+    id: number;
 
     constructor(
-        id: string,
+        id: number,
         firstGroup: Group,
         secondGroup: Group
     ) {
