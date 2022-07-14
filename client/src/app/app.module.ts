@@ -13,6 +13,7 @@ import { InteractionCanvasComponent } from './components/designer/interaction-ca
 import { InteractionOptionsComponent } from './components/designer/interaction-options/interaction-options.component';
 import { ViolationOutputComponent } from './components/designer/violation-output/violation-output.component';
 import { RobotViewerComponent } from './components/designer/robot-viewer/robot-viewer.component';
+import { GroupComponent } from './components/designer/interaction-canvas/group/group.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,8 @@ import { RobotViewerComponent } from './components/designer/robot-viewer/robot-v
     InteractionCanvasComponent,
     InteractionOptionsComponent,
     ViolationOutputComponent,
-    RobotViewerComponent
+    RobotViewerComponent,
+    GroupComponent,
   ],
   imports: [
     BrowserModule,

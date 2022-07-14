@@ -1,16 +1,18 @@
 <button
 	id="newGroupBtn"
 	class="px-3 py-1.5 rounded-md text-white bg-blue-600 hover:bg-blue-700 shadow mx-0.5"
+	[ngClass]="{'bg-blue-800': addGroupPressed === true}"
 	value="newGroup"
-	onclick="newGroupBtnPressed(this)"
+	(click)="newGroup()"
 >
 	+ Group
 </button>
 <button
 	id="drawLineBtn"
 	class="px-3 py-1.5 rounded-md text-white bg-blue-600 hover:bg-blue-700 shadow mx-0.5"
+	[ngClass]="{'bg-blue-800': addTransitionPressed === true}"
 	value="drawLine"
-	onclick="newLineBtnPressed(this)"
+	(click)="newTransition()"
 >
 	+ Line
 </button>
