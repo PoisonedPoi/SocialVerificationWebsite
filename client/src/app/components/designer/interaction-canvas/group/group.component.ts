@@ -12,6 +12,7 @@ export class GroupComponent implements OnInit {
   group: Group = new Group();
   x: string = "";
   y: string = "";
+  name: string = "";
 
   constructor(private canvasManager: CanvasManagerService) {
 
@@ -26,6 +27,17 @@ export class GroupComponent implements OnInit {
     console.log(this.group);
     this.x = this.group.x + 'px';
     this.y = this.group.y + 'px';
+    if (this.group.name) {
+      this.name = this.group.name;
+    } else {
+      this.name = "untitled" + id;
+    }
+
+    this.canvasManager.setGroup(this.group);
+  }
+
+  updateName() {
+    this.canvasManager.setGroup(this.group);
   }
 
 }

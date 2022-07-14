@@ -1,4 +1,4 @@
-import { Component, ComponentFactoryResolver, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { Group } from 'src/app/models/group';
 import { CanvasManagerService } from 'src/app/services/canvas-manager.service';
 import { GroupComponent } from './group/group.component';
@@ -14,6 +14,16 @@ export class InteractionCanvasComponent implements OnInit {
 
   @ViewChild("canvas", { read: ViewContainerRef})
   container!: ViewContainerRef;
+  
+  @HostListener('window:load', ['$event'])
+  onLoadHander() {
+    this.canvasManager.loadInteractionFromLocal();
+  }
+
+  @HostListener('window:beforeunload', ['$event'])
+  beforeUnloadHander() {
+    this.canvasManager.saveInteractionToLocal();
+  }
 
   constructor(private canvasManager: CanvasManagerService) {
   }
