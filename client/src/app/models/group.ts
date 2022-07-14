@@ -9,7 +9,7 @@ export class Group {
     y: number;
     micros: MicroInteraction[] = [];
 
-    constructor(id: number, isFirst: boolean) {
+    constructor(id: number = -1, isFirst: boolean = false) {
         this.initialGroup = isFirst;
         this.id = id;
         this.micros = [];
