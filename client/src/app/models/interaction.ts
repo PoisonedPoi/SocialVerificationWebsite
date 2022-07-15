@@ -9,24 +9,23 @@ import { Violation } from "./violation";
 
 export class Interaction {
 
-    groupIDNum: number;
-    transitionIDNum: number;
-    microIDNum: number;
+    groupIDNum: number = 0;
+    transitionIDNum: number = 0;
+    microIDNum: number = 0;
     violations: Violation[] = [];
     trackedMicroTypes: MicroType[] = [];
     groups: Group[] = [];
     transitions: Transition[] = [];
     micros: MicroInteraction[] = [];
 
-    constructor() {
-        this.groupIDNum = 0;
-        this.transitionIDNum = 0;
-        this.microIDNum = 0;
-        this.violations = []
-        this.trackedMicroTypes = [];
-        this.groups = [];
-        this.transitions = [];
-        this.micros = [];
+    constructor(xml: string | null = null) {
+        if (xml) {
+            this.createFromXML(xml);
+        } 
+    }
+
+    createFromXML(xml: string) {
+        
     }
 
     getMicro(id: number): MicroInteraction | null {

@@ -1,25 +1,30 @@
 import { Component, HostListener, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { Group } from 'src/app/models/group';
+import { Interaction } from 'src/app/models/interaction';
 import { CanvasManagerService } from 'src/app/services/canvas-manager.service';
 import { GroupComponent } from './group/group.component';
 
 @Component({
   selector: 'app-interaction-canvas',
   templateUrl: './interaction-canvas.component.html',
-  styleUrls: ['./interaction-canvas.component.css']
+  styles: [
+  ]
 })
 export class InteractionCanvasComponent implements OnInit {
 
+  interaction: Interaction = new Interaction();
   groups: Group[] = [];
 
   @ViewChild("canvas", { read: ViewContainerRef})
   container!: ViewContainerRef;
   
+  // Load XML stored in local storage
   @HostListener('window:load', ['$event'])
   onLoadHander() {
     this.canvasManager.loadInteractionFromLocal();
   }
 
+  // Save XML to local storage 
   @HostListener('window:beforeunload', ['$event'])
   beforeUnloadHander() {
     this.canvasManager.saveInteractionToLocal();

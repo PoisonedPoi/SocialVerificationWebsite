@@ -1,11 +1,13 @@
-import { identifierName } from '@angular/compiler';
 import { EventEmitter, Injectable, Output } from '@angular/core';
 import { Group } from '../models/group';
+import { Interaction } from '../models/interaction';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CanvasManagerService {
+
+  currInteraction: Interaction = new Interaction();
 
   isAddingGroup: boolean = false;
   addingTransition: number = 0;
@@ -72,6 +74,8 @@ export class CanvasManagerService {
 
   loadInteractionFromLocal() {
     let xmlString = localStorage.getItem('interactionXML');
+
+    this.currInteraction = new Interaction(xmlString);
 
     console.log(xmlString);
   }
