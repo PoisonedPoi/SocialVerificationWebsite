@@ -14,6 +14,7 @@ import { InteractionOptionsComponent } from './components/designer/interaction-o
 import { ViolationOutputComponent } from './components/designer/violation-output/violation-output.component';
 import { RobotViewerComponent } from './components/designer/robot-viewer/robot-viewer.component';
 import { GroupComponent } from './components/designer/interaction-canvas/group/group.component';
+import { TransitionComponent } from './components/designer/interaction-canvas/transition/transition.component';
 
 @NgModule({
   declarations: [
@@ -29,6 +30,7 @@ import { GroupComponent } from './components/designer/interaction-canvas/group/g
     ViolationOutputComponent,
     RobotViewerComponent,
     GroupComponent,
+    TransitionComponent,
   ],
   imports: [
     BrowserModule,
