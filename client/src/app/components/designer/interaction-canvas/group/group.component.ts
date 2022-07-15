@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { Group } from 'src/app/models/group';
 import { CanvasManagerService } from 'src/app/services/canvas-manager.service';
 
@@ -36,7 +36,9 @@ export class GroupComponent implements OnInit {
     this.canvasManager.setGroup(this.group);
   }
 
-  updateName() {
+  updateName(event: any) {
+    this.name = event.target.value;
+    this.group.name = this.name;
     this.canvasManager.setGroup(this.group);
   }
 
