@@ -5,7 +5,8 @@ import { CanvasManagerService } from 'src/app/services/canvas-manager.service';
 @Component({
   selector: 'app-group',
   templateUrl: './group.component.html',
-  styleUrls: ['./group.component.css']
+  styles: [
+  ]
 })
 export class GroupComponent implements OnInit {
 

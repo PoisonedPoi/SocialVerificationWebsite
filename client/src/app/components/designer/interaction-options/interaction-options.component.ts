@@ -3,7 +3,7 @@ import { Component, OnInit } from '@angular/core';
 @Component({
   selector: 'app-interaction-options',
   templateUrl: './interaction-options.component.html',
-  styleUrls: ['./interaction-options.component.css']
+  styleUrls: []
 })
 export class InteractionOptionsComponent implements OnInit {
 

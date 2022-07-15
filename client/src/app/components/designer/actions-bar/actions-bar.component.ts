@@ -4,7 +4,8 @@ import { CanvasManagerService } from 'src/app/services/canvas-manager.service';
 @Component({
   selector: 'app-actions-bar',
   templateUrl: './actions-bar.component.html',
-  styleUrls: ['./actions-bar.component.css']
+  styles: [
+  ]
 })
 export class ActionsBarComponent implements OnInit {
 
