@@ -7,7 +7,7 @@ import { Interaction } from '../models/interaction';
 })
 export class CanvasManagerService {
 
-  currInteraction: Interaction = new Interaction();
+  interaction: Interaction = new Interaction();
 
   isAddingGroup: boolean = false;
   addingTransition: number = 0;
@@ -21,25 +21,22 @@ export class CanvasManagerService {
 
   constructor() {}
 
-  addGroup(x: number, y: number): number {
+  addGroup(x: number, y: number): Group {
+
+    let isInitial: boolean = this.groupIdCounter == 0 ? true : false;
+    let name: string = 'untitled' + this.groupIdCounter;
+
     this.groupIdCounter++;
 
-    let g = new Group(this.groupIdCounter, false);
+    let g = new Group(isInitial, this.groupIdCounter, name, x, y);
 
-    g.x = x;
-    g.y = y;
+    this.interaction.groups.push(g);
 
-    if (this.groupIdCounter == 1) {
-      g.isInitialGroup = true;
-    }
+    this.getUpdatedInteraction.emit(this.interaction);
 
-    this.groups.push(g);
+    console.log(this.interaction);
 
-    this.getUpdatedGroups.emit(this.groups);
-
-    console.log(this.groups);
-
-    return g.id;
+    return g;
   }
 
   setAddingGroup(val: boolean) {
@@ -56,13 +53,13 @@ export class CanvasManagerService {
     this.updateBtnState.emit();
   }
 
-  getGroupById(id: number): Group {
+  getGroupById(id: number): Group | undefined {
     let g: Group | undefined = this.groups.find((x: Group) => x.id === id);
 
     if (g) {
       return g;
     }
-    return new Group(id, false);
+    return undefined;
   }
 
   setGroup(group: Group) {
@@ -76,7 +73,7 @@ export class CanvasManagerService {
   loadInteractionFromLocal() {
     let xmlString = localStorage.getItem('interactionXML');
 
-    this.currInteraction = new Interaction(xmlString);
+    this.interaction = new Interaction(xmlString);
 
     console.log(xmlString);
   }

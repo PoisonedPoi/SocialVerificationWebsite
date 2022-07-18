@@ -16,25 +16,21 @@ export class GroupComponent implements OnInit {
   name: string = "";
 
   constructor(private canvasManager: CanvasManagerService) {
-
+    this.canvasManager.getUpdatedInteraction.subscribe((interaction) => {
+      let g = interaction.getGroup(this.group.id);
+      if (g) { this.group = g; }
+    });
   }
 
   ngOnInit(): void {
 
   }
 
-  setGroupById(id: number) {
-    this.group = this.canvasManager.getGroupById(id);
-    console.log(this.group);
+  setGroup(g: Group) {
+    this.group = g;
     this.x = this.group.x + 'px';
     this.y = this.group.y + 'px';
-    if (this.group.name) {
-      this.name = this.group.name;
-    } else {
-      this.name = "untitled" + id;
-    }
-
-    this.canvasManager.setGroup(this.group);
+    this.group.name = g.name;
   }
 
   updateName(event: any) {

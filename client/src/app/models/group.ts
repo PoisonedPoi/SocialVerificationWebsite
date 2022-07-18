@@ -10,7 +10,7 @@ export class Group {
     micros: MicroInteraction[] = [];
 
     constructor(
-      isInitialGroup: boolean,
+      isInitialGroup: boolean = false,
       id: number = -1, 
       name: string = "",
       x: number = 5,

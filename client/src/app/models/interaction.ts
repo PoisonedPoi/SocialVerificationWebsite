@@ -180,16 +180,19 @@ export class Interaction {
     addGroup(x: number, y: number, id: number, isInitial: boolean, name: string): Group {
       let group: Group = new Group(isInitial, id, name, x, y);
 
+      this.groups.push(group);
+
       return group;
     }
 
+    /*
     // Creates a group 
     createGroup(): Group {
         let newGroup;
         if (this.groupIDNum == 0) {
-            newGroup = new Group(0, true);
+            //newGroup = new Group(true);
         } else {
-            newGroup = new Group(this.groupIDNum, false);
+            //newGroup = new Group(this.groupIDNum, false);
         }
         newGroup.name = "untitled" + this.groupIDNum;
         this.groups.push(newGroup);
@@ -206,6 +209,7 @@ export class Interaction {
         this.groups.push(newGroup);
         return id;
     }
+    */
 
 
     getGroup(id: number) {
