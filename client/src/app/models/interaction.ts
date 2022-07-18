@@ -177,6 +177,13 @@ export class Interaction {
         }
     }
 
+    addGroup(x: number, y: number, id: number, isInitial: boolean, name: string): Group {
+      let group: Group = new Group(isInitial, id, name, x, y);
+
+      return group;
+    }
+
+    // Creates a group 
     createGroup(): Group {
         let newGroup;
         if (this.groupIDNum == 0) {

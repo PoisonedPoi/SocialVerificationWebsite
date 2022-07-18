@@ -47,20 +47,15 @@ export class InteractionCanvasComponent implements OnInit {
     if (this.canvasManager.isAddingGroup) {
       console.log('Add group here (%d,%d)', event.offsetX, event.offsetY);
 
-      // Interaction part
+      // Create empty group and push onto interaction
+      let group = this.interaction.createGroup();
 
-      let g = this.interaction.createGroup();
+      // Setup group given 
+      this.interaction.makeGroup(event.offsetX, event.offsetY, group.id, group.isInitialGroup, group.name);
 
-      this.interaction.makeGroup(event.offsetX, event.offsetY, g.id, g.isInitialGroup, g.name!);
+      const groupComponent = this.container.createComponent(GroupComponent).instance;
 
-
-      // Group part LEGACY
-
-      let id = this.canvasManager.addGroup(event.offsetX, event.offsetY)
-
-      const group = this.container.createComponent(GroupComponent).instance;
-
-      group.setGroupById(id);
+      groupComponent.setGroupById(group.id);
 
       this.canvasManager.setAddingGroup(false);
     } else if (this.canvasManager.addingTransition == 1) {

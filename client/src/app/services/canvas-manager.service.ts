@@ -11,7 +11,7 @@ export class CanvasManagerService {
 
   isAddingGroup: boolean = false;
   addingTransition: number = 0;
-
+  
   groupIdCounter: number = 0;
   groups: Group[] = [];
 

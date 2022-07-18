@@ -9,12 +9,19 @@ export class Group {
     y: number;
     micros: MicroInteraction[] = [];
 
-    constructor(id: number = -1, isFirst: boolean = false, name: string = "") {
-        this.isInitialGroup = isFirst;
+    constructor(
+      isInitialGroup: boolean,
+      id: number = -1, 
+      name: string = "",
+      x: number = 5,
+      y: number = 5
+    ) {
+        this.isInitialGroup = isInitialGroup;
         this.id = id;
+        this.name = name;
+        this.x = x;
+        this.y = y;
         this.micros = [];
-        this.x = 5;
-        this.y = 5;
     }
 
     setXY(x: number, y: number) {
