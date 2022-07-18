@@ -36,12 +36,25 @@ export class InteractionCanvasComponent implements OnInit {
   ngOnInit(): void {
     this.canvasManager.getUpdatedGroups.subscribe((groups) => {
       this.groups = groups;
+    });
+
+    this.canvasManager.getUpdatedInteraction.subscribe((interaction) => {
+      this.interaction = interaction;
     })
   }
 
   clickCanvas(event: any) {
     if (this.canvasManager.isAddingGroup) {
       console.log('Add group here (%d,%d)', event.offsetX, event.offsetY);
+
+      // Interaction part
+
+      let g = this.interaction.createGroup();
+
+      this.interaction.makeGroup(event.offsetX, event.offsetY, g.id, g.isInitialGroup, g.name!);
+
+
+      // Group part LEGACY
 
       let id = this.canvasManager.addGroup(event.offsetX, event.offsetY)
 

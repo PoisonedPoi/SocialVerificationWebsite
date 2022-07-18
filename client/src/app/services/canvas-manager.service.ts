@@ -17,6 +17,7 @@ export class CanvasManagerService {
 
   @Output() updateBtnState: EventEmitter<any> = new EventEmitter();
   @Output() getUpdatedGroups: EventEmitter<Group[]> = new EventEmitter<Group[]>();
+  @Output() getUpdatedInteraction: EventEmitter<Interaction> = new EventEmitter<Interaction>();
 
   constructor() {}
 
@@ -29,7 +30,7 @@ export class CanvasManagerService {
     g.y = y;
 
     if (this.groupIdCounter == 1) {
-      g.initialGroup = true;
+      g.isInitialGroup = true;
     }
 
     this.groups.push(g);
@@ -89,7 +90,7 @@ export class CanvasManagerService {
 
     //add groups
     this.groups.forEach(group => {
-        xmlString += '<group id="' + group.id + '" init="' + group.initialGroup + '" x="' + group.x + '" y="' + group.y + '">';
+        xmlString += '<group id="' + group.id + '" init="' + group.isInitialGroup + '" x="' + group.x + '" y="' + group.y + '">';
         xmlString += '<name>' + group.name + '</name>';
         group.micros.forEach(micro => {
             xmlString += '<micro>';

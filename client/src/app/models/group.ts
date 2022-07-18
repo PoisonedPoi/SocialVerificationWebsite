@@ -2,15 +2,15 @@ import { MicroInteraction } from "./microInteraction";
 
 export class Group {
 
-    initialGroup: boolean; //--is this the initial group or no? (bool)
+    isInitialGroup: boolean; //--is this the initial group or no? (bool)
     id: number;
-    name?: string;
+    name: string = "";
     x: number; 
     y: number;
     micros: MicroInteraction[] = [];
 
-    constructor(id: number = -1, isFirst: boolean = false) {
-        this.initialGroup = isFirst;
+    constructor(id: number = -1, isFirst: boolean = false, name: string = "") {
+        this.isInitialGroup = isFirst;
         this.id = id;
         this.micros = [];
         this.x = 5;

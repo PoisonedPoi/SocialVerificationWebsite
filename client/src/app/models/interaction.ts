@@ -65,7 +65,7 @@ export class Interaction {
 
         //add groups
         JSONModel.groups.forEach((group: Group) => {
-            xmlString += '<group id="' + group.id + '" init="' + group.initialGroup + '" x="' + group.x + '" y="' + group.y + '">';
+            xmlString += '<group id="' + group.id + '" init="' + group.isInitialGroup + '" x="' + group.x + '" y="' + group.y + '">';
             xmlString += '<name>' + group.name + '</name>';
             group.micros.forEach(micro => {
                 xmlString += '<micro>';
@@ -177,7 +177,7 @@ export class Interaction {
         }
     }
 
-    createGroup() {
+    createGroup(): Group {
         let newGroup;
         if (this.groupIDNum == 0) {
             newGroup = new Group(0, true);
@@ -187,7 +187,7 @@ export class Interaction {
         newGroup.name = "untitled" + this.groupIDNum;
         this.groups.push(newGroup);
         this.groupIDNum++;
-        return newGroup.id;
+        return newGroup;
     }
 
     makeGroup(x: number, y: number, id: number, isInitial: boolean, name: string) { //mainly used when loading interactions
@@ -214,7 +214,7 @@ export class Interaction {
 
     getInitialGroup() {
         for (let i = 0; i < this.groups.length; i++) {
-            if (this.groups[i].initialGroup == true) {
+            if (this.groups[i].isInitialGroup == true) {
                 return this.groups[i];
             }
         }
@@ -237,7 +237,7 @@ export class Interaction {
         let removeGroup = this.getGroup(id);
         for (let i = 0; i < this.groups.length; i++) {
             if (this.groups[i].id == id) {
-                if (this.groups[i].initialGroup == true) {
+                if (this.groups[i].isInitialGroup == true) {
                     console.log("cannot remove initial group, no change to database TODO make this an error message");
                     return false;
                 }
