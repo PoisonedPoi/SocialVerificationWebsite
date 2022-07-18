@@ -1,6 +1,7 @@
 import { EventEmitter, Injectable, Output } from '@angular/core';
 import { Group } from '../models/group';
 import { Interaction } from '../models/interaction';
+import { ParameterResult } from '../models/parameterResult';
 
 @Injectable({
   providedIn: 'root'
@@ -11,24 +12,22 @@ export class CanvasManagerService {
 
   isAddingGroup: boolean = false;
   addingTransition: number = 0;
-  
-  groupIdCounter: number = 0;
+
   groups: Group[] = [];
 
   @Output() updateBtnState: EventEmitter<any> = new EventEmitter();
-  @Output() getUpdatedGroups: EventEmitter<Group[]> = new EventEmitter<Group[]>();
   @Output() getUpdatedInteraction: EventEmitter<Interaction> = new EventEmitter<Interaction>();
 
   constructor() {}
 
   addGroup(x: number, y: number): Group {
 
-    let isInitial: boolean = this.groupIdCounter == 0 ? true : false;
-    let name: string = 'untitled' + this.groupIdCounter;
+    let isInitial: boolean = this.interaction.groupIdCounter == 0 ? true : false;
+    let name: string = 'untitled' + this.interaction.groupIdCounter;
 
-    this.groupIdCounter++;
+    this.interaction.groupIdCounter++;
 
-    let g = new Group(isInitial, this.groupIdCounter, name, x, y);
+    let g = new Group(isInitial, this.interaction.groupIdCounter, name, x, y);
 
     this.interaction.groups.push(g);
 
@@ -39,6 +38,7 @@ export class CanvasManagerService {
     return g;
   }
 
+  /* State management for view reflection */
   setAddingGroup(val: boolean) {
     this.isAddingGroup = val;
     this.addingTransition = 0;
@@ -53,6 +53,7 @@ export class CanvasManagerService {
     this.updateBtnState.emit();
   }
 
+  
   getGroupById(id: number): Group | undefined {
     let g: Group | undefined = this.groups.find((x: Group) => x.id === id);
 
@@ -78,6 +79,7 @@ export class CanvasManagerService {
     console.log(xmlString);
   }
 
+  /* Save interaction to XML */
   saveInteractionToLocal() {
 
     let xmlString = '';
@@ -96,12 +98,14 @@ export class CanvasManagerService {
                 if (parameter.type == "array") { //unique case
                     xmlString += '<parameter type="array">';
                     xmlString += '<name>answers robot can recognize</name>'
-                    /*
-                    if (micro.parameterResults.find(x => x.paramId == parameter.id).currResult == '') {
+
+                    let pr = micro.parameterResults.find(x => x.paramId == parameter.id);
+                    if (!pr || pr.currResult == '') {
                         xmlString += '</parameter>'
                         return;
                     }
-                    micro.parameterResults.find(x => x.paramID == parameter.id).curResult.forEach(res => {
+
+                    pr.currResult.forEach((res: ParameterResult<any>) => {
                         let link = "";
                         if (res.linkTitle == "Human Ready") {
                             link = "human_ready";  //these are the variables needed in the back end
@@ -112,7 +116,6 @@ export class CanvasManagerService {
                         }
                         xmlString += '<item type="string" val="' + res.val + '" link="' + link + '"/>';
                     });
-                    */
                     xmlString += '</parameter>'
                 } else { //normal case
                     xmlString += `

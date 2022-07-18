@@ -17,14 +17,14 @@ export class InteractionCanvasComponent implements OnInit {
 
   @ViewChild("canvas", { read: ViewContainerRef})
   container!: ViewContainerRef;
-  
+
   // Load XML stored in local storage
   @HostListener('window:load', ['$event'])
   onLoadHander() {
     this.canvasManager.loadInteractionFromLocal();
   }
 
-  // Save XML to local storage 
+  // Save XML to local storage
   @HostListener('window:beforeunload', ['$event'])
   beforeUnloadHander() {
     this.canvasManager.saveInteractionToLocal();
@@ -34,10 +34,6 @@ export class InteractionCanvasComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.canvasManager.getUpdatedGroups.subscribe((groups) => {
-      this.groups = groups;
-    });
-
     this.canvasManager.getUpdatedInteraction.subscribe((interaction) => {
       this.interaction = interaction;
     })

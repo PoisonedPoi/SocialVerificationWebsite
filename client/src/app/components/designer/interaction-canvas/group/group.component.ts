@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Group } from 'src/app/models/group';
 import { CanvasManagerService } from 'src/app/services/canvas-manager.service';
 

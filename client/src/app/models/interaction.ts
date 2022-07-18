@@ -9,7 +9,7 @@ import { Violation } from "./violation";
 
 export class Interaction {
 
-    groupIDNum: number = 0;
+    groupIdCounter: number = 0;
     transitionIDNum: number = 0;
     microIDNum: number = 0;
     violations: Violation[] = [];
@@ -21,11 +21,11 @@ export class Interaction {
     constructor(xml: string | null = null) {
         if (xml) {
             this.createFromXML(xml);
-        } 
+        }
     }
 
     createFromXML(xml: string) {
-        
+
     }
 
     getMicro(id: number): MicroInteraction | null {
@@ -40,7 +40,7 @@ export class Interaction {
     }
 
     getMicroParameters(id: number): Parameter[] {
-        let ret: MicroInteraction | null = this.getMicro(id); 
+        let ret: MicroInteraction | null = this.getMicro(id);
 
         return ret != null ? ret.parameters : [];
     }
@@ -186,7 +186,7 @@ export class Interaction {
     }
 
     /*
-    // Creates a group 
+    // Creates a group
     createGroup(): Group {
         let newGroup;
         if (this.groupIDNum == 0) {

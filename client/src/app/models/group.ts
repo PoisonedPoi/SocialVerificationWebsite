@@ -2,7 +2,7 @@ import { MicroInteraction } from "./microInteraction";
 
 export class Group {
 
-    isInitialGroup: boolean; //--is this the initial group or no? (bool)
+    isInitialGroup: boolean;
     id: number;
     name: string = "";
     x: number; 
