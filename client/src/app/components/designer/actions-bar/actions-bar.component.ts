@@ -9,8 +9,8 @@ import { CanvasManagerService } from 'src/app/services/canvas-manager.service';
 })
 export class ActionsBarComponent implements OnInit {
 
-  addGroupPressed: boolean = false;
-  addTransitionPressed: boolean = false;
+  isAddingGroup: boolean = false;
+  isAddingTransition: boolean = false;
   
 
   constructor(private canvasManager: CanvasManagerService) {
@@ -22,24 +22,46 @@ export class ActionsBarComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  newGroup() {
+  /* Action button click functions */
+  addGroup() {
     this.canvasManager.setAddingGroup(true);
   }
 
-  newTransition() {
+  addTransition() {
     this.canvasManager.setAddingTransition(1);
   }
 
+  exportToXML() {
+    console.log("Export to XML");
+  }
+
+  verifyModel() {
+    console.log("Verify model");
+  }
+
+  saveToFile() {
+    console.log("Save to file");
+  }
+
+  loadFromFile() {
+    console.log("Load from file");
+  }
+
+  clear() {
+    console.log("Clear");
+  }
+
+  /* Update view functions */
   updateButtonColors() {
     if (this.canvasManager.isAddingGroup) {
-      this.addGroupPressed = true;
-      this.addTransitionPressed = false;
+      this.isAddingGroup = true;
+      this.isAddingTransition = false;
     } else if (this.canvasManager.addingTransition != 0) {
-      this.addGroupPressed = false;
-      this.addTransitionPressed = true;
+      this.isAddingGroup = false;
+      this.isAddingTransition = true;
     } else {
-      this.addGroupPressed = false;
-      this.addTransitionPressed = false;
+      this.isAddingGroup = false;
+      this.isAddingTransition = false;
     }
   
   }

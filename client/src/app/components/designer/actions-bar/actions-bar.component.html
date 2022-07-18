@@ -1,60 +1,46 @@
 <button
-	id="newGroupBtn"
 	class="px-3 py-1.5 rounded-md text-white bg-blue-600 hover:bg-blue-700 shadow mx-0.5"
-	[ngClass]="{'bg-blue-800': addGroupPressed === true}"
-	value="newGroup"
-	(click)="newGroup()"
+	[ngClass]="{'bg-blue-800': isAddingGroup === true}"
+	(click)="addGroup()"
 >
 	+ Group
 </button>
 <button
-	id="drawLineBtn"
 	class="px-3 py-1.5 rounded-md text-white bg-blue-600 hover:bg-blue-700 shadow mx-0.5"
-	[ngClass]="{'bg-blue-800': addTransitionPressed === true}"
-	value="drawLine"
-	(click)="newTransition()"
+	[ngClass]="{'bg-blue-800': isAddingTransition === true}"
+	(click)="addTransition()"
 >
 	+ Line
 </button>
 <button
-	id="exportToXML"
 	class="px-3 py-1.5 rounded-md text-white bg-blue-600 hover:bg-blue-700 shadow mx-0.5"
-	value="export"
-	onclick="exportToXML()"
+	(click)="exportToXML()"
 >
 	Export
 </button>
 <button
-	id="exportToXML"
 	class="px-3 py-1.5 rounded-md text-white bg-blue-600 hover:bg-blue-700 shadow mx-0.5"
-	value="export"
-	onclick="verifyModel()"
+	(click)="verifyModel()"
 >
 	Verify Model
 </button>
 <button
-	id="saveToFile"
 	class="px-3 py-1.5 rounded-md text-white bg-blue-600 hover:bg-blue-700 shadow mx-0.5"
-	value="saveToFile"
-	onclick="saveToFile()"
+	(click)="saveToFile()"
 >
 	Save To File
 </button>
 
 	<button
-	id="loadFromFile"
 	class="px-3 py-1.5 rounded-md text-white bg-blue-600 hover:bg-blue-700 shadow mx-0.5"
-	value="saveToFile"
-	onclick="loadFromFile()"
+	(click)="loadFromFile()"
 >
 	Load From File
 </button>
 <input type="file" id="interactionFileUpload" style="display: none" /> 
 <button
-	id="clearAllBtn"
 	class="px-3 py-1.5 rounded-md text-white bg-red-600 hover:bg-red-700 shadow mx-0.5"
-	value="saveToFile"
-	onclick="clearAll()"
+	(click)="clear()"
 >
 	Clear
 </button>
