@@ -1,8 +1,9 @@
-<div
-    class="absolute w-24 h-48 bg-gray-300 border-2 border-black rounded-lg"
-    [style.top]="y"
-    [style.left]="x"
+<div 
+  class="absolute w-24 h-48 bg-gray-300 border-2 border-black rounded-lg"
+  [style.left]='x'
+  [style.top]='y'
+  (contextmenu)='showContextMenu($event)'
 >
-    <input type="text" (change)="updateName($event)" [value]="group.name" class="bg-gray-300 w-[90%] ml-1 mr-0.5 border-gray-300 text-center">
-    <div id="microContainer"></div>
+  <input type="text" (change)="updateName($event)" [value]="group.name" class="bg-gray-300 w-[90%] ml-1 mr-0.5 border-gray-300 text-center">
+  <div id="microContainer"></div>
 </div>

@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { DragDropModule } from '@angular/cdk/drag-drop';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -15,6 +16,7 @@ import { ViolationOutputComponent } from './components/designer/violation-output
 import { RobotViewerComponent } from './components/designer/robot-viewer/robot-viewer.component';
 import { GroupComponent } from './components/designer/interaction-canvas/group/group.component';
 import { TransitionComponent } from './components/designer/interaction-canvas/transition/transition.component';
+import { GroupContextMenuComponent } from './components/designer/interaction-canvas/group/group-context-menu/group-context-menu.component';
 
 @NgModule({
   declarations: [
@@ -31,10 +33,12 @@ import { TransitionComponent } from './components/designer/interaction-canvas/tr
     RobotViewerComponent,
     GroupComponent,
     TransitionComponent,
+    GroupContextMenuComponent,
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    DragDropModule
   ],
   providers: [],
   bootstrap: [AppComponent]

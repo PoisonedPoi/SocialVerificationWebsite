@@ -4,8 +4,7 @@ import { CanvasManagerService } from 'src/app/services/canvas-manager.service';
 @Component({
   selector: 'app-actions-bar',
   templateUrl: './actions-bar.component.html',
-  styles: [
-  ]
+  styles: []
 })
 export class ActionsBarComponent implements OnInit {
 
@@ -40,15 +39,17 @@ export class ActionsBarComponent implements OnInit {
   }
 
   saveToFile() {
-    console.log("Save to file");
+    //console.log("Save to file");
+    this.canvasManager.saveInteractionToLocal();
   }
 
   loadFromFile() {
-    console.log("Load from file");
+    //console.log("Load from file");
+    this.canvasManager.loadInteractionFromLocal();
   }
 
   clear() {
-    console.log("Clear");
+    this.canvasManager.clearCanvas();
   }
 
   /* Update view functions */

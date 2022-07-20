@@ -25,7 +25,103 @@ export class Interaction {
     }
 
     createFromXML(xml: string) {
+      let parser: DOMParser = new DOMParser();
+      let xmlDoc: Document = parser.parseFromString(xml, "text/xml");;
 
+      const errorNode = xmlDoc.querySelector('parsererror');
+      if (errorNode) {
+        console.log("Parsing error");
+        return;
+      } else {
+        let groups = xmlDoc.getElementsByTagName("group");
+        let transitions = xmlDoc.getElementsByTagName("transition");
+
+        for (let i = 0; i < groups.length; i++) {
+            let curGroup = groups[i];
+
+            let groupIDStr = curGroup.getAttribute("id");
+            let groupID = parseInt(groupIDStr!);
+
+            let isInitialGroup = curGroup.getAttribute("init");
+            let isInitial: boolean = false;
+
+            if (isInitialGroup == "true") {
+                isInitial = true;
+            } else {
+                isInitial = false;
+            }
+
+            let xStr = curGroup.getAttribute("x");
+            let yStr = curGroup.getAttribute("y");
+
+            let x = parseInt(xStr!);
+            let y = parseInt(yStr!);
+
+            let name = curGroup.getElementsByTagName("name")[0].textContent;
+            //load group
+            this.addGroup(x, y, groupID, isInitial, name!);
+            let micros = curGroup.getElementsByTagName("micro");
+            //load micros
+            for (let j = 0; j < micros.length; j++) {
+                let curMicro = micros[j];
+                let microName = curMicro.getElementsByTagName("name")[0].textContent;
+                //load template of micro into group
+                let microID = this.addMicroToGroup(groupID, microName!);
+
+                //load saved values of micro into group
+                let parameters = curMicro.getElementsByTagName("parameter");
+                for (let k = 0; k < parameters.length; k++) {
+                    let curParameter = parameters[k];
+                    let curType = curParameter.getAttribute("type");
+                    if (curType == "array") {
+                        let arrayItems = curParameter.getElementsByTagName('item');
+                        let arrayVariable = curParameter.getElementsByTagName('name')[0].textContent;
+                        let arrayResults = [];
+                        for (let m = 0; m < arrayItems.length; m++) {
+                            let curItem = arrayItems[m];
+                            let itemVal = curItem.getAttribute('val');
+                            let itemLink = curItem.getAttribute('link');
+                            if (itemLink == 'human_ready') {
+                                itemLink = 'Human Ready';
+                            } else if (itemLink == 'human_ignore') {
+                                itemLink = 'Human Suspended';
+                            }
+                            arrayResults.push({ val: itemVal, linkTitle: itemLink });
+                        }
+                        //IC.interaction.setMicroParamValByVariable(microID, arrayVariable, arrayResults);
+
+                    } else {
+                        let curVal = curParameter.getAttribute("val");
+                        let paramVariable = curParameter.textContent;
+                        //IC.interaction.setMicroParamValByVariable(microID, paramVariable, curVal);
+                    }
+                }
+            }
+        }
+        for (let i = 0; i < transitions.length; i++) {
+            let curTransition = transitions[i];
+            let group1ID = curTransition.getElementsByTagName("source")[0].getAttribute("ref");
+            let group2ID = curTransition.getElementsByTagName("target")[0].getAttribute("ref");
+            let guards = curTransition.getElementsByTagName("guard");
+            let humanReady = false;
+            let humanBusy = false;
+            let humanIgnored = false;
+            for (let j = 0; j < guards.length; j++) {
+                let curGuard = guards[j];
+                if (curGuard.getAttribute("condition") == "human_ready") {
+                    humanReady = true;
+                } else if (curGuard.getAttribute("condition") == "human_busy") {
+                    humanBusy = true;
+                } else if (curGuard.getAttribute("condition") == "human_ignore") {
+                    humanIgnored = true;
+                }
+            }
+            //let newTransID = addTransitionByID(group1ID, group2ID);
+            //updateTransitionStates(newTransID, humanReady, humanBusy, humanIgnored);
+        }
+
+        this.groupIdCounter = this.groups.length;
+      }
     }
 
     getMicro(id: number): MicroInteraction | null {
@@ -58,9 +154,9 @@ export class Interaction {
 
     exportModelToXML() {
         let JSONModel = JSON.parse(JSON.stringify(this));
-        let xmlString = '';
-        //xmlString += '<?xml version="1.0" encoding="utf-8"?>'
-        xmlString += '<nta>';
+        //let xmlString = '<?xml version="1.0" encoding="UTF-8" ?>';
+        let xmlString = '<nat>'
+        //xmlString += '<interaction>';
         xmlString += '<name>interaction</name>';
 
         //add groups
@@ -134,7 +230,8 @@ export class Interaction {
             xmlString += '</transition>'
         });
         xmlString += '<design>copy</design>';
-        xmlString += '</nta>';
+        //xmlString += '</interaction>';
+        xmlString += '</nat>';
         return xmlString;
     }
 
@@ -185,41 +282,12 @@ export class Interaction {
       return group;
     }
 
-    /*
-    // Creates a group
-    createGroup(): Group {
-        let newGroup;
-        if (this.groupIDNum == 0) {
-            //newGroup = new Group(true);
-        } else {
-            //newGroup = new Group(this.groupIDNum, false);
-        }
-        newGroup.name = "untitled" + this.groupIDNum;
-        this.groups.push(newGroup);
-        this.groupIDNum++;
-        return newGroup;
-    }
-
-    makeGroup(x: number, y: number, id: number, isInitial: boolean, name: string) { //mainly used when loading interactions
-        this.groupIDNum = this.groupIDNum + id; //simple way to make sure id isn't repeated when dynamically adding groups
-        console.log("updated " + this.groupIDNum);
-        let newGroup = new Group(id, isInitial);
-        newGroup.name = name;
-        newGroup.setXY(x, y);
-        this.groups.push(newGroup);
-        return id;
-    }
-    */
-
-
     getGroup(id: number) {
-        //console.log(this.groups);
         for (let i = 0; i < this.groups.length; i++) {
             if (this.groups[i].id == id) {
                 return this.groups[i];
             }
         }
-        console.log("couldnt find id " + id + " in getGroup");
         return;
     }
 
