@@ -16,6 +16,10 @@ export class GroupComponent implements OnInit {
   group: Group = new Group();
   name: string = "";
 
+  contextMenuHidden: boolean = true;
+  contextMenuX: string = "";
+  contextMenuY: string = "";
+
   constructor(private canvasManager: CanvasManagerService) {
     this.canvasManager.getUpdatedInteraction.subscribe((interaction) => {
       let g = interaction.getGroup(this.group.id);
@@ -40,7 +44,20 @@ export class GroupComponent implements OnInit {
     this.canvasManager.updateGroup(this.group);
   }
 
+  removeGroup(event: any) {
+    console.log(event);
+  }
+
   showContextMenu(event: any) {
+    event.preventDefault();
+
+    this.contextMenuX = event.offsetX;
+    this.contextMenuY = event.offsetY;
+
+    console.log("Show context menu");
+
+    this.contextMenuHidden = false;
+  /*
     event.preventDefault();
     if (document.getElementById("contextMenuGroup").style.display == "block") {
         hideMenu();
@@ -51,6 +68,11 @@ export class GroupComponent implements OnInit {
         menu.style.left = e.pageX + "px";
         menu.style.top = e.pageY + "px";
     }
+  */
+  }
+
+  hideContextMenu() {
+    this.contextMenuHidden = true;
   }
 
 }
