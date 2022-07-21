@@ -45,6 +45,14 @@ export class CanvasManagerService {
     return g;
   }
 
+  removeGroup(id: number):void {
+    this.interaction.removeGroup(id);
+
+    this.getUpdatedInteraction.emit(this.interaction);
+
+    console.log(this.interaction);
+  }
+
   /* State management for view reflection */
   setAddingGroup(val: boolean) {
     this.isAddingGroup = val;

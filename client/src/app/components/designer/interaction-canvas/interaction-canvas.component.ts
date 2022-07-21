@@ -2,6 +2,8 @@ import { Component, ElementRef, HostListener, OnInit, ViewChild, ViewContainerRe
 import { Group } from 'src/app/models/group';
 import { Interaction } from 'src/app/models/interaction';
 import { CanvasManagerService } from 'src/app/services/canvas-manager.service';
+import {ContextMenuService} from 'src/app/services/context-menu.service';
+import {ContextMenuComponent} from './context-menu/context-menu.component';
 import { GroupComponent } from './group/group.component';
 
 @Component({
@@ -32,7 +34,7 @@ export class InteractionCanvasComponent implements OnInit {
     this.canvasManager.saveInteractionToLocal();
   }
 
-  constructor(private canvasManager: CanvasManagerService, host: ElementRef) {
+  constructor(private canvasManager: CanvasManagerService, private contextMenu: ContextMenuService, host: ElementRef) {
     this.offsetX = host.nativeElement.offsetLeft - host.nativeElement.scrollLeft;
     this.offsetY = host.nativeElement.offsetTop - host.nativeElement.scrollTop;
     let off = this.offset(host.nativeElement);
@@ -46,7 +48,10 @@ export class InteractionCanvasComponent implements OnInit {
       this.renderCanvas();
     });
 
-    console.log("Coords: (%d, %d)", this.offsetX, this.offsetY);
+    this.contextMenu.showContextMenu.subscribe(() => {
+      this.showContextMenu();
+    });
+
   }
 
   offset(el: HTMLElement) {
@@ -91,6 +96,12 @@ export class InteractionCanvasComponent implements OnInit {
 
       this.canvasManager.setAddingTransition(0);
     }
+  }
+
+  showContextMenu(): void {
+    const contextMenuComponent = this.container.createComponent(ContextMenuComponent).instance;
+
+    contextMenuComponent.setMenu(this.contextMenu.id, this.contextMenu.type, this.contextMenu.position);
   }
 
 }

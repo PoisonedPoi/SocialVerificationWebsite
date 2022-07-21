@@ -16,7 +16,7 @@ import { ViolationOutputComponent } from './components/designer/violation-output
 import { RobotViewerComponent } from './components/designer/robot-viewer/robot-viewer.component';
 import { GroupComponent } from './components/designer/interaction-canvas/group/group.component';
 import { TransitionComponent } from './components/designer/interaction-canvas/transition/transition.component';
-import { GroupContextMenuComponent } from './components/designer/interaction-canvas/group/group-context-menu/group-context-menu.component';
+import { ContextMenuComponent } from './components/designer/interaction-canvas/context-menu/context-menu.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +33,7 @@ import { GroupContextMenuComponent } from './components/designer/interaction-can
     RobotViewerComponent,
     GroupComponent,
     TransitionComponent,
-    GroupContextMenuComponent,
+    ContextMenuComponent,
   ],
   imports: [
     BrowserModule,

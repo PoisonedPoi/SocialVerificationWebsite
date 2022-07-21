@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Group } from 'src/app/models/group';
+import { Position } from 'src/app/models/position';
 import { CanvasManagerService } from 'src/app/services/canvas-manager.service';
+import {ContextMenuService} from 'src/app/services/context-menu.service';
 
 @Component({
   selector: 'app-group',
@@ -16,11 +18,7 @@ export class GroupComponent implements OnInit {
   group: Group = new Group();
   name: string = "";
 
-  contextMenuHidden: boolean = true;
-  contextMenuX: string = "";
-  contextMenuY: string = "";
-
-  constructor(private canvasManager: CanvasManagerService) {
+  constructor(private canvasManager: CanvasManagerService, private contextMenu: ContextMenuService) {
     this.canvasManager.getUpdatedInteraction.subscribe((interaction) => {
       let g = interaction.getGroup(this.group.id);
       if (g) { this.group = g; }
@@ -44,35 +42,10 @@ export class GroupComponent implements OnInit {
     this.canvasManager.updateGroup(this.group);
   }
 
-  removeGroup(event: any) {
-    console.log(event);
-  }
-
   showContextMenu(event: any) {
     event.preventDefault();
 
-    this.contextMenuX = event.offsetX;
-    this.contextMenuY = event.offsetY;
-
-    console.log("Show context menu");
-
-    this.contextMenuHidden = false;
-  /*
-    event.preventDefault();
-    if (document.getElementById("contextMenuGroup").style.display == "block") {
-        hideMenu();
-    } else {
-        var menu = document.getElementById("contextMenuGroup");
-        document.getElementById("removeGroupBtn").setAttribute('value', e.target.id);
-        menu.style.display = 'block';
-        menu.style.left = e.pageX + "px";
-        menu.style.top = e.pageY + "px";
-    }
-  */
-  }
-
-  hideContextMenu() {
-    this.contextMenuHidden = true;
+    this.contextMenu.displayContextMenu(this.group.id, 'group', new Position(event.offsetX, event.offsetY));
   }
 
 }
