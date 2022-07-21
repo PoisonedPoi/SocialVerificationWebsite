@@ -11,18 +11,21 @@ import {ContextMenuService} from 'src/app/services/context-menu.service';
 })
 export class ContextMenuComponent implements OnInit {
 
-  @Input() type: string = '';
+  @Input() type: string = 'group';
   @Input() id: number = -1;
   @Input() position: Position = new Position();
   x: string = '';
   y: string = '';
 
-  buttonList: string = '';
+  menuHidden: boolean = true;
+
+  removeGroupHidden: boolean = true;
 
   @HostListener('document:click', ['$event'])
   clickOff(event: any) {
     if(!this.el.nativeElement.contains(event.target)) {
-      this.contextMenu.hideContextMenu();
+      this.menuHidden = true;
+      this.contextMenu.hideContextMenuEmitter.emit();
     }  
   } 
 
@@ -36,6 +39,8 @@ export class ContextMenuComponent implements OnInit {
   }
 
   setMenu(id: number, type: string, position: Position): void {
+    this.menuHidden = false;
+
     this.type = type;
     this.id = id;
     this.position = position;
@@ -46,8 +51,7 @@ export class ContextMenuComponent implements OnInit {
     console.log("Menu: (%d, %d)", position.x, position.y);
 
     if (this.type == 'group') {
-      //this.buttonList = `<button class="absolute px-3 py-1.5 rounded-md text-white bg-red-600 hover:bg-red-700 shadow mx-0.5" (click)="removeGroup()">Remove Group</button>`
-      //this.buttonList = "<button>Remove Group</button>"
+      this.removeGroupHidden = false;
     } else if (this.type == 'transition') {
 
     }

@@ -1,7 +1,12 @@
 <div
-  class="absolute"
+  class="absolute z-10"
+  [hidden]="menuHidden"
   [style.left]="x"
   [style.top]="y"
-  [innerHTML]="buttonList"
 >
+  <button
+    class="absolute px-3 py-1.5 rounded-md text-white bg-red-600 hover:bg-red-700 shadow mx-0.5"
+    [style.hidden]="removeGroupHidden"
+    (click)="removeGroup()"
+  >Remove Group</button>`
 </div>

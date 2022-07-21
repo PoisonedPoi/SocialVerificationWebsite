@@ -22,9 +22,4 @@ export class ContextMenuService {
 
     this.showContextMenu.emit();
   }
-
-  hideContextMenu() {
-
-  }
-
 }

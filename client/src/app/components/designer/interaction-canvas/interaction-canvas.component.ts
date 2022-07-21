@@ -1,4 +1,4 @@
-import { Component, ComponentRef, ElementRef, HostListener, OnInit, Renderer2, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, ComponentRef, ElementRef, HostListener, OnInit, Renderer2, ViewChild, ViewContainerRef, ViewRef } from '@angular/core';
 import { Group } from 'src/app/models/group';
 import { Interaction } from 'src/app/models/interaction';
 import {Position} from 'src/app/models/position';
@@ -21,6 +21,10 @@ export class InteractionCanvasComponent implements OnInit {
 
   interaction: Interaction = new Interaction();
   groups: Group[] = [];
+
+  contextMenuHidden: boolean = true;
+
+  contextMenuComponent: ContextMenuComponent | null = null;
 
   @ViewChild("canvas", { read: ViewContainerRef})
   container!: ViewContainerRef;
@@ -79,6 +83,8 @@ export class InteractionCanvasComponent implements OnInit {
       // Set the component to match the model
       groupComponent.setGroup(g);
     });
+
+    this.contextMenuComponent = this.container.createComponent(ContextMenuComponent).instance;
   }
 
   clickCanvas(event: any) {
@@ -109,27 +115,39 @@ export class InteractionCanvasComponent implements OnInit {
   }
 
   showContextMenu(): void {
+    this.contextMenuHidden = false;
+
+
+    /*
     const contextMenuComponent = this.container.createComponent(ContextMenuComponent);
 
     this.components.push(contextMenuComponent);
-
-    contextMenuComponent.instance.setMenu(this.contextMenu.id, this.contextMenu.type, this.contextMenu.position);
+    */
+    if (this.contextMenuComponent) {
+      this.contextMenuComponent.setMenu(this.contextMenu.id, this.contextMenu.type, this.contextMenu.position);
+    } else {
+      console.log("context menu comp doesn't exist");
+    }
   }
 
   hideContextMenu(): void {
+    this.contextMenuHidden = true;
+
     let c = ContextMenuComponent;
   
-    /*
     const contextMenu = this.components.find((component: ComponentRef<any>) => component.instance instanceof c);
     if (contextMenu) {
       const componentIndex = this.components.indexOf(contextMenu);
       if (componentIndex !== -1) {
         // Remove component from both view and array
-        this.container.remove(this.container.indexOf(contextMenu.hostView));
-        this.components.splice(componentIndex, 1);
+        console.log("here");
+        if (this.container.indexOf(contextMenu.hostView) > -1) {
+          this.container.remove(this.container.indexOf(contextMenu.hostView));
+          this.components.splice(componentIndex, 1);
+        }
+        console.log("after here");
       }
     }
-    */
   }
 
 }
