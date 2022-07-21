@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, Renderer2 } from '@angular/core';
 import { Group } from 'src/app/models/group';
 import { Position } from 'src/app/models/position';
 import { CanvasManagerService } from 'src/app/services/canvas-manager.service';
@@ -18,7 +18,10 @@ export class GroupComponent implements OnInit {
   group: Group = new Group();
   name: string = "";
 
-  constructor(private canvasManager: CanvasManagerService, private contextMenu: ContextMenuService) {
+  constructor(
+    private canvasManager: CanvasManagerService, 
+    private contextMenu: ContextMenuService,
+  ) {
     this.canvasManager.getUpdatedInteraction.subscribe((interaction) => {
       let g = interaction.getGroup(this.group.id);
       if (g) { this.group = g; }
@@ -45,7 +48,10 @@ export class GroupComponent implements OnInit {
   showContextMenu(event: any) {
     event.preventDefault();
 
-    this.contextMenu.displayContextMenu(this.group.id, 'group', new Position(event.offsetX, event.offsetY));
+    let xNum: number = parseInt(this.x.substring(0, this.x.length - 2));
+    let yNum: number = parseInt(this.y.substring(0, this.x.length - 2));
+
+    this.contextMenu.displayContextMenu(this.group.id, 'group', new Position(xNum + event.offsetX, yNum + event.offsetY));
   }
 
 }

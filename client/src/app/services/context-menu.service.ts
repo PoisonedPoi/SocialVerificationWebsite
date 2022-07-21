@@ -11,6 +11,7 @@ export class ContextMenuService {
   position: Position = new Position();
 
   @Output() showContextMenu: EventEmitter<any> = new EventEmitter<any>();
+  @Output() hideContextMenuEmitter: EventEmitter<any> = new EventEmitter<any>();
 
   constructor() { }
 
@@ -20,6 +21,10 @@ export class ContextMenuService {
     this.position = position;
 
     this.showContextMenu.emit();
+  }
+
+  hideContextMenu() {
+
   }
 
 }

@@ -17,12 +17,12 @@ export class CanvasManagerService {
   @Output() updateBtnState: EventEmitter<any> = new EventEmitter();
   @Output() getUpdatedInteraction: EventEmitter<Interaction> = new EventEmitter<Interaction>();
 
-  canvasOffsetX: string = '';
-  canvasOffsetY: string = '';
+  canvasOffsetX: number = 0;
+  canvasOffsetY: number = 0;
 
   constructor() {}
 
-  setCanvasOffset(x: string, y: string) {
+  setCanvasOffset(x: number, y: number) {
     this.canvasOffsetX = x;
     this.canvasOffsetY = y;
   }

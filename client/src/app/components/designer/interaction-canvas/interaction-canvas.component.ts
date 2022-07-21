@@ -1,6 +1,7 @@
-import { Component, ElementRef, HostListener, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, ComponentRef, ElementRef, HostListener, OnInit, Renderer2, ViewChild, ViewContainerRef } from '@angular/core';
 import { Group } from 'src/app/models/group';
 import { Interaction } from 'src/app/models/interaction';
+import {Position} from 'src/app/models/position';
 import { CanvasManagerService } from 'src/app/services/canvas-manager.service';
 import {ContextMenuService} from 'src/app/services/context-menu.service';
 import {ContextMenuComponent} from './context-menu/context-menu.component';
@@ -16,11 +17,16 @@ export class InteractionCanvasComponent implements OnInit {
   offsetX: number = 5;
   offsetY: number = 5;
 
+  position: Position = new Position();
+
   interaction: Interaction = new Interaction();
   groups: Group[] = [];
 
   @ViewChild("canvas", { read: ViewContainerRef})
   container!: ViewContainerRef;
+
+  // Components contained in container
+  components: ComponentRef<any>[] = [];
 
   // Load XML stored in local storage
   @HostListener('window:load', ['$event'])
@@ -34,14 +40,22 @@ export class InteractionCanvasComponent implements OnInit {
     this.canvasManager.saveInteractionToLocal();
   }
 
-  constructor(private canvasManager: CanvasManagerService, private contextMenu: ContextMenuService, host: ElementRef) {
-    this.offsetX = host.nativeElement.offsetLeft - host.nativeElement.scrollLeft;
-    this.offsetY = host.nativeElement.offsetTop - host.nativeElement.scrollTop;
-    let off = this.offset(host.nativeElement);
-    console.log(off);
-  }
+  constructor(
+    private canvasManager: CanvasManagerService,
+    private contextMenu: ContextMenuService,
+    private render: Renderer2,
+    private el: ElementRef
+  ) {}
 
   ngOnInit(): void {
+    this.render.listen('window', 'load', () => {
+      this.position = new Position(this.el.nativeElement.getBoundingClientRect().left, this.el.nativeElement.getBoundingClientRect().top);
+
+      this.canvasManager.setCanvasOffset(this.position.x, this.position.y);
+
+      console.log(this.position);
+    });
+
     this.canvasManager.getUpdatedInteraction.subscribe((interaction) => {
       this.container.clear();
       this.interaction = interaction;
@@ -52,14 +66,10 @@ export class InteractionCanvasComponent implements OnInit {
       this.showContextMenu();
     });
 
+    this.contextMenu.hideContextMenuEmitter.subscribe(() => {
+      this.hideContextMenu();
+    });
   }
-
-  offset(el: HTMLElement) {
-	    var rect = el.getBoundingClientRect(),
-	    scrollLeft = window.pageXOffset || document.documentElement.scrollLeft,
-	    scrollTop = window.pageYOffset || document.documentElement.scrollTop;
-	    return { top: rect.top + scrollTop, left: rect.left + scrollLeft }
-	}
 
   renderCanvas(): void {
     this.interaction.groups.forEach((g: Group) => {
@@ -99,9 +109,27 @@ export class InteractionCanvasComponent implements OnInit {
   }
 
   showContextMenu(): void {
-    const contextMenuComponent = this.container.createComponent(ContextMenuComponent).instance;
+    const contextMenuComponent = this.container.createComponent(ContextMenuComponent);
 
-    contextMenuComponent.setMenu(this.contextMenu.id, this.contextMenu.type, this.contextMenu.position);
+    this.components.push(contextMenuComponent);
+
+    contextMenuComponent.instance.setMenu(this.contextMenu.id, this.contextMenu.type, this.contextMenu.position);
+  }
+
+  hideContextMenu(): void {
+    let c = ContextMenuComponent;
+  
+    /*
+    const contextMenu = this.components.find((component: ComponentRef<any>) => component.instance instanceof c);
+    if (contextMenu) {
+      const componentIndex = this.components.indexOf(contextMenu);
+      if (componentIndex !== -1) {
+        // Remove component from both view and array
+        this.container.remove(this.container.indexOf(contextMenu.hostView));
+        this.components.splice(componentIndex, 1);
+      }
+    }
+    */
   }
 
 }
