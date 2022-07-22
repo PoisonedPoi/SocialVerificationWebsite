@@ -17,6 +17,7 @@ import { RobotViewerComponent } from './components/designer/robot-viewer/robot-v
 import { GroupComponent } from './components/designer/interaction-canvas/group/group.component';
 import { TransitionComponent } from './components/designer/interaction-canvas/transition/transition.component';
 import { ContextMenuComponent } from './components/designer/interaction-canvas/context-menu/context-menu.component';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { ContextMenuComponent } from './components/designer/interaction-canvas/c
   imports: [
     BrowserModule,
     AppRoutingModule,
-    DragDropModule
+    DragDropModule,
+    NoopAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
