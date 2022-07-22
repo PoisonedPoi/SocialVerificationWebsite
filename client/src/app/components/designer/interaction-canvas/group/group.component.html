@@ -3,6 +3,8 @@
   [style.left]='x'
   [style.top]='y'
   (contextmenu)='showContextMenu($event)'
+  cdkDragBoundary=".bounding-canvas"
+  cdkDrag
 >
   <input type="text" (change)="updateName($event)" [value]="group.name" class="bg-gray-300 w-[90%] ml-1 mr-0.5 border-gray-300 text-center">
   <div id="microContainer"></div>

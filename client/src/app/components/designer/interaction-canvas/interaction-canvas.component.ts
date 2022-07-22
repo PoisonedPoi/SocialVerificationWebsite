@@ -1,4 +1,4 @@
-import { Component, ComponentRef, ElementRef, HostListener, OnInit, Renderer2, ViewChild, ViewContainerRef, ViewRef } from '@angular/core';
+import { Component, ComponentRef, ElementRef, HostListener, OnInit, Renderer2, ViewChild, ViewContainerRef } from '@angular/core';
 import { Group } from 'src/app/models/group';
 import { Interaction } from 'src/app/models/interaction';
 import {Position} from 'src/app/models/position';
@@ -89,20 +89,10 @@ export class InteractionCanvasComponent implements OnInit {
 
   clickCanvas(event: any) {
     if (this.canvasManager.isAddingGroup) {
-
-      console.log('Add group here (%d,%d)', event.offsetX, event.offsetY);
-
-      // Add group model to current state
-      let group: Group = this.canvasManager.addGroup(event.offsetX, event.offsetY);
-
-      // Create a group component
-      const groupComponent = this.container.createComponent(GroupComponent).instance;
-
-      // Set the component to match the model
-      groupComponent.setGroup(group);
+      // Add group model to current interaction
+      this.canvasManager.addGroup(event.offsetX, event.offsetY);
 
       this.canvasManager.setAddingGroup(false);
-
     } else if (this.canvasManager.addingTransition == 1) {
       console.log('Init transition here (%d,%d)', event.offsetX, event.offsetY);
 
