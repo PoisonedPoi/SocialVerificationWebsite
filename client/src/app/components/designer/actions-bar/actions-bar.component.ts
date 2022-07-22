@@ -23,11 +23,19 @@ export class ActionsBarComponent implements OnInit {
 
   /* Action button click functions */
   addGroup() {
-    this.canvasManager.setAddingGroup(true);
+    if (this.canvasManager.isAddingGroup) {
+      this.canvasManager.setAddingGroup(false);
+    } else {
+      this.canvasManager.setAddingGroup(true);
+    }
   }
 
   addTransition() {
-    this.canvasManager.setAddingTransition(1);
+    if (this.canvasManager.addingTransition != 0) {
+      this.canvasManager.setAddingTransition(0);
+    } else {
+      this.canvasManager.setAddingTransition(1);
+    }
   }
 
   exportToXML() {
