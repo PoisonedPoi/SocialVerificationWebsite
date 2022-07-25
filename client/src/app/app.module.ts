@@ -18,6 +18,7 @@ import { GroupComponent } from './components/designer/interaction-canvas/group/g
 import { TransitionComponent } from './components/designer/interaction-canvas/transition/transition.component';
 import { ContextMenuComponent } from './components/designer/interaction-canvas/context-menu/context-menu.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { MicroComponent } from './components/designer/interaction-canvas/group/micro/micro.component';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
     GroupComponent,
     TransitionComponent,
     ContextMenuComponent,
+    MicroComponent,
   ],
   imports: [
     BrowserModule,

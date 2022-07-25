@@ -6,7 +6,9 @@
   cdkDragBoundary=".bounding-canvas"
   cdkDrag
   (cdkDragEnded)="droppedGroup($event)"
+  (dragover)="allowDrop($event)"
+  (drop)="dropMicro($event)"
 >
   <input type="text" (change)="updateName($event)" [value]="group.name" class="bg-gray-300 w-[90%] ml-1 mr-0.5 border-gray-300 text-center">
-  <div id="microContainer"></div>
+  <div #microContainer cdkDropList></div>
 </div>
