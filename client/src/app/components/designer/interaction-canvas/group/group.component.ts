@@ -1,3 +1,4 @@
+import {CdkDragEnd, CdkDragStart} from '@angular/cdk/drag-drop';
 import { Component, OnInit } from '@angular/core';
 import { Group } from 'src/app/models/group';
 import { Position } from 'src/app/models/position';
@@ -54,4 +55,10 @@ export class GroupComponent implements OnInit {
     this.contextMenu.displayContextMenu(this.group.id, 'group', new Position(xNum + event.offsetX, yNum + event.offsetY));
   }
 
+  droppedGroup(event: CdkDragEnd) {
+    let rect = event.source.getRootElement().getBoundingClientRect();
+    this.group.x = rect.x - this.canvasManager.canvasOffsetX;
+    this.group.y = rect.y - this.canvasManager.canvasOffsetY;
+    this.canvasManager.updateGroup(this.group);
+  }
 }

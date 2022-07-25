@@ -56,8 +56,6 @@ export class InteractionCanvasComponent implements OnInit {
       this.position = new Position(this.el.nativeElement.getBoundingClientRect().left, this.el.nativeElement.getBoundingClientRect().top);
 
       this.canvasManager.setCanvasOffset(this.position.x, this.position.y);
-
-      console.log(this.position);
     });
 
     this.canvasManager.getUpdatedInteraction.subscribe((interaction) => {
