@@ -43,7 +43,7 @@ export class Group {
                 return;
             }
         }
-        console.log("error, did not find and remove micro " + microid + " from group " + this.id)
+        console.log("ERROR: did not find and remove micro " + microid + " from group " + this.id)
     }
 
     getMicros() {
@@ -85,7 +85,7 @@ export class Group {
             }
         })
         if (paramID == null) {
-            console.log("Error, unable to set micro param val by variable, Variable name " + variableName + " not found");
+            console.log("ERROR: unable to set micro param val by variable, Variable name " + variableName + " not found");
             return;
         }
         let paramRes = micro.parameterResults.find(x => x.paramId == paramID);

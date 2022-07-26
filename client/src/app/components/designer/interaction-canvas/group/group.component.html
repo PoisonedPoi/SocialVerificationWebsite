@@ -11,6 +11,6 @@
 >
   <input type="text" (change)="updateName($event)" [value]="group.name" class="bg-gray-300 w-[90%] ml-1 mr-0.5 border-gray-300 text-center">
   <div *ngFor="let micro of group.micros">
-    <app-micro [micro]="micro"></app-micro>
+    <app-micro [micro]="micro" [groupId]="group.id"></app-micro>
   </div>
 </div>

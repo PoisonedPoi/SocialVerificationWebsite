@@ -56,8 +56,6 @@ export class ContextMenuComponent implements OnInit {
 
     this.x = position.x + 'px';
     this.y = position.y + 'px';
-
-    console.log("%s: (%d, %d)", type, position.x, position.y);
   }
 
   removeGroup() {

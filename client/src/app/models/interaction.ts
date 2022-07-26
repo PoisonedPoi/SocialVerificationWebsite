@@ -62,6 +62,7 @@ export class Interaction {
             let name = curGroup.getElementsByTagName("name")[0].textContent;
             //load group
             let g: Group = this.addGroup(x, y, groupID, isInitial, name!);
+            
             let micros = curGroup.getElementsByTagName("micro");
             //load micros
             for (let j = 0; j < micros.length; j++) {
@@ -105,6 +106,8 @@ export class Interaction {
                 if (microId) {
                   g.micros.push(new MicroInteraction(parseInt(microId), microName!, microParameters));
                 }
+
+                g.microIdCounter = micros.length;
             }
         }
         for (let i = 0; i < transitions.length; i++) {
@@ -297,12 +300,12 @@ export class Interaction {
     }
 
     getGroup(id: number) {
-        for (let i = 0; i < this.groups.length; i++) {
-            if (this.groups[i].id == id) {
-                return this.groups[i];
-            }
-        }
-        return;
+      for (let i = 0; i < this.groups.length; i++) {
+          if (this.groups[i].id == id) {
+              return this.groups[i];
+          }
+      }
+      return;
     }
 
     getInitialGroup() {

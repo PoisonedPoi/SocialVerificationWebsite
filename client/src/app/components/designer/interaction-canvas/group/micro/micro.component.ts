@@ -14,16 +14,13 @@ import {CanvasManagerService} from 'src/app/services/canvas-manager.service';
 export class MicroComponent implements OnInit {
 
   @Input() micro: MicroInteraction = new MicroInteraction(1, 'Greeter');
+  @Input() groupId: number = -1;
 
   @ViewChild('microEl') el!: ElementRef;
 
   constructor(private contextMenu: ContextMenuService, private canvasManager: CanvasManagerService) { }
 
   ngOnInit(): void {
-  }
-
-  setMicro(m: MicroInteraction) {
-    this.micro = m;
   }
 
   showContextMenu(event: any) {
@@ -37,7 +34,7 @@ export class MicroComponent implements OnInit {
     let xOffset = xPos - canvasPos.x;
     let yOffset = yPos - canvasPos.y;
 
-    this.contextMenu.displayContextMenu('micro', new Position(xOffset + event.offsetX, yOffset + event.offsetY), this.micro.id);
+    this.contextMenu.displayContextMenu('micro', new Position(xOffset + event.offsetX, yOffset + event.offsetY), this.groupId, this.micro.id);
   }
 
 }

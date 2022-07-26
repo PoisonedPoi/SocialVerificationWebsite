@@ -1,7 +1,8 @@
 import { EventEmitter, Injectable, Output } from '@angular/core';
 import { Group } from '../models/group';
 import { Interaction } from '../models/interaction';
-import {Position} from '../models/position';
+import { Position } from '../models/position';
+import { MicroInteraction } from '../models/microInteraction';
 
 @Injectable({
   providedIn: 'root'
@@ -26,9 +27,9 @@ export class CanvasManagerService {
     let isInitial: boolean = this.interaction.groupIdCounter == 0 ? true : false;
     let name: string = 'untitled' + this.interaction.groupIdCounter;
 
-    this.interaction.groupIdCounter++;
-
     let g = new Group(isInitial, this.interaction.groupIdCounter, name, x, y);
+
+    this.interaction.groupIdCounter++;
 
     this.interaction.groups.push(g);
 
@@ -47,18 +48,35 @@ export class CanvasManagerService {
     this.getUpdatedInteraction.emit(this.interaction);
   }
 
+  addMicroToGroup(groupId: number): MicroInteraction  | null {
+
+    const g: Group | undefined = this.interaction.getGroup(groupId);
+    
+    if (!g) {
+      console.log("ERROR: add micro to group failure with groupId: %d", groupId);
+      return null;
+    }
+
+    let m: MicroInteraction = new MicroInteraction(g.microIdCounter++, this.currentMicroType);
+
+    g.micros.push(m);
+
+    this.getUpdatedInteraction.emit(this.interaction);
+    
+    return m;
+  }
+
   removeMicro(groupId: number, microId: number):void {
     const g: Group | undefined = this.interaction.getGroup(groupId);
     
     if (!g) {
+      console.log("ERROR: remove micro failure with groupId: %d", groupId);
       return;
     }
 
     g.removeMicro(microId);
 
     this.getUpdatedInteraction.emit(this.interaction);
-
-    console.log(this.interaction);
   }
 
   /* State management for view reflection */

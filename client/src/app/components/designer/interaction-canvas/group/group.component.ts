@@ -1,7 +1,6 @@
 import { CdkDragEnd } from '@angular/cdk/drag-drop';
 import { Component, OnInit } from '@angular/core';
 import { Group } from 'src/app/models/group';
-import {MicroInteraction} from 'src/app/models/microInteraction';
 import { Position } from 'src/app/models/position';
 import { CanvasManagerService } from 'src/app/services/canvas-manager.service';
 import { ContextMenuService } from 'src/app/services/context-menu.service';
@@ -74,7 +73,8 @@ export class GroupComponent implements OnInit {
 
   dropMicro() {
     // Add micro to group
-    this.group.micros.push(new MicroInteraction(this.group.microIdCounter++, this.canvasManager.currentMicroType));
+    //this.group.micros.push(new MicroInteraction(this.group.microIdCounter++, this.canvasManager.currentMicroType));
+    this.canvasManager.addMicroToGroup(this.group.id);
     this.canvasManager.updateGroup(this.group);
   }
 }

@@ -116,7 +116,7 @@ export class InteractionCanvasComponent implements OnInit {
     this.contextMenuHidden = false;
 
     if (this.contextMenuComponent) {
-      this.contextMenuComponent.setMenu(this.contextMenu.type, this.contextMenu.position, this.contextMenu.groupId);
+      this.contextMenuComponent.setMenu(this.contextMenu.type, this.contextMenu.position, this.contextMenu.groupId, this.contextMenu.microId);
     } else {
       console.log("context menu comp doesn't exist");
     }
@@ -132,14 +132,11 @@ export class InteractionCanvasComponent implements OnInit {
       const componentIndex = this.components.indexOf(contextMenu);
       if (componentIndex !== -1) {
         // Remove component from both view and array
-        console.log("here");
         if (this.container.indexOf(contextMenu.hostView) > -1) {
           this.container.remove(this.container.indexOf(contextMenu.hostView));
           this.components.splice(componentIndex, 1);
         }
-        console.log("after here");
       }
     }
   }
-
 }
