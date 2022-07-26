@@ -12,19 +12,25 @@ import {ContextMenuService} from 'src/app/services/context-menu.service';
 export class ContextMenuComponent implements OnInit {
 
   @Input() type: string = 'group';
-  @Input() id: number = -1;
+  @Input() groupId: number = -1;
+  @Input() microId: number = -1;
+  @Input() transitionId: number = -1;
+
   @Input() position: Position = new Position();
+
   x: string = '';
   y: string = '';
 
   menuHidden: boolean = true;
 
   removeGroupHidden: boolean = true;
+  removeMicroHidden: boolean = true;
 
   @HostListener('document:click', ['$event'])
   clickOff(event: any) {
     if(!this.el.nativeElement.contains(event.target)) {
       this.menuHidden = true;
+      this.contextMenu.type = '';
       this.contextMenu.hideContextMenuEmitter.emit();
     }  
   } 
@@ -38,27 +44,28 @@ export class ContextMenuComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  setMenu(id: number, type: string, position: Position): void {
+  setMenu(type: string, position: Position, groupId: number = -1, microId: number = -1, transitionId: number = -1): void {
     this.menuHidden = false;
 
     this.type = type;
-    this.id = id;
     this.position = position;
+
+    this.groupId = groupId;
+    this.microId = microId;
+    this.transitionId = transitionId;
 
     this.x = position.x + 'px';
     this.y = position.y + 'px';
 
-    console.log("Menu: (%d, %d)", position.x, position.y);
-
-    if (this.type == 'group') {
-      this.removeGroupHidden = false;
-    } else if (this.type == 'transition') {
-
-    }
+    console.log("%s: (%d, %d)", type, position.x, position.y);
   }
 
   removeGroup() {
-    this.canvasManager.removeGroup(this.id);
+    this.canvasManager.removeGroup(this.groupId);
+  }
+
+  removeMicro() {
+    this.canvasManager.removeMicro(this.groupId, this.microId);
   }
 
 }

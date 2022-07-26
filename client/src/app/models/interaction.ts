@@ -67,8 +67,11 @@ export class Interaction {
             for (let j = 0; j < micros.length; j++) {
                 let curMicro = micros[j];
                 let microName = curMicro.getElementsByTagName("name")[0].textContent;
+                let microId: string | null = curMicro.getAttribute("id");
 
-                console.log("microName: %s", microName);
+                if (microId) {
+                  console.log("%d: %s", parseInt(microId), microName);
+                }
 
                 //load template of micro into group
                 let microID = this.addMicroToGroup(groupID, microName!);
@@ -169,7 +172,7 @@ export class Interaction {
             xmlString += '<group id="' + group.id + '" init="' + group.isInitialGroup + '" x="' + group.x + '" y="' + group.y + '">';
             xmlString += '<name>' + group.name + '</name>';
             group.micros.forEach((micro: MicroInteraction) => {
-                xmlString += '<micro>';
+                xmlString += '<micro id="' + micro.id + '">';
                 xmlString += '<name>' + micro.type + '</name>';
                 micro.parameters.forEach(parameter => {
                     if (parameter.type == "array") { //unique case

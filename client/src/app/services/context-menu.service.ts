@@ -6,19 +6,25 @@ import {Position} from '../models/position';
 })
 export class ContextMenuService {
 
-  id: number = -1;
   type: string = '';
   position: Position = new Position();
+
+  groupId: number = -1;
+  microId: number = -1;
+  transitionId: number = -1;
 
   @Output() showContextMenu: EventEmitter<any> = new EventEmitter<any>();
   @Output() hideContextMenuEmitter: EventEmitter<any> = new EventEmitter<any>();
 
   constructor() { }
 
-  displayContextMenu(id: number, type: string, position: Position) {
-    this.id = id;
+  displayContextMenu(type: string, position: Position, groupId: number = -1, microId: number = -1, transitionId: number = -1) {
     this.type = type;
     this.position = position;
+
+    this.groupId = groupId;
+    this.microId = microId;
+    this.transitionId = transitionId;
 
     this.showContextMenu.emit();
   }

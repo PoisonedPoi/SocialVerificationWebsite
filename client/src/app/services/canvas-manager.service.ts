@@ -39,8 +39,16 @@ export class CanvasManagerService {
     return g;
   }
 
-  removeGroup(id: number):void {
-    this.interaction.removeGroup(id);
+  removeGroup(groupId: number):void {
+    this.interaction.removeGroup(groupId);
+
+    this.getUpdatedInteraction.emit(this.interaction);
+
+    console.log(this.interaction);
+  }
+
+  removeMicro(groupId: number, microId: number):void {
+    this.interaction.removeMicroFromGroup(groupId, microId);
 
     this.getUpdatedInteraction.emit(this.interaction);
 

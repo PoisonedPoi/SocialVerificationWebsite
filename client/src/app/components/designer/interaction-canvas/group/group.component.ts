@@ -49,12 +49,16 @@ export class GroupComponent implements OnInit {
   }
 
   showContextMenu(event: any) {
+    if (this.contextMenu.type != '') {
+      return;
+    }
+
     event.preventDefault();
 
     let xNum: number = parseInt(this.x.substring(0, this.x.length - 2));
     let yNum: number = parseInt(this.y.substring(0, this.x.length - 2));
 
-    this.contextMenu.displayContextMenu(this.group.id, 'group', new Position(xNum + event.offsetX, yNum + event.offsetY));
+    this.contextMenu.displayContextMenu('group', new Position(xNum + event.offsetX, yNum + event.offsetY), this.group.id);
   }
 
   allowDrop(event: any) {
@@ -70,9 +74,7 @@ export class GroupComponent implements OnInit {
 
   dropMicro() {
     // Add micro to group
-    // Might randomly generate id in future, if necessary
-    let id = 1;
-    this.group.micros.push(new MicroInteraction(id, this.canvasManager.currentMicroType));
+    this.group.micros.push(new MicroInteraction(this.group.microIdCounter++, this.canvasManager.currentMicroType));
     this.canvasManager.updateGroup(this.group);
   }
 }
