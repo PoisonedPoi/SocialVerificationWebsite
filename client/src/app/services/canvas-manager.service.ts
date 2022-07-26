@@ -114,6 +114,15 @@ export class CanvasManagerService {
     this.getUpdatedInteraction.emit(this.interaction);
   }
 
+  async loadInteractionFromXMLFile(file: File) {
+    let t: string = await file.text();
+
+    this.interaction = new Interaction(t);
+
+    this.getUpdatedInteraction.emit(this.interaction);
+  }
+
+
   loadInteractionFromLocal(): void {
     let xmlString = localStorage.getItem('interactionXML');
 

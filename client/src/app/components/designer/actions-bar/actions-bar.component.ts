@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CanvasManagerService } from 'src/app/services/canvas-manager.service';
 
 @Component({
@@ -8,10 +8,11 @@ import { CanvasManagerService } from 'src/app/services/canvas-manager.service';
 })
 export class ActionsBarComponent implements OnInit {
 
+  @ViewChild('interactionFileUpload') fileUpload!: ElementRef;
+
   isAddingGroup: boolean = false;
   isAddingTransition: boolean = false;
   
-
   constructor(private canvasManager: CanvasManagerService) {
     canvasManager.updateBtnState.subscribe(() => {
       this.updateButtonColors();
@@ -47,13 +48,25 @@ export class ActionsBarComponent implements OnInit {
   }
 
   saveToFile() {
-    //console.log("Save to file");
-    this.canvasManager.saveInteractionToLocal();
+    console.log("Save to file");
+
+    let file = "interaction.xml";
+    let text = this.canvasManager.interaction.exportModelToXML();
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8, ' + encodeURIComponent(text));
+    element.setAttribute('download', file);
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
   }
 
   loadFromFile() {
-    //console.log("Load from file");
-    this.canvasManager.loadInteractionFromLocal();
+    console.log("Load from file");
+    this.fileUpload.nativeElement.click();
+  }
+
+  loadFromUpload(event: any) {
+    this.canvasManager.loadInteractionFromXMLFile(event.target.files[0]);
   }
 
   clear() {
