@@ -1,4 +1,3 @@
-import { MicroType } from "./microType";
 import { Parameter } from "./parameter";
 import { ParameterResult } from "./parameterResult";
 
@@ -10,10 +9,10 @@ export class MicroInteraction {
     parameterResults: ParameterResult<any>[] = [];  
     //Note: results are stored as follows: {parameter id: resultString} (or list instead of result string case of type=array) so parameterResults looks like [{0,"yes"},{20,"option1"}] --these will be passed to backend along with the variable name(which is stored in parameter)
 
-    constructor(id: number, microType: MicroType) { //micros are built off a microType defined
-        this.type = microType.type;
-        this.parameters = microType.parameters;
+    constructor(id: number, type: string, parameters: Parameter[] = []) { //micros are built off a microType defined
         this.id = id;
+        this.type = type;
+        this.parameters = parameters;
         this.parameterResults = [];
         this.parameters.forEach(parameter => {
             if (parameter.type == "bool") {

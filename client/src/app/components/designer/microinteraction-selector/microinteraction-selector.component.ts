@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {MicroType} from 'src/app/models/microType';
+import {CanvasManagerService} from 'src/app/services/canvas-manager.service';
 
 @Component({
   selector: 'app-microinteraction-selector',
@@ -8,19 +8,12 @@ import {MicroType} from 'src/app/models/microType';
 })
 export class MicrointeractionSelectorComponent implements OnInit {
 
-  microTypes: MicroType[] = [
-    new MicroType("Greeter", []),
-    new MicroType("Ask", []),
-    new MicroType("Farewell", []),
-  ];
-
-  constructor() { }
+  constructor(private canvasManager: CanvasManagerService) { }
 
   ngOnInit(): void {
   }
 
-  dragStart(event: any) {
-    let microData = JSON.stringify(this.microTypes[0]);
-    event.dataTransfer.setData("microData", microData);
+  dragStart(type: string) {
+    this.canvasManager.currentMicroType = type;
   }
 }

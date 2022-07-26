@@ -1,6 +1,7 @@
 import { EventEmitter, Injectable, Output } from '@angular/core';
 import { Group } from '../models/group';
 import { Interaction } from '../models/interaction';
+import {Position} from '../models/position';
 
 @Injectable({
   providedIn: 'root'
@@ -11,21 +12,16 @@ export class CanvasManagerService {
 
   isAddingGroup: boolean = false;
   addingTransition: number = 0;
+  currentMicroType: string = '';
 
   groups: Group[] = [];
 
   @Output() updateBtnState: EventEmitter<any> = new EventEmitter();
   @Output() getUpdatedInteraction: EventEmitter<Interaction> = new EventEmitter<Interaction>();
 
-  canvasOffsetX: number = 0;
-  canvasOffsetY: number = 0;
+  canvasOffset: Position = new Position(0, 0);
 
   constructor() {}
-
-  setCanvasOffset(x: number, y: number) {
-    this.canvasOffsetX = x;
-    this.canvasOffsetY = y;
-  }
 
   addGroup(x: number, y: number): Group {
 
@@ -39,8 +35,6 @@ export class CanvasManagerService {
     this.interaction.groups.push(g);
 
     this.getUpdatedInteraction.emit(this.interaction);
-
-    console.log(this.interaction);
 
     return g;
   }
@@ -70,7 +64,7 @@ export class CanvasManagerService {
 
   
   getGroupById(id: number): Group | undefined {
-    let g: Group | undefined = this.groups.find((x: Group) => x.id === id);
+    let g: Group | undefined = this.interaction.groups.find((x: Group) => x.id === id);
 
     if (g) {
       return g;
@@ -79,11 +73,13 @@ export class CanvasManagerService {
   }
 
   updateGroup(group: Group) {
-    let gs: Group[] = this.groups.filter((x: Group) => x.id != group.id);
+    let gs: Group[] = this.interaction.groups.filter((x: Group) => x.id != group.id);
 
     gs.push(group);
 
-    this.groups = gs;
+    this.interaction.groups = gs;
+
+    this.getUpdatedInteraction.emit(this.interaction);
   }
 
   loadInteractionFromLocal(): void {

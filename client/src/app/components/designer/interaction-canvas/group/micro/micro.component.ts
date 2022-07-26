@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
+import {MicroInteraction} from 'src/app/models/microInteraction';
 
 @Component({
   selector: 'app-micro',
@@ -8,9 +9,15 @@ import { Component, OnInit } from '@angular/core';
 })
 export class MicroComponent implements OnInit {
 
+  @Input() micro: MicroInteraction = new MicroInteraction(1, 'Greeter');
+
   constructor() { }
 
   ngOnInit(): void {
+  }
+
+  setMicro(m: MicroInteraction) {
+    this.micro = m;
   }
 
 }

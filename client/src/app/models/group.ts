@@ -8,6 +8,7 @@ export class Group {
     x: number; 
     y: number;
     micros: MicroInteraction[] = [];
+    microIdCounter: number = 0;
 
     constructor(
       isInitialGroup: boolean = false,
@@ -27,9 +28,6 @@ export class Group {
     setXY(x: number, y: number) {
         this.x = x;
         this.y = y;
-    }
-    addMicro(micro: MicroInteraction) {
-        this.micros.push(micro);
     }
 
     removeMicro(microid: number) {

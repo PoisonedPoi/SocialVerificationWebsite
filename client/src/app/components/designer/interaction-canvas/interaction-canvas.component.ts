@@ -20,7 +20,6 @@ export class InteractionCanvasComponent implements OnInit {
   position: Position = new Position();
 
   interaction: Interaction = new Interaction();
-  groups: Group[] = [];
 
   contextMenuHidden: boolean = true;
 
@@ -49,21 +48,26 @@ export class InteractionCanvasComponent implements OnInit {
     private contextMenu: ContextMenuService,
     private render: Renderer2,
     private el: ElementRef
-  ) {}
+  ) {
+  }
 
   ngOnInit(): void {
     this.render.listen('window', 'load', () => {
       this.position = new Position(this.el.nativeElement.getBoundingClientRect().left, this.el.nativeElement.getBoundingClientRect().top);
 
-      this.canvasManager.setCanvasOffset(this.position.x, this.position.y);
+      // Set canvas offset in canvasManager OnLoad
+      // TODO Update canvas offsets when user changes the window size
+      this.canvasManager.canvasOffset = this.position;
     });
 
+    // When interaction changes, re-render the canvas
     this.canvasManager.getUpdatedInteraction.subscribe((interaction) => {
       this.container.clear();
       this.interaction = interaction;
       this.renderCanvas();
     });
 
+    // Show and hide context menu
     this.contextMenu.showContextMenu.subscribe(() => {
       this.showContextMenu();
     });
@@ -72,6 +76,8 @@ export class InteractionCanvasComponent implements OnInit {
       this.hideContextMenu();
     });
   }
+
+  /* CANVAS RENDERING */
 
   renderCanvas(): void {
     this.interaction.groups.forEach((g: Group) => {
@@ -84,6 +90,8 @@ export class InteractionCanvasComponent implements OnInit {
 
     this.contextMenuComponent = this.container.createComponent(ContextMenuComponent).instance;
   }
+
+  /* CANVAS INPUT */
 
   clickCanvas(event: any) {
     if (this.canvasManager.isAddingGroup) {
@@ -102,15 +110,11 @@ export class InteractionCanvasComponent implements OnInit {
     }
   }
 
+  /* CONTEXT MENU */
+
   showContextMenu(): void {
     this.contextMenuHidden = false;
 
-
-    /*
-    const contextMenuComponent = this.container.createComponent(ContextMenuComponent);
-
-    this.components.push(contextMenuComponent);
-    */
     if (this.contextMenuComponent) {
       this.contextMenuComponent.setMenu(this.contextMenu.id, this.contextMenu.type, this.contextMenu.position);
     } else {

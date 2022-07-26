@@ -1,5 +1,5 @@
 import { CdkDragEnd } from '@angular/cdk/drag-drop';
-import { Component, OnInit, ViewChild, ViewContainerRef, ComponentRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Group } from 'src/app/models/group';
 import {MicroInteraction} from 'src/app/models/microInteraction';
 import { Position } from 'src/app/models/position';
@@ -18,29 +18,22 @@ export class GroupComponent implements OnInit {
   y: string = "";
 
   group: Group = new Group();
-  name: string = "";
-
-  @ViewChild("microContainer", { read: ViewContainerRef})
-  microContainer!: ViewContainerRef;
-
-  // Components contained in container
-  microComponents: ComponentRef<any>[] = [];
 
   constructor(
     private canvasManager: CanvasManagerService, 
     private contextMenu: ContextMenuService,
-  ) {
+  ) {}
+
+  ngOnInit(): void {
+  }
+
+  ngViewAfterInit(): void {
     this.canvasManager.getUpdatedInteraction.subscribe((interaction) => {
       let g = interaction.getGroup(this.group.id);
       if (g) {
         this.group = g;
-        this.renderMicros();
       }
     });
-  }
-
-  ngOnInit(): void {
-
   }
 
   setGroup(g: Group) {
@@ -51,8 +44,7 @@ export class GroupComponent implements OnInit {
   }
 
   updateName(event: any) {
-    this.name = event.target.value;
-    this.group.name = this.name;
+    this.group.name = event.target.value;
     this.canvasManager.updateGroup(this.group);
   }
 
@@ -65,30 +57,22 @@ export class GroupComponent implements OnInit {
     this.contextMenu.displayContextMenu(this.group.id, 'group', new Position(xNum + event.offsetX, yNum + event.offsetY));
   }
 
-  renderMicros() {
-    this.group.micros.forEach((m: MicroInteraction) => {
-      const microComponent = this.microContainer.createComponent(/*MicroComponent*/GroupComponent);
-      microComponent.setMicro(m);
-    });
-  }
-
   allowDrop(event: any) {
     event.preventDefault();
   }
 
   droppedGroup(event: CdkDragEnd) {
     let rect = event.source.getRootElement().getBoundingClientRect();
-    this.group.x = rect.x - this.canvasManager.canvasOffsetX;
-    this.group.y = rect.y - this.canvasManager.canvasOffsetY;
+    this.group.x = rect.x - this.canvasManager.canvasOffset.x;
+    this.group.y = rect.y - this.canvasManager.canvasOffset.y;
     this.canvasManager.updateGroup(this.group);
   }
 
-  dropMicro(event: any) {
-    let microData = JSON.parse(event.dataTransfer.getData("microData"));
-
+  dropMicro() {
     // Add micro to group
-    
-
-    console.log(event);
+    // Might randomly generate id in future, if necessary
+    let id = 1;
+    this.group.micros.push(new MicroInteraction(id, this.canvasManager.currentMicroType));
+    this.canvasManager.updateGroup(this.group);
   }
 }

@@ -1,11 +1,11 @@
 export class ParameterResult<T> {
 
-    paramId: string;
+    paramId: number;
     currResult: T;
     linkTitle: string = "";
     val: string = "";
 
-    constructor(id: string, res: T) {
+    constructor(id: number, res: T) {
         this.paramId = id;
         this.currResult = res;
     }
