@@ -16,7 +16,7 @@ export class Interaction {
     trackedMicroTypes: MicroType[] = [];
     groups: Group[] = [];
     transitions: Transition[] = [];
-    micros: MicroInteraction[] = [];
+    //micros: MicroInteraction[] = [];
 
     constructor(xml: string | null = null) {
         if (xml) {
@@ -61,23 +61,19 @@ export class Interaction {
 
             let name = curGroup.getElementsByTagName("name")[0].textContent;
             //load group
-            this.addGroup(x, y, groupID, isInitial, name!);
+            let g: Group = this.addGroup(x, y, groupID, isInitial, name!);
             let micros = curGroup.getElementsByTagName("micro");
             //load micros
             for (let j = 0; j < micros.length; j++) {
+
                 let curMicro = micros[j];
                 let microName = curMicro.getElementsByTagName("name")[0].textContent;
                 let microId: string | null = curMicro.getAttribute("id");
 
-                if (microId) {
-                  console.log("%d: %s", parseInt(microId), microName);
-                }
-
-                //load template of micro into group
-                let microID = this.addMicroToGroup(groupID, microName!);
-
                 //load saved values of micro into group
                 let parameters = curMicro.getElementsByTagName("parameter");
+                let microParameters: Parameter[] = [];
+
                 for (let k = 0; k < parameters.length; k++) {
                     let curParameter = parameters[k];
                     let curType = curParameter.getAttribute("type");
@@ -103,6 +99,11 @@ export class Interaction {
                         let paramVariable = curParameter.textContent;
                         //IC.interaction.setMicroParamValByVariable(microID, paramVariable, curVal);
                     }
+                }
+
+                //load template of micro into group
+                if (microId) {
+                  g.micros.push(new MicroInteraction(parseInt(microId), microName!, microParameters));
                 }
             }
         }
@@ -132,29 +133,6 @@ export class Interaction {
       }
     }
 
-    getMicro(id: number): MicroInteraction | null {
-        for (let i = 0; i < this.micros.length; i++) {
-            if (this.micros[i].id == id) {
-                return this.micros[i];
-            }
-        }
-
-        console.log("ERROR: Model couldnt find getMicro with id " + id);
-        return null;
-    }
-
-    getMicroParameters(id: number): Parameter[] {
-        let ret: MicroInteraction | null = this.getMicro(id);
-
-        return ret != null ? ret.parameters : [];
-    }
-
-    setMicroResults(id: number, results: ParameterResult<any>[]) {
-        let micro: MicroInteraction | null = this.getMicro(id);
-        if (micro) {
-            micro.updateResults(results);
-        }
-    }
 
     exportModelToJSON() {
         return (JSON.parse(JSON.stringify(this)));
@@ -255,26 +233,6 @@ export class Interaction {
         return this.violations;
     }
 
-    setMicroParamValByVariable(microID: number, variableName: string, val: any) {
-        let micro = this.getMicro(microID);
-        if (!micro) { return; }
-
-        let paramID: number = -1;
-        micro.parameters.forEach(param => {
-            if (param.variableName == variableName) {
-                paramID = param.id;
-            }
-        })
-        if (paramID == null) {
-            console.log("Error, unable to set micro param val by variable, Variable name " + variableName + " not found");
-            return;
-        }
-        let paramRes = micro.parameterResults.find(x => x.paramId == paramID);
-        if (paramRes) {
-            paramRes.currResult = val;
-        }
-
-    }
 
     loadMicroTypes() {
         //TODO access serverlet to get all microinteraction types from server and store them as micro types, for now these are the hard coded versions
@@ -370,9 +328,12 @@ export class Interaction {
 
     removeGroup(id: number) {
         let removeGroup = this.getGroup(id);
+
+        if (!removeGroup) { return; }
+
         for (let i = 0; i < this.groups.length; i++) {
             if (this.groups[i].id == id) {
-                if (this.groups[i].isInitialGroup == true) {
+                if (this.groups[i].isInitialGroup == true && this.groups.length != 1) {
                     console.log("cannot remove initial group, no change to database TODO make this an error message");
                     return false;
                 }
@@ -391,16 +352,7 @@ export class Interaction {
             this.removeTransition(toRemove[i]);
         }
 
-        if (!removeGroup) { return; }
 
-        let microsToRemove = removeGroup.getMicros();
-        for (let i = 0; i < this.micros.length; i++) {
-            for (let j = 0; j < microsToRemove.length; j++) {
-                if (this.micros[i].id == microsToRemove[j].id) {
-                    this.micros.splice(i, 1);
-                }
-            }
-        }
         return true;
     }
 
@@ -435,6 +387,7 @@ export class Interaction {
         return null;
     }
 
+    /*
     addMicroToGroup(id: number, microTypeName: string) {
         let group = this.getGroup(id);
         let microType = this.getMicroTypeByName(microTypeName);
@@ -461,6 +414,7 @@ export class Interaction {
 
         group.removeMicro(microid);
     }
+    */
 
     addTransition(group1id: number, group2id: number) {
         let group1 = this.getGroup(group1id);

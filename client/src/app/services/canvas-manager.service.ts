@@ -14,8 +14,6 @@ export class CanvasManagerService {
   addingTransition: number = 0;
   currentMicroType: string = '';
 
-  groups: Group[] = [];
-
   @Output() updateBtnState: EventEmitter<any> = new EventEmitter();
   @Output() getUpdatedInteraction: EventEmitter<Interaction> = new EventEmitter<Interaction>();
 
@@ -42,13 +40,21 @@ export class CanvasManagerService {
   removeGroup(groupId: number):void {
     this.interaction.removeGroup(groupId);
 
-    this.getUpdatedInteraction.emit(this.interaction);
+    if (this.interaction.groups.length == 0) {
+      this.interaction.groupIdCounter = 0;
+    }
 
-    console.log(this.interaction);
+    this.getUpdatedInteraction.emit(this.interaction);
   }
 
   removeMicro(groupId: number, microId: number):void {
-    this.interaction.removeMicroFromGroup(groupId, microId);
+    const g: Group | undefined = this.interaction.getGroup(groupId);
+    
+    if (!g) {
+      return;
+    }
+
+    g.removeMicro(microId);
 
     this.getUpdatedInteraction.emit(this.interaction);
 
