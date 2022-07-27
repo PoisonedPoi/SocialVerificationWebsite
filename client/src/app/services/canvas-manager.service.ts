@@ -3,6 +3,8 @@ import { Group } from '../models/group';
 import { Interaction } from '../models/interaction';
 import { Position } from '../models/position';
 import { MicroInteraction } from '../models/microInteraction';
+import {Parameter} from '../models/parameter';
+import {MicroType} from '../models/microType';
 
 @Injectable({
   providedIn: 'root'
@@ -57,7 +59,14 @@ export class CanvasManagerService {
       return null;
     }
 
-    let m: MicroInteraction = new MicroInteraction(g.microIdCounter++, this.currentMicroType);
+    let params: Parameter[] = [];
+    let mt: MicroType | undefined = this.interaction.trackedMicroTypes.find((m: MicroType) => m.type === this.currentMicroType);
+
+    if (mt) {
+      params = mt.parameters;
+    }
+
+    let m: MicroInteraction = new MicroInteraction(g.microIdCounter++, this.currentMicroType, params);
 
     g.micros.push(m);
 
