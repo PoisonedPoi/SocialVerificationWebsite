@@ -14,7 +14,7 @@ import {ParameterManagerService} from 'src/app/services/parameter-manager.servic
 })
 export class MicroComponent implements OnInit {
 
-  @Input() micro: MicroInteraction = new MicroInteraction(1, 'Greeter');
+  @Input() micro: MicroInteraction = new MicroInteraction(1, 1, 'Greeter');
   @Input() groupId: number = -1;
 
   @ViewChild('microEl') el!: ElementRef;

@@ -5,6 +5,7 @@ import { Position } from '../models/position';
 import { MicroInteraction } from '../models/microInteraction';
 import {Parameter} from '../models/parameter';
 import {MicroType} from '../models/microType';
+import {ParameterResult} from '../models/parameterResult';
 
 @Injectable({
   providedIn: 'root'
@@ -24,6 +25,8 @@ export class CanvasManagerService {
 
   constructor() {}
 
+  /* Group related CRUD functions */
+
   addGroup(x: number, y: number): Group {
 
     let isInitial: boolean = this.interaction.groupIdCounter == 0 ? true : false;
@@ -40,6 +43,25 @@ export class CanvasManagerService {
     return g;
   }
 
+  getGroupById(id: number): Group | undefined {
+    let g: Group | undefined = this.interaction.groups.find((x: Group) => x.id === id);
+
+    if (g) {
+      return g;
+    }
+    return undefined;
+  }
+
+  updateGroup(group: Group) {
+    let gs: Group[] = this.interaction.groups.filter((x: Group) => x.id != group.id);
+
+    gs.push(group);
+
+    this.interaction.groups = gs;
+
+    this.getUpdatedInteraction.emit(this.interaction);
+  }
+
   removeGroup(groupId: number):void {
     this.interaction.removeGroup(groupId);
 
@@ -49,6 +71,8 @@ export class CanvasManagerService {
 
     this.getUpdatedInteraction.emit(this.interaction);
   }
+  
+  /* Micro related CRUD functions */
 
   addMicroToGroup(groupId: number): MicroInteraction  | null {
 
@@ -66,7 +90,7 @@ export class CanvasManagerService {
       params = mt.parameters;
     }
 
-    let m: MicroInteraction = new MicroInteraction(g.microIdCounter++, this.currentMicroType, params);
+    let m: MicroInteraction = new MicroInteraction(g.microIdCounter++, g.id, this.currentMicroType, params);
 
     g.micros.push(m);
 
@@ -88,7 +112,15 @@ export class CanvasManagerService {
     this.getUpdatedInteraction.emit(this.interaction);
   }
 
+  /* Parameter related CRUD functions */
+  
+  updateParams(groupId: number, microId: number, paramRes: ParameterResult<any>[]) {
+
+  }
+
+
   /* State management for view reflection */
+
   setAddingGroup(val: boolean) {
     this.isAddingGroup = val;
     this.addingTransition = 0;
@@ -103,25 +135,7 @@ export class CanvasManagerService {
     this.updateBtnState.emit();
   }
 
-  
-  getGroupById(id: number): Group | undefined {
-    let g: Group | undefined = this.interaction.groups.find((x: Group) => x.id === id);
-
-    if (g) {
-      return g;
-    }
-    return undefined;
-  }
-
-  updateGroup(group: Group) {
-    let gs: Group[] = this.interaction.groups.filter((x: Group) => x.id != group.id);
-
-    gs.push(group);
-
-    this.interaction.groups = gs;
-
-    this.getUpdatedInteraction.emit(this.interaction);
-  }
+  /* Loading from file on disk */
 
   async loadInteractionFromXMLFile(file: File) {
     let t: string = await file.text();
@@ -131,6 +145,7 @@ export class CanvasManagerService {
     this.getUpdatedInteraction.emit(this.interaction);
   }
 
+  /* Save and load interaction from local storage */
 
   loadInteractionFromLocal(): void {
     let xmlString = localStorage.getItem('interactionXML');
@@ -140,12 +155,14 @@ export class CanvasManagerService {
     this.getUpdatedInteraction.emit(this.interaction);
   }
 
-  /* Save interaction to XML */
+
   saveInteractionToLocal() {
     let xmlString = this.interaction.exportModelToXML();
 
     localStorage.setItem('interactionXML', xmlString);
   }
+
+  /* New interaction */
 
   clearCanvas() {
     this.interaction = new Interaction(null);

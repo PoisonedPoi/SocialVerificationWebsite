@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MicroInteraction } from 'src/app/models/microInteraction';
+import {ParameterResult} from 'src/app/models/parameterResult';
+import {CanvasManagerService} from 'src/app/services/canvas-manager.service';
 import {ParameterManagerService} from 'src/app/services/parameter-manager.service';
 
 @Component({
@@ -10,8 +12,9 @@ import {ParameterManagerService} from 'src/app/services/parameter-manager.servic
 export class InteractionOptionsComponent implements OnInit {
 
   micro: MicroInteraction | null = null;
+  paramRes: ParameterResult<any>[] = [];
 
-  constructor(private parameterManager: ParameterManagerService) { }
+  constructor(private parameterManager: ParameterManagerService, private canvasManager: CanvasManagerService) { }
 
   ngOnInit(): void {
     this.parameterManager.getUpdatedMicro.subscribe((m: MicroInteraction) => {
@@ -21,6 +24,10 @@ export class InteractionOptionsComponent implements OnInit {
 
   saveOptions() {
     console.log("Save params");
+
+    if (this.micro) {
+      this.canvasManager.updateParams(this.micro.groupId, this.micro.id, this.paramRes);
+    }
   }
 
   discardOptions() {

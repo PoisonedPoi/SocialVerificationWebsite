@@ -8,7 +8,6 @@ import {Parameter} from '../models/parameter';
 export class ParameterManagerService {
 
   currentParameter: Parameter | null = null;
-  //currentMicro: MicroInteraction | null = null;
 
   @Output() getUpdatedMicro: EventEmitter<MicroInteraction> = new EventEmitter();
 

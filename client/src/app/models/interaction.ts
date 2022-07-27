@@ -72,14 +72,14 @@ export class Interaction {
 
                 //load saved values of micro into group
                 let parameters = curMicro.getElementsByTagName("parameter");
-                let microParameters: Parameter[] = [];
 
                 // These are the parameter results
                 // We should be able to set the parameters just by knowing the micro
+                let paramRes: ParameterResult<any>[] = [];
+
                 for (let k = 0; k < parameters.length; k++) {
 
                   // Setup parameters
-                  
                   let curParameter = parameters[k];
                   let curType = curParameter.getAttribute("type");
 
@@ -98,23 +98,27 @@ export class Interaction {
                           }
                           arrayResults.push({ val: itemVal, linkTitle: itemLink });
                       }
+                      paramRes.push(new ParameterResult<any>(k, arrayResults));
                       //IC.interaction.setMicroParamValByVariable(microID, arrayVariable, arrayResults);
 
                   } else {
                       let curVal = curParameter.getAttribute("val");
                       let paramVariable = curParameter.textContent;
+                      paramRes.push(new ParameterResult<any>(k, curVal));
                       //IC.interaction.setMicroParamValByVariable(microID, paramVariable, curVal);
                   }
                 }
 
                 //load template of micro into group
+                let microParameters: Parameter[] = [];
+
                 let curMicroType: MicroType | undefined = this.trackedMicroTypes.find((m: MicroType) => m.type === microName);
 
                 if (curMicroType) {
                   microParameters = curMicroType.parameters;
                 }
 
-                g.micros.push(new MicroInteraction(j, microName!, microParameters));
+                g.micros.push(new MicroInteraction(j, g.id, microName!, microParameters, paramRes));
 
                 g.microIdCounter = micros.length;
             }
@@ -143,6 +147,7 @@ export class Interaction {
 
         this.groupIdCounter = this.groups.length;
       }
+
     }
 
 

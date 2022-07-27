@@ -15,7 +15,7 @@
   <div *ngIf="param.type === 'array'">
     <label>Responses the robot can recognize</label>
     <input type="text" class="w-full border-2" [(ngModel)]="response" />
-    <label>Corresponding human state</label>
+    <label class="mt-1 mr-2">Corresponding human state</label>
     <select class="p-1 mb-2" [(ngModel)]="humanState">
       <option value="humanReady">Human Ready</option>
       <option value="humanBusy">Human Busy</option>
