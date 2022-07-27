@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { FormsModule } from '@angular/forms';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -19,6 +20,7 @@ import { TransitionComponent } from './components/designer/interaction-canvas/tr
 import { ContextMenuComponent } from './components/designer/interaction-canvas/context-menu/context-menu.component';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { MicroComponent } from './components/designer/interaction-canvas/group/micro/micro.component';
+import { ParameterOptionsComponent } from './components/designer/interaction-options/parameter-options/parameter-options.component';
 
 @NgModule({
   declarations: [
@@ -37,12 +39,14 @@ import { MicroComponent } from './components/designer/interaction-canvas/group/m
     TransitionComponent,
     ContextMenuComponent,
     MicroComponent,
+    ParameterOptionsComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     DragDropModule,
-    NoopAnimationsModule
+    NoopAnimationsModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

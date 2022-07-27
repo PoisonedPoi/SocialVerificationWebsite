@@ -9,13 +9,13 @@ import {ParameterManagerService} from 'src/app/services/parameter-manager.servic
 })
 export class InteractionOptionsComponent implements OnInit {
 
-  currentMicro: MicroInteraction | null = null;
+  micro: MicroInteraction | null = null;
 
   constructor(private parameterManager: ParameterManagerService) { }
 
   ngOnInit(): void {
     this.parameterManager.getUpdatedMicro.subscribe((m: MicroInteraction) => {
-      this.currentMicro = m;
+      this.micro = m;
     });
   }
 

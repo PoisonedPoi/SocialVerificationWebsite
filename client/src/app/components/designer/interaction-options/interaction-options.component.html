@@ -1,11 +1,11 @@
-<div *ngIf="currentMicro">
+<div *ngIf="micro">
   <div class="text-center border-b-2 border-black">
-    {{ currentMicro.type }} Options
+    {{ micro.type }} Options
   </div>
-  <div *ngFor="let param of currentMicro.parameters">
-    {{ param.title }}
+  <div *ngFor="let param of micro.parameters">
+    <app-parameter-options [microType]="micro.type" [param]="param"></app-parameter-options>
   </div>
-  <div *ngIf="currentMicro.parameters.length == 0; else save" class="p-2">
+  <div *ngIf="micro.parameters.length == 0; else save" class="p-2">
     No options for this micro-interaction
   </div>
   <ng-template #save>
