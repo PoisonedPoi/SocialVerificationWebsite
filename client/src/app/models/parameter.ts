@@ -7,11 +7,11 @@ export class Parameter {
     type: string // one of these: "str", "bool", "array","int" - (these are sent to back end as parameter type)
 
     constructor(
-        id: number, 
-        title: string,
-        variableName: string, 
-        description: string, 
-        type: string
+        id: number = -1, 
+        title: string = '',
+        variableName: string = '', 
+        description: string = '', 
+        type: string = ''
     ) {
         this.id = id;
         this.title = title;

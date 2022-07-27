@@ -73,6 +73,10 @@ export class ActionsBarComponent implements OnInit {
     this.canvasManager.clearCanvas();
   }
 
+  saveInteractionToLocal() {
+    this.canvasManager.saveInteractionToLocal();
+  }
+
   /* Update view functions */
   updateButtonColors() {
     if (this.canvasManager.isAddingGroup) {

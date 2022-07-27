@@ -3,6 +3,7 @@ import {MicroInteraction} from 'src/app/models/microInteraction';
 import {ContextMenuService} from 'src/app/services/context-menu.service';
 import { Position } from 'src/app/models/position';
 import {CanvasManagerService} from 'src/app/services/canvas-manager.service';
+import {ParameterManagerService} from 'src/app/services/parameter-manager.service';
 
 
 @Component({
@@ -18,9 +19,19 @@ export class MicroComponent implements OnInit {
 
   @ViewChild('microEl') el!: ElementRef;
 
-  constructor(private contextMenu: ContextMenuService, private canvasManager: CanvasManagerService) { }
+  constructor(
+    private contextMenu: ContextMenuService,
+    private canvasManager: CanvasManagerService,
+    private parameterManager: ParameterManagerService
+  ) { }
 
   ngOnInit(): void {
+  }
+
+  selectMicro(event: any) {
+    event.preventDefault();
+
+    this.parameterManager.getUpdatedMicro.emit(this.micro);
   }
 
   showContextMenu(event: any) {

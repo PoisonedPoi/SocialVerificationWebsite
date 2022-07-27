@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { MicroInteraction } from 'src/app/models/microInteraction';
+import {ParameterManagerService} from 'src/app/services/parameter-manager.service';
 
 @Component({
   selector: 'app-interaction-options',
@@ -7,9 +9,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class InteractionOptionsComponent implements OnInit {
 
-  constructor() { }
+  currentMicro: MicroInteraction | null = null;
+
+  constructor(private parameterManager: ParameterManagerService) { }
 
   ngOnInit(): void {
+    this.parameterManager.getUpdatedMicro.subscribe((m: MicroInteraction) => {
+      this.currentMicro = m;
+    });
   }
 
 }

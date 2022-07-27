@@ -69,43 +69,52 @@ export class Interaction {
 
                 let curMicro = micros[j];
                 let microName = curMicro.getElementsByTagName("name")[0].textContent;
-                let microId: string | null = curMicro.getAttribute("id");
 
                 //load saved values of micro into group
                 let parameters = curMicro.getElementsByTagName("parameter");
                 let microParameters: Parameter[] = [];
 
+                // These are the parameter results
+                // We should be able to set the parameters just by knowing the micro
                 for (let k = 0; k < parameters.length; k++) {
-                    let curParameter = parameters[k];
-                    let curType = curParameter.getAttribute("type");
-                    if (curType == "array") {
-                        let arrayItems = curParameter.getElementsByTagName('item');
-                        let arrayVariable = curParameter.getElementsByTagName('name')[0].textContent;
-                        let arrayResults = [];
-                        for (let m = 0; m < arrayItems.length; m++) {
-                            let curItem = arrayItems[m];
-                            let itemVal = curItem.getAttribute('val');
-                            let itemLink = curItem.getAttribute('link');
-                            if (itemLink == 'human_ready') {
-                                itemLink = 'Human Ready';
-                            } else if (itemLink == 'human_ignore') {
-                                itemLink = 'Human Suspended';
-                            }
-                            arrayResults.push({ val: itemVal, linkTitle: itemLink });
-                        }
-                        //IC.interaction.setMicroParamValByVariable(microID, arrayVariable, arrayResults);
 
-                    } else {
-                        let curVal = curParameter.getAttribute("val");
-                        let paramVariable = curParameter.textContent;
-                        //IC.interaction.setMicroParamValByVariable(microID, paramVariable, curVal);
-                    }
+                  // Setup parameters
+                  
+                  let curParameter = parameters[k];
+                  let curType = curParameter.getAttribute("type");
+
+                  if (curType == "array") {
+                      let arrayItems = curParameter.getElementsByTagName('item');
+                      let arrayVariable = curParameter.getElementsByTagName('name')[0].textContent;
+                      let arrayResults = [];
+                      for (let m = 0; m < arrayItems.length; m++) {
+                          let curItem = arrayItems[m];
+                          let itemVal = curItem.getAttribute('val');
+                          let itemLink = curItem.getAttribute('link');
+                          if (itemLink == 'human_ready') {
+                              itemLink = 'Human Ready';
+                          } else if (itemLink == 'human_ignore') {
+                              itemLink = 'Human Suspended';
+                          }
+                          arrayResults.push({ val: itemVal, linkTitle: itemLink });
+                      }
+                      //IC.interaction.setMicroParamValByVariable(microID, arrayVariable, arrayResults);
+
+                  } else {
+                      let curVal = curParameter.getAttribute("val");
+                      let paramVariable = curParameter.textContent;
+                      //IC.interaction.setMicroParamValByVariable(microID, paramVariable, curVal);
+                  }
                 }
 
                 //load template of micro into group
-                if (microId) {
-                  g.micros.push(new MicroInteraction(parseInt(microId), microName!, microParameters));
+                let curMicroType: MicroType | undefined = this.trackedMicroTypes.find((m: MicroType) => m.type === microName);
+
+                if (curMicroType) {
+                  microParameters = curMicroType.parameters;
                 }
+
+                g.micros.push(new MicroInteraction(j, microName!, microParameters));
 
                 g.microIdCounter = micros.length;
             }
@@ -155,6 +164,9 @@ export class Interaction {
             group.micros.forEach((micro: MicroInteraction) => {
                 xmlString += '<micro id="' + micro.id + '">';
                 xmlString += '<name>' + micro.type + '</name>';
+
+                console.log(micro);
+
                 micro.parameters.forEach(parameter => {
                     if (parameter.type == "array") { //unique case
                         xmlString += '<parameter type="array">';
