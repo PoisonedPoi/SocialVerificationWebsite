@@ -19,4 +19,11 @@ export class InteractionOptionsComponent implements OnInit {
     });
   }
 
+  saveOptions() {
+    console.log("Save params");
+  }
+
+  discardOptions() {
+    console.log("Discard params");
+  }
 }
