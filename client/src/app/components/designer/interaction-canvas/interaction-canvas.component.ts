@@ -14,10 +14,8 @@ import { GroupComponent } from './group/group.component';
 })
 export class InteractionCanvasComponent implements OnInit {
 
-  offsetX: number = 5;
-  offsetY: number = 5;
-
   position: Position = new Position();
+  scrollPosition: Position = new Position();
 
   interaction: Interaction = new Interaction();
 
@@ -27,6 +25,8 @@ export class InteractionCanvasComponent implements OnInit {
 
   @ViewChild("canvas", { read: ViewContainerRef})
   container!: ViewContainerRef;
+
+  @ViewChild("canvasContainer") canvasContainer!: ElementRef;
 
   // Components contained in container
   components: ComponentRef<any>[] = [];
@@ -58,6 +58,7 @@ export class InteractionCanvasComponent implements OnInit {
       // Set canvas offset in canvasManager OnLoad
       // TODO Update canvas offsets when user changes the window size
       this.canvasManager.canvasOffset = this.position;
+      this.canvasManager.canvasScrollOffset = this.scrollPosition;
     });
 
     // When interaction changes, re-render the canvas
@@ -91,12 +92,17 @@ export class InteractionCanvasComponent implements OnInit {
     this.contextMenuComponent = this.container.createComponent(ContextMenuComponent).instance;
   }
 
+  updateScrollOffset(event: any) {
+    this.scrollPosition.x = event.target.scrollLeft;
+    this.scrollPosition.y = event.target.scrollTop;
+  }
+
   /* CANVAS INPUT */
 
   clickCanvas(event: any) {
     if (this.canvasManager.isAddingGroup) {
       // Add group model to current interaction
-      this.canvasManager.addGroup(event.offsetX, event.offsetY);
+      this.canvasManager.addGroup(event.offsetX - this.scrollPosition.x, event.offsetY - this.scrollPosition.y);
 
       this.canvasManager.setAddingGroup(false);
     } else if (this.canvasManager.addingTransition == 1) {

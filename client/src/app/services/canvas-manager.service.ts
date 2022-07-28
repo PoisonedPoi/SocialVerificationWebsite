@@ -22,6 +22,7 @@ export class CanvasManagerService {
   @Output() getUpdatedInteraction: EventEmitter<Interaction> = new EventEmitter<Interaction>();
 
   canvasOffset: Position = new Position(0, 0);
+  canvasScrollOffset: Position = new Position(0, 0);
 
   constructor() {}
 
@@ -32,7 +33,7 @@ export class CanvasManagerService {
     let isInitial: boolean = this.interaction.groupIdCounter == 0 ? true : false;
     let name: string = 'untitled' + this.interaction.groupIdCounter;
 
-    let g = new Group(isInitial, this.interaction.groupIdCounter, name, x, y);
+    let g = new Group(isInitial, this.interaction.groupIdCounter, name, x + this.canvasScrollOffset.x, y + this.canvasScrollOffset.y);
 
     this.interaction.groupIdCounter++;
 
