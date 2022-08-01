@@ -88,74 +88,7 @@ export class Interaction {
 
         //add groups
         JSONModel.groups.forEach((group: Group) => {
-            xmlString += '<group id="' + group.id + '" init="' + group.isInitialGroup + '" x="' + group.x + '" y="' + group.y + '">';
-            xmlString += '<name>' + group.name + '</name>';
-            group.micros.forEach((micro: MicroInteraction) => {
-
-                xmlString += '<micro id="' + micro.id + '">';
-                xmlString += '<name>' + micro.type + '</name>';
-
-                console.log(micro);
-
-                micro.parameters.forEach(parameter => {
-
-                  let paramRes = micro.parameterResults.find((x: ParameterResult) => x.id == parameter.id)
-
-                  // Guards to catch parse errors
-                  if (!paramRes) {
-                    console.log("ERROR: something went wrong!");
-                    xmlString += '</parameter>'
-                    return;
-                  }
-
-                  if (!paramRes.boolResult ||
-                      !paramRes.intResult ||
-                      !paramRes.strResult ||
-                      !paramRes.arrayResult
-                  ) {
-                    console.log("ERROR: empty parameter");
-                    xmlString += '</parameter>'
-                    return;
-                  }
-                  
-                  // Clean this up; maybe with a bigger switch statement
-                  if (parameter.type == "array") { //unique case
-                      xmlString += '<parameter type="array">';
-                      xmlString += '<name>answers robot can recognize</name>'
-
-                      paramRes.arrayResult.forEach((res: any) => {
-                          let link = "";
-                          if (res.linkTitle == "Human Ready") {
-                              link = "human_ready";  //these are the variables needed in the back end
-                          } else if (res.linkTitle == "Human Suspended") {
-                              link = "human_ignore";
-                          } else {
-                              console.log("ERROR: interaction.exportModelToXML: linkTitle not recognized when making model");
-                          }
-                          xmlString += '<item type="string" val="' + res.val + '" link="' + link + '"/>';
-                      });
-                      xmlString += '</parameter>'
-                  } else { //normal case
-                    xmlString += '<parameter type="' + parameter.type + '"';
-
-                    switch (parameter.type) {
-                      case 'bool': 
-                        xmlString += ' val="' + paramRes.boolResult + '">' ;
-                        break;
-                      case 'int':
-                        xmlString += ' val="' + paramRes.intResult + '">';
-                        break;
-                      case 'str':
-                        xmlString += ' val="' + paramRes.strResult + '">';
-                        break;
-                    }
-
-                    xmlString += parameter.variableName + '</parameter>';
-                  }
-                });
-                xmlString += '</micro>';
-            });
-            xmlString += '</group>';
+          xmlString += group.getGroupInXML();
         });
 
         /*

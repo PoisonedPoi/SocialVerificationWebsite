@@ -52,6 +52,21 @@ export class Group {
       }
     }
 
+    /* Export group to XML */
+
+    getGroupInXML(): string {
+      let xmlString: string = '';
+      xmlString += '<group id="' + this.id + '" init="' + this.isInitialGroup + '" x="' + this.x + '" y="' + this.y + '">';
+      xmlString += '<name>' + this.name + '</name>';
+
+      this.micros.forEach((micro: MicroInteraction) => {
+        xmlString += micro.getMicroFromXML();
+      });
+
+      xmlString += '</group>';
+
+      return xmlString;
+    }
     
     /* Position */
 

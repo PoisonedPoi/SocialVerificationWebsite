@@ -1,3 +1,5 @@
+import {Parameter} from "./parameter";
+
 export class ParameterResult {
 
   id: number;
@@ -26,7 +28,7 @@ export class ParameterResult {
   }
 
   setParameterResultFromXML(el: Element, id: number) {
-    
+
     this.id = id;
 
     this.type = el.getAttribute("type");
@@ -46,7 +48,7 @@ export class ParameterResult {
       }
     } else if (this.type == "array") {
       let arrayItems = el.getElementsByTagName('item');
-      let arrayVariable = el.getElementsByTagName('name')[0].textContent;
+      //let arrayVariable = el.getElementsByTagName('name')[0].textContent;
       let arrayResults = [];
 
       for (let m = 0; m < arrayItems.length; m++) {
@@ -63,5 +65,62 @@ export class ParameterResult {
 
       this.arrayResult = arrayResults;
     }
+  }
+
+  getParameterResultInXML(parameter: Parameter): string {
+    let xmlString: string = '';
+
+    // Guards to catch parse errors
+    if (!this) {
+      console.log("ERROR: something went wrong!");
+      xmlString += '<parameter></parameter>'
+      return xmlString;
+    }
+
+    if (!this.boolResult ||
+        !this.intResult ||
+        !this.strResult ||
+        !this.arrayResult
+    ) {
+      console.log("ERROR: empty parameter");
+      xmlString += '<parameter></parameter>'
+      return xmlString;
+    }
+    
+    // Clean this up; maybe with a bigger switch statement
+    if (parameter.type == "array") { //unique case
+        xmlString += '<parameter type="array">';
+        xmlString += '<name>answers robot can recognize</name>'
+
+        this.arrayResult.forEach((res: any) => {
+            let link = "";
+            if (res.linkTitle == "Human Ready") {
+                link = "human_ready";  //these are the variables needed in the back end
+            } else if (res.linkTitle == "Human Suspended") {
+                link = "human_ignore";
+            } else {
+                console.log("ERROR: interaction.exportModelToXML: linkTitle not recognized when making model");
+            }
+            xmlString += '<item type="string" val="' + res.val + '" link="' + link + '"/>';
+        });
+        xmlString += '</parameter>'
+    } else { //normal case
+      xmlString += '<parameter type="' + this.type + '"';
+
+      switch (parameter.type) {
+        case 'bool': 
+          xmlString += ' val="' + this.boolResult + '">' ;
+          break;
+        case 'int':
+          xmlString += ' val="' + this.intResult + '">';
+          break;
+        case 'str':
+          xmlString += ' val="' + this.strResult + '">';
+          break;
+      }
+
+      xmlString += parameter.variableName + '</parameter>';
+    }
+    return xmlString;
   }
 }

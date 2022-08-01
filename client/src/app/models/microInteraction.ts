@@ -60,6 +60,31 @@ export class MicroInteraction {
       }
     }
 
+    getMicroFromXML(): string {
+      let trackedMicroTypes: MicroType[] = getTrackedMicroTypes();
+
+      let xmlString: string = '';
+
+      xmlString += '<micro id="' + this.id + '">';
+      xmlString += '<name>' + this.type + '</name>';
+
+      console.log(this);
+
+      let microType: MicroType | undefined = trackedMicroTypes.find(mt => mt.type == this.type);
+
+      // Have to get a way to get both param and paramRes synched up for access
+
+      this.parameterResults.forEach((paramRes: ParameterResult) => {
+
+        //let param: Parameter = 
+        //xmlString += paramRes.getParameterResultInXML();
+      });
+
+      xmlString += '</micro>';
+
+      return xmlString;
+    }
+
     updateResults(results: ParameterResult[]) {
         this.parameterResults = results;
     }
