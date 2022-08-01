@@ -1,6 +1,7 @@
 import { MicroInteraction } from "./microInteraction";
 import { Parameter } from "./parameter";
 import { ParameterResult } from "./parameterResult";
+import { MicroType } from "./microType";
 
 export class Group {
 
@@ -26,6 +27,82 @@ export class Group {
         this.y = y;
         this.micros = [];
     }
+
+    /* Create group from XML element */
+
+    setGroupFromXML(el: Element, id: number) {
+      // Set group properties
+      // groupId is based on a counter so the index of groups is the ID
+
+      let isInitial: boolean = el.getAttribute("init") == 'true';
+
+      let x = parseInt(el.getAttribute("x")!);
+      let y = parseInt(el.getAttribute("y")!);
+
+      let name = el.getElementsByTagName("name")[0].textContent;
+
+      let micros = el.getElementsByTagName("micro");
+      let groupMicros: MicroInteraction[] = [];
+
+      //load micros
+      for (let mid = 0; mid < micros.length; mid++) {
+
+        // Set micro properties
+        // Same as groups microIds are based off a counter so index of micros is the ID
+
+        let type = micros[mid].getElementsByTagName("name")[0].textContent;
+
+        //load saved values of micro into group
+        let parameterResults = micros[mid].getElementsByTagName("parameter");
+
+        // These are the parameter results
+        let microParameterResults: ParameterResult<any>[] = [];
+
+        for (let pid = 0; pid < parameterResults.length; pid++) {
+
+          // Setup parameters
+          let curParameter = parameterResults[pid];
+          let curType = curParameter.getAttribute("type");
+
+          if (curType == "array") {
+              let arrayItems = curParameter.getElementsByTagName('item');
+              let arrayVariable = curParameter.getElementsByTagName('name')[0].textContent;
+              let arrayResults = [];
+              for (let m = 0; m < arrayItems.length; m++) {
+                  let curItem = arrayItems[m];
+                  let itemVal = curItem.getAttribute('val');
+                  let itemLink = curItem.getAttribute('link');
+                  if (itemLink == 'human_ready') {
+                      itemLink = 'Human Ready';
+                  } else if (itemLink == 'human_ignore') {
+                      itemLink = 'Human Suspended';
+                  }
+                  arrayResults.push({ val: itemVal, linkTitle: itemLink });
+              }
+              microParameterResults.push(new ParameterResult<any>(pid, arrayResults));
+              //IC.interaction.setMicroParamValByVariable(microID, arrayVariable, arrayResults);
+
+          } else {
+              let curVal = curParameter.getAttribute("val");
+              let paramVariable = curParameter.textContent;
+              microParameterResults.push(new ParameterResult<any>(pid, curVal));
+              //IC.interaction.setMicroParamValByVariable(microID, paramVariable, curVal);
+          }
+        }
+
+        //load template of micro into group
+        let microParameters: Parameter[] = [];
+
+        let curMicroType: MicroType | undefined = this.trackedMicroTypes.find((m: MicroType) => m.type === type);
+
+        if (curMicroType) {
+          microParameters = curMicroType.parameters;
+        }
+
+        groupMicros.push(new MicroInteraction(mid, id, type!, microParameters, microParameterResults));
+      }
+    }
+
     
     /* Position */
 
@@ -94,7 +171,4 @@ export class Group {
         }
 
     }
-
-
-
 }
