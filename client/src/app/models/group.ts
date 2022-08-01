@@ -1,13 +1,11 @@
 import { MicroInteraction } from "./microInteraction";
 import { Parameter } from "./parameter";
-import { ParameterResult } from "./parameterResult";
-import { MicroType } from "./microType";
 
 export class Group {
 
     isInitialGroup: boolean;
     id: number;
-    name: string = "";
+    name: string | null = "";
     x: number; 
     y: number;
     micros: MicroInteraction[] = [];
@@ -31,75 +29,26 @@ export class Group {
     /* Create group from XML element */
 
     setGroupFromXML(el: Element, id: number) {
+
       // Set group properties
-      // groupId is based on a counter so the index of groups is the ID
+      this.id = id;
 
-      let isInitial: boolean = el.getAttribute("init") == 'true';
+      this.isInitialGroup = el.getAttribute("init") == 'true';
 
-      let x = parseInt(el.getAttribute("x")!);
-      let y = parseInt(el.getAttribute("y")!);
+      this.x = parseInt(el.getAttribute("x")!);
+      this.y = parseInt(el.getAttribute("y")!);
 
-      let name = el.getElementsByTagName("name")[0].textContent;
+      this.name = el.getElementsByTagName("name")[0].textContent;
 
+      // Load micros
       let micros = el.getElementsByTagName("micro");
-      let groupMicros: MicroInteraction[] = [];
 
-      //load micros
       for (let mid = 0; mid < micros.length; mid++) {
 
-        // Set micro properties
-        // Same as groups microIds are based off a counter so index of micros is the ID
+        let micro: MicroInteraction = new MicroInteraction();
+        micro.setMircoFromXML(micros[mid], mid);
 
-        let type = micros[mid].getElementsByTagName("name")[0].textContent;
-
-        //load saved values of micro into group
-        let parameterResults = micros[mid].getElementsByTagName("parameter");
-
-        // These are the parameter results
-        let microParameterResults: ParameterResult<any>[] = [];
-
-        for (let pid = 0; pid < parameterResults.length; pid++) {
-
-          // Setup parameters
-          let curParameter = parameterResults[pid];
-          let curType = curParameter.getAttribute("type");
-
-          if (curType == "array") {
-              let arrayItems = curParameter.getElementsByTagName('item');
-              let arrayVariable = curParameter.getElementsByTagName('name')[0].textContent;
-              let arrayResults = [];
-              for (let m = 0; m < arrayItems.length; m++) {
-                  let curItem = arrayItems[m];
-                  let itemVal = curItem.getAttribute('val');
-                  let itemLink = curItem.getAttribute('link');
-                  if (itemLink == 'human_ready') {
-                      itemLink = 'Human Ready';
-                  } else if (itemLink == 'human_ignore') {
-                      itemLink = 'Human Suspended';
-                  }
-                  arrayResults.push({ val: itemVal, linkTitle: itemLink });
-              }
-              microParameterResults.push(new ParameterResult<any>(pid, arrayResults));
-              //IC.interaction.setMicroParamValByVariable(microID, arrayVariable, arrayResults);
-
-          } else {
-              let curVal = curParameter.getAttribute("val");
-              let paramVariable = curParameter.textContent;
-              microParameterResults.push(new ParameterResult<any>(pid, curVal));
-              //IC.interaction.setMicroParamValByVariable(microID, paramVariable, curVal);
-          }
-        }
-
-        //load template of micro into group
-        let microParameters: Parameter[] = [];
-
-        let curMicroType: MicroType | undefined = this.trackedMicroTypes.find((m: MicroType) => m.type === type);
-
-        if (curMicroType) {
-          microParameters = curMicroType.parameters;
-        }
-
-        groupMicros.push(new MicroInteraction(mid, id, type!, microParameters, microParameterResults));
+        this.micros.push(micro);
       }
     }
 
@@ -144,12 +93,14 @@ export class Group {
         return ret != null ? ret.parameters : [];
     }
 
+    /*
     setMicroResults(microId: number, results: ParameterResult<any>[]) {
         let micro: MicroInteraction | null = this.getMicro(microId);
         if (micro) {
             micro.updateResults(results);
         }
     }
+    */
 
     setMicroParamValByVariable(microID: number, variableName: string, val: any) {
         let micro = this.getMicro(microID);
@@ -165,9 +116,17 @@ export class Group {
             console.log("ERROR: unable to set micro param val by variable, Variable name " + variableName + " not found");
             return;
         }
-        let paramRes = micro.parameterResults.find(x => x.paramId == paramID);
+        let paramRes = micro.parameterResults.find(x => x.id == paramID);
         if (paramRes) {
-            paramRes.currResult = val;
+          if (paramRes.type == 'bool') {
+            paramRes.boolResult = val;
+          } else if (paramRes.type == 'int') {
+            paramRes.intResult = val;
+          } else if (paramRes.type == 'str') {
+            paramRes.strResult = val;
+          } else if (paramRes.type == 'array') {
+            paramRes.arrayResult = val;
+          }
         }
 
     }

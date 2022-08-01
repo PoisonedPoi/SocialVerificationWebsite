@@ -1,11 +1,11 @@
 import { Group } from "./group";
 import { MicroInteraction } from "./microInteraction";
 import { MicroType } from "./microType";
-import { Parameter } from "./parameter";
 import { ParameterResult } from "./parameterResult";
 import { State } from "./state";
 import { Transition } from "./transition";
 import { Violation } from "./violation";
+import { getTrackedMicroTypes } from "./trackedMicroTypes";
 
 export class Interaction {
 
@@ -13,7 +13,6 @@ export class Interaction {
     transitionIDNum: number = 0;
     microIDNum: number = 0;
     violations: Violation[] = [];
-    trackedMicroTypes: MicroType[] = [];
     groups: Group[] = [];
     transitions: Transition[] = [];
     //micros: MicroInteraction[] = [];
@@ -41,19 +40,12 @@ export class Interaction {
           let group: Group = new Group();
           group.setGroupFromXML(groups[gid], gid);
 
-
-          // Initialize group
-          //let g: Group = this.addGroup(x, y, gid, isInitial, name!);
-
           this.groups.push(group);
-
-          //g.micros = groupMicros;
-
-          //g.microIdCounter = groupMicros.length;
         }
 
         this.groupIdCounter = this.groups.length;
 
+        /*
         let transitions = xmlDoc.getElementsByTagName("transition");
 
         for (let i = 0; i < transitions.length; i++) {
@@ -77,9 +69,9 @@ export class Interaction {
             //let newTransID = addTransitionByID(group1ID, group2ID);
             //updateTransitionStates(newTransID, humanReady, humanBusy, humanIgnored);
         }
+        */
 
       }
-
     }
 
 
@@ -99,58 +91,74 @@ export class Interaction {
             xmlString += '<group id="' + group.id + '" init="' + group.isInitialGroup + '" x="' + group.x + '" y="' + group.y + '">';
             xmlString += '<name>' + group.name + '</name>';
             group.micros.forEach((micro: MicroInteraction) => {
+
                 xmlString += '<micro id="' + micro.id + '">';
                 xmlString += '<name>' + micro.type + '</name>';
 
                 console.log(micro);
 
                 micro.parameters.forEach(parameter => {
-                    if (parameter.type == "array") { //unique case
-                        xmlString += '<parameter type="array">';
-                        xmlString += '<name>answers robot can recognize</name>'
 
-                        let paramRes = micro.parameterResults.find((x: ParameterResult<any>) => x.paramId == parameter.id)
+                  let paramRes = micro.parameterResults.find((x: ParameterResult) => x.id == parameter.id)
 
-                        if (!paramRes) {
-                            console.log("ERROR: something went wrong!");
-                            xmlString += '</parameter>'
-                            return;
-                        }
+                  // Guards to catch parse errors
+                  if (!paramRes) {
+                    console.log("ERROR: something went wrong!");
+                    xmlString += '</parameter>'
+                    return;
+                  }
 
-                        if (paramRes.currResult == '') {
-                            xmlString += '</parameter>'
-                            return;
-                        }
+                  if (!paramRes.boolResult ||
+                      !paramRes.intResult ||
+                      !paramRes.strResult ||
+                      !paramRes.arrayResult
+                  ) {
+                    console.log("ERROR: empty parameter");
+                    xmlString += '</parameter>'
+                    return;
+                  }
+                  
+                  // Clean this up; maybe with a bigger switch statement
+                  if (parameter.type == "array") { //unique case
+                      xmlString += '<parameter type="array">';
+                      xmlString += '<name>answers robot can recognize</name>'
 
-                        paramRes.currResult.forEach((res: any) => {
-                            let link = "";
-                            if (res.linkTitle == "Human Ready") {
-                                link = "human_ready";  //these are the variables needed in the back end
-                            } else if (res.linkTitle == "Human Suspended") {
-                                link = "human_ignore";
-                            } else {
-                                console.log("ERROR: interaction.exportModelToXML: linkTitle not recognized when making model");
-                            }
-                            xmlString += '<item type="string" val="' + res.val + '" link="' + link + '"/>';
-                        });
-                        xmlString += '</parameter>'
-                    } else { //normal case
+                      paramRes.arrayResult.forEach((res: any) => {
+                          let link = "";
+                          if (res.linkTitle == "Human Ready") {
+                              link = "human_ready";  //these are the variables needed in the back end
+                          } else if (res.linkTitle == "Human Suspended") {
+                              link = "human_ignore";
+                          } else {
+                              console.log("ERROR: interaction.exportModelToXML: linkTitle not recognized when making model");
+                          }
+                          xmlString += '<item type="string" val="' + res.val + '" link="' + link + '"/>';
+                      });
+                      xmlString += '</parameter>'
+                  } else { //normal case
+                    xmlString += '<parameter type="' + parameter.type + '"';
 
-                        let paramRes = micro.parameterResults.find(x => x.paramId == parameter.id)
-
-                        if (!paramRes) {
-                            console.log("ERROR: something went wrong!");
-                            xmlString += '</parameter>'
-                            return;
-                        }
-                        xmlString += '<parameter type="' + parameter.type + '" val="' + paramRes.currResult + '">' + parameter.variableName + '</parameter>';
+                    switch (parameter.type) {
+                      case 'bool': 
+                        xmlString += ' val="' + paramRes.boolResult + '">' ;
+                        break;
+                      case 'int':
+                        xmlString += ' val="' + paramRes.intResult + '">';
+                        break;
+                      case 'str':
+                        xmlString += ' val="' + paramRes.strResult + '">';
+                        break;
                     }
+
+                    xmlString += parameter.variableName + '</parameter>';
+                  }
                 });
                 xmlString += '</micro>';
             });
             xmlString += '</group>';
         });
 
+        /*
         //add transitions
         JSONModel.transitions.forEach((transition: Transition) => {
             xmlString += '<transition>'
@@ -167,9 +175,12 @@ export class Interaction {
             }
             xmlString += '</transition>'
         });
+
+        */
+
         xmlString += '<design>copy</design>';
-        //xmlString += '</interaction>';
         xmlString += '</nat>';
+
         return xmlString;
     }
 
@@ -185,61 +196,6 @@ export class Interaction {
 
     getViolations() {
         return this.violations;
-    }
-
-
-    loadMicroTypes() {
-        //TODO access serverlet to get all microinteraction types from server and store them as micro types, for now these are the hard coded versions
-        let microTypes = [];
-
-        //greeter
-        let parameter0 = new Parameter(0, "Wait for Response", "Wait_for_response", "Set whether the robot waits for the human to greet back", "bool");
-        let parameter1 = new Parameter(1, "Greet with Speech", "Greet_with_speech", "Set whether the robot greets the human with speech", "bool");
-        let parameter2 = new Parameter(2, "Greet with Handshake", "Greet_with_handshake", "Set whether the robot extends its arm for a handshake", "bool");
-        let microGreeter = new MicroType("Greeter", [parameter0, parameter1, parameter2]);
-        microTypes.push(microGreeter);
-
-        //ask
-        let parameter3 = new Parameter(3, "Question", "question", "The Specific question the robot will ask", "str");
-        let parameter4 = new Parameter(4, "Responses the robot can recognize", "answers robot can recognize", "input the answers the robot can recognize the user saying, and then set the state that should be executed following the response", "array");
-        let microAsk = new MicroType("Ask", [parameter3, parameter4]);
-        microTypes.push(microAsk);
-
-        //remark
-        let parameter5 = new Parameter(5, "Content", "content", "What the robot will say to the user", "str");
-        let parameter6 = new Parameter(6, "Use Gesture", "use_gesture", "Should the robot use gestures (this is different from handoff)", "bool");
-        let parameter7 = new Parameter(7, "Allow the human to respond", "Allow_human_to_respond", "Whether the robot gives the human any time to respond after the robot's remark before moving on", "bool");
-        let microRemark = new MicroType("Remark", [parameter5, parameter6, parameter7]);
-        microTypes.push(microRemark);
-
-        //instruction
-        let parameter8 = new Parameter(8, "Instruction", "Instruction", "The instruction that the robot will provide the human", "str");
-        let microInstruct = new MicroType("Instruction", [parameter8]);
-        microTypes.push(microInstruct);
-
-        //handoff
-        let microHandoff = new MicroType("Handoff", []);
-        microTypes.push(microHandoff);
-
-        //answer
-        let parameter9 = new Parameter(9, "Introduction", "Introduction", "Robot begins microinteraction by saying I can answer your question", "bool");
-        let microAnswer = new MicroType("Answer", [parameter9]);
-        microTypes.push(microAnswer);
-
-        //wait
-        let parameter10 = new Parameter(10, "Wait Time (seconds)", "wait time (seconds)", "Number of seconds for the robot to wait", "int");
-        let parameter11 = new Parameter(11, "Allow Speech", "allow_speech", "Allows a human to say something to the robot to override its wait time", "bool");
-        let parameter12 = new Parameter(12, "Look At People", "look_at_people", "Enable face tracking, which allows the robot to met the gaze of anyone in its vicinity", "bool");
-        let microWait = new MicroType("Wait", [parameter10, parameter11, parameter12]);
-        microTypes.push(microWait);
-
-        //farwell
-        let microFarewell = new MicroType("Farewell", []);
-        microTypes.push(microFarewell);
-
-        for (let i = 0; i < microTypes.length; i++) {
-            this.trackedMicroTypes.push(microTypes[i]);
-        }
     }
 
     addGroup(x: number, y: number, id: number, isInitial: boolean, name: string): Group {
@@ -329,10 +285,12 @@ export class Interaction {
     }
 
     getMicroTypeByName(name: string) {
-        for (let i = 0; i < this.trackedMicroTypes.length; i++) {
-            if (this.trackedMicroTypes[i].type == name) {
+      let trackedMicroTypes: MicroType[] = getTrackedMicroTypes();
+
+        for (let i = 0; i < trackedMicroTypes.length; i++) {
+            if (trackedMicroTypes[i].type == name) {
                 //make a deep copy and then return it
-                let copiedMicroType = JSON.parse(JSON.stringify(this.trackedMicroTypes[i]));
+                let copiedMicroType = JSON.parse(JSON.stringify(trackedMicroTypes[i]));
                 return copiedMicroType;
             }
         }

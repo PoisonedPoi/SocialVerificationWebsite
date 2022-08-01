@@ -9,7 +9,7 @@ import {Parameter} from 'src/app/models/parameter';
 })
 export class ParameterOptionsComponent implements OnInit {
 
-  @Input() microType: string = '';
+  @Input() microType: string | null = '';
   @Input() param: Parameter = new Parameter();
 
   @Output() val: any = null;

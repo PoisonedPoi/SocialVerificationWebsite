@@ -6,6 +6,7 @@ import { MicroInteraction } from '../models/microInteraction';
 import {Parameter} from '../models/parameter';
 import {MicroType} from '../models/microType';
 import {ParameterResult} from '../models/parameterResult';
+import { getTrackedMicroTypes } from '../models/trackedMicroTypes';
 
 @Injectable({
   providedIn: 'root'
@@ -77,6 +78,8 @@ export class CanvasManagerService {
 
   addMicroToGroup(groupId: number): MicroInteraction  | null {
 
+    let trackedMicroTypes: MicroType[] = getTrackedMicroTypes();
+
     const g: Group | undefined = this.interaction.getGroup(groupId);
     
     if (!g) {
@@ -85,7 +88,8 @@ export class CanvasManagerService {
     }
 
     let params: Parameter[] = [];
-    let mt: MicroType | undefined = this.interaction.trackedMicroTypes.find((m: MicroType) => m.type === this.currentMicroType);
+
+    let mt: MicroType | undefined = trackedMicroTypes.find((m: MicroType) => m.type === this.currentMicroType);
 
     if (mt) {
       params = mt.parameters;
@@ -115,7 +119,7 @@ export class CanvasManagerService {
 
   /* Parameter related CRUD functions */
   
-  updateParams(groupId: number, microId: number, paramRes: ParameterResult<any>[]) {
+  updateParams(groupId: number, microId: number, paramRes: ParameterResult[]) {
 
   }
 

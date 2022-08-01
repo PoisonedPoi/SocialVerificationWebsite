@@ -12,7 +12,7 @@ import {ParameterManagerService} from 'src/app/services/parameter-manager.servic
 export class InteractionOptionsComponent implements OnInit {
 
   micro: MicroInteraction | null = null;
-  paramRes: ParameterResult<any>[] = [];
+  paramRes: ParameterResult[] = [];
 
   constructor(private parameterManager: ParameterManagerService, private canvasManager: CanvasManagerService) { }
 
