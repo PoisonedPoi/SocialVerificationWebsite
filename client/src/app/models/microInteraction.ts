@@ -34,12 +34,13 @@ export class MicroInteraction {
         }
     }
 
-    setMircoFromXML(el: Element, id: number) {
+    setMircoFromXML(el: Element, mid: number, gid: number) {
 
       let trackedMicroTypes: MicroType[] = getTrackedMicroTypes();
 
       // Set micro properties
-      this.id = id;
+      this.id = mid;
+      this.groupId = gid;
 
       this.type = el.getElementsByTagName("name")[0].textContent;
 
@@ -57,27 +58,18 @@ export class MicroInteraction {
       for (let pid = 0; pid < parameterResults.length; pid++) {
         let pr: ParameterResult = new ParameterResult();
         pr.setParameterResultFromXML(parameterResults[pid], pid);
+        this.parameterResults.push(pr);
       }
     }
 
     getMicroFromXML(): string {
-      let trackedMicroTypes: MicroType[] = getTrackedMicroTypes();
-
       let xmlString: string = '';
 
       xmlString += '<micro id="' + this.id + '">';
       xmlString += '<name>' + this.type + '</name>';
 
-      console.log(this);
-
-      let microType: MicroType | undefined = trackedMicroTypes.find(mt => mt.type == this.type);
-
-      // Have to get a way to get both param and paramRes synched up for access
-
-      this.parameterResults.forEach((paramRes: ParameterResult) => {
-
-        //let param: Parameter = 
-        //xmlString += paramRes.getParameterResultInXML();
+      this.parameterResults.forEach((paramRes: ParameterResult, i: number) => {
+        xmlString += paramRes.getParameterResultInXML(this.parameters[i].variableName);
       });
 
       xmlString += '</micro>';

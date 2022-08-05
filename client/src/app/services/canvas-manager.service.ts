@@ -120,7 +120,16 @@ export class CanvasManagerService {
   /* Parameter related CRUD functions */
   
   updateParams(groupId: number, microId: number, paramRes: ParameterResult[]) {
+    let g = this.interaction.groups.find(group => group.id === groupId);
 
+    if (g) {
+      let m = g.micros.find(micro => micro.id === microId);
+      if (m) {
+        m.updateResults(paramRes);
+
+        this.getUpdatedInteraction.emit(this.interaction);
+      }
+    }
   }
 
 
@@ -156,6 +165,8 @@ export class CanvasManagerService {
     let xmlString = localStorage.getItem('interactionXML');
 
     this.interaction = new Interaction(xmlString);
+
+    console.log(this.interaction);
 
     this.getUpdatedInteraction.emit(this.interaction);
   }

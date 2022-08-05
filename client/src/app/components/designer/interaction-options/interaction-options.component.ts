@@ -14,23 +14,25 @@ export class InteractionOptionsComponent implements OnInit {
   micro: MicroInteraction | null = null;
   paramRes: ParameterResult[] = [];
 
+
   constructor(private parameterManager: ParameterManagerService, private canvasManager: CanvasManagerService) { }
 
   ngOnInit(): void {
     this.parameterManager.getUpdatedMicro.subscribe((m: MicroInteraction) => {
       this.micro = m;
+      this.paramRes = this.micro.parameterResults;
+      console.log(this.paramRes);
     });
   }
 
   saveOptions() {
-    console.log("Save params");
-
+    // Tell canvas manager to updateParams
     if (this.micro) {
       this.canvasManager.updateParams(this.micro.groupId, this.micro.id, this.paramRes);
     }
   }
 
-  discardOptions() {
-    console.log("Discard params");
-  }
+  setResults(idx: number, result: ParameterResult) {
+    this.paramRes[idx] = result;
+  } 
 }

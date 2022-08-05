@@ -2,8 +2,15 @@
   <div class="text-center border-b-2 border-black">
     {{ micro.type }} Options
   </div>
-  <div *ngFor="let param of micro.parameters">
-    <app-parameter-options [microType]="micro.type" [param]="param"></app-parameter-options>
+  <div *ngFor="let param of micro.parameters; let idx=index;">
+    <app-parameter-options 
+      [microType]="micro.type" 
+      [param]="param"
+      [name]="'boolParam' + idx"
+      [index]="idx"
+      [result]="paramRes[idx]"
+      (resultEmitter)="setResults(idx, $event)"
+    ></app-parameter-options>
   </div>
   <div *ngIf="micro.parameters.length == 0; else save" class="p-2">
     No options for this micro-interaction
@@ -14,10 +21,6 @@
         class="px-3 py-1.5 rounded-md text-white bg-blue-600 hover:bg-blue-700 shadow mx-0.5"
         (click)="saveOptions()"
       >Save</button>
-      <button
-        class="px-3 py-1.5 rounded-md text-white bg-red-600 hover:bg-red-700 shadow mx-0.5"
-        (click)="discardOptions()"
-      >Discard</button>
     </div>
   </ng-template>
 </div>

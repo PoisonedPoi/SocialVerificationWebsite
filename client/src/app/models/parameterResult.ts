@@ -8,7 +8,8 @@ export class ParameterResult {
   boolResult: boolean | null = false;
   intResult: number | null = -1;
   strResult: string | null = '';
-  arrayResult: { val: string | null, linkTitle: string | null }[] | null = [];
+  arrayResult: Map<string, string> | null = null;
+  //arrayResult: { val: string | null, linkTitle: string | null }[] | null = [];
 
   constructor(
     id: number = -1,
@@ -16,7 +17,8 @@ export class ParameterResult {
     br: boolean | null = null,
     ir: number | null = null,
     sr: string | null = null,
-    ar: { val: string | null, linkTitle: string | null }[] | null = null
+    ar: Map<string, string> | null = null,
+    //ar: { val: string | null, linkTitle: string | null }[] | null = null
   ) {
       this.id = id;
       this.type = type;
@@ -49,7 +51,8 @@ export class ParameterResult {
     } else if (this.type == "array") {
       let arrayItems = el.getElementsByTagName('item');
       //let arrayVariable = el.getElementsByTagName('name')[0].textContent;
-      let arrayResults = [];
+      //let arrayResults = [];
+      let arrayResults = new Map<string, string>();
 
       for (let m = 0; m < arrayItems.length; m++) {
           let curItem = arrayItems[m];
@@ -60,14 +63,16 @@ export class ParameterResult {
           } else if (itemLink == 'human_ignore') {
               itemLink = 'Human Suspended';
           }
-          arrayResults.push({ val: itemVal, linkTitle: itemLink });
+          if (itemLink && itemVal) {
+            arrayResults.set(itemLink, itemVal);
+          }
       }
 
       this.arrayResult = arrayResults;
     }
   }
 
-  getParameterResultInXML(parameter: Parameter): string {
+  getParameterResultInXML(name: string): string {
     let xmlString: string = '';
 
     // Guards to catch parse errors
@@ -77,10 +82,10 @@ export class ParameterResult {
       return xmlString;
     }
 
-    if (!this.boolResult ||
-        !this.intResult ||
-        !this.strResult ||
-        !this.arrayResult
+    if (this.boolResult == null &&
+        this.intResult == null &&
+        this.strResult == null &&
+        this.arrayResult == null
     ) {
       console.log("ERROR: empty parameter");
       xmlString += '<parameter></parameter>'
@@ -88,39 +93,31 @@ export class ParameterResult {
     }
     
     // Clean this up; maybe with a bigger switch statement
-    if (parameter.type == "array") { //unique case
-        xmlString += '<parameter type="array">';
-        xmlString += '<name>answers robot can recognize</name>'
+    if (this.arrayResult != null) { //unique case
+      xmlString += '<parameter type="array">';
+      xmlString += '<name>answers robot can recognize</name>'
 
-        this.arrayResult.forEach((res: any) => {
-            let link = "";
-            if (res.linkTitle == "Human Ready") {
-                link = "human_ready";  //these are the variables needed in the back end
-            } else if (res.linkTitle == "Human Suspended") {
-                link = "human_ignore";
-            } else {
-                console.log("ERROR: interaction.exportModelToXML: linkTitle not recognized when making model");
-            }
-            xmlString += '<item type="string" val="' + res.val + '" link="' + link + '"/>';
-        });
-        xmlString += '</parameter>'
-    } else { //normal case
-      xmlString += '<parameter type="' + this.type + '"';
-
-      switch (parameter.type) {
-        case 'bool': 
-          xmlString += ' val="' + this.boolResult + '">' ;
-          break;
-        case 'int':
-          xmlString += ' val="' + this.intResult + '">';
-          break;
-        case 'str':
-          xmlString += ' val="' + this.strResult + '">';
-          break;
-      }
-
-      xmlString += parameter.variableName + '</parameter>';
+      this.arrayResult.forEach((res: any) => {
+        let link = "";
+        if (res.linkTitle == "Human Ready") {
+            link = "human_ready";  //these are the variables needed in the back end
+        } else if (res.linkTitle == "Human Suspended") {
+            link = "human_ignore";
+        } else {
+            console.log("ERROR: interaction.exportModelToXML: linkTitle not recognized when making model");
+        }
+        xmlString += '<item type="string" val="' + res.val + '" link="' + link + '"/>';
+      });
+      xmlString += '</parameter>'
+    } else if (this.boolResult != null) {
+      xmlString += '<parameter type="bool" val="' + this.boolResult + '">' ;
+    } else if (this.strResult != null) {
+      xmlString += '<parameter type="str" val="' + this.intResult + '">';
+    } else if (this.intResult != null) {
+      xmlString += '<parameter type="int" val="' + this.strResult + '">';
     }
+
+    xmlString += name + '</parameter>';
     return xmlString;
   }
 }

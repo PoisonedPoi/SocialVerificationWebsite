@@ -43,13 +43,17 @@ export class Group {
       // Load micros
       let micros = el.getElementsByTagName("micro");
 
-      for (let mid = 0; mid < micros.length; mid++) {
+      let mid;
+      for (mid = 0; mid < micros.length; mid++) {
 
         let micro: MicroInteraction = new MicroInteraction();
-        micro.setMircoFromXML(micros[mid], mid);
+        micro.setMircoFromXML(micros[mid], mid, id);
 
         this.micros.push(micro);
       }
+
+      this.microIdCounter = mid;
+
     }
 
     /* Export group to XML */

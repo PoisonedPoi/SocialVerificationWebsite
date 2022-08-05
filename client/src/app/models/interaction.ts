@@ -87,7 +87,9 @@ export class Interaction {
         xmlString += '<name>interaction</name>';
 
         //add groups
-        JSONModel.groups.forEach((group: Group) => {
+
+        //JSONModel.groups.forEach((group: Group) => {
+        this.groups.forEach((group: Group) => {
           xmlString += group.getGroupInXML();
         });
 

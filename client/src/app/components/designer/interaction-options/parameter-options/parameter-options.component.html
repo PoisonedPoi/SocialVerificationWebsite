@@ -1,15 +1,15 @@
 <div class="p-2">
   <div *ngIf="param.type === 'str'" class="flex flex-col">
     <label>{{ param.title }}</label>
-    <textarea class="border-2" [value]="val"></textarea>
+    <textarea class="border-2" (change)="changeStrVal($event)" [value]="strVal" ></textarea>
   </div>
   <div *ngIf="param.type === 'bool'">
     <label>{{ param.title }}</label>
     <br>
-    <input type="radio" />
+    <input type="radio" [name]="name" (change)="changeBoolVal(true)" [checked]="boolVal === true" />
     <label>Yes</label>
     <br>
-    <input type="radio" />
+    <input type="radio" [name]="name" (change)="changeBoolVal(false)" [checked]="boolVal === false" />
     <label>No</label>
   </div>
   <div *ngIf="param.type === 'array'">
@@ -40,7 +40,7 @@
   </div>
   <div *ngIf="param.type === 'int'">
     <label>{{ param.title }}</label>
-    <input type="number" class="border-2" value="3"/>
+    <input type="number" class="border-2" [value]="intVal" (change)="changeIntVal($event)" />
   </div>
 </div>
 

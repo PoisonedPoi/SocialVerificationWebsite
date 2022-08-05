@@ -31,7 +31,7 @@ export class MicroComponent implements OnInit {
   selectMicro(event: any) {
     event.preventDefault();
 
-    this.parameterManager.getUpdatedMicro.emit(this.micro);
+    this.parameterManager.updateCurrentMicro(this.micro);
   }
 
   showContextMenu(event: any) {

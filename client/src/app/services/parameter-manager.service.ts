@@ -1,16 +1,19 @@
 import { EventEmitter, Injectable, Output } from '@angular/core';
 import {MicroInteraction} from '../models/microInteraction';
-import {Parameter} from '../models/parameter';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ParameterManagerService {
 
-  currentParameter: Parameter | null = null;
+  micro: MicroInteraction = new MicroInteraction();
 
   @Output() getUpdatedMicro: EventEmitter<MicroInteraction> = new EventEmitter();
 
   constructor() { }
 
+  updateCurrentMicro(micro: MicroInteraction) {
+    this.micro = micro;
+    this.getUpdatedMicro.emit(this.micro);
+  }
 }
