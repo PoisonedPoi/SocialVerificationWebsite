@@ -1,5 +1,6 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { CanvasManagerService } from 'src/app/services/canvas-manager.service';
+import {ParameterManagerService} from 'src/app/services/parameter-manager.service';
 
 @Component({
   selector: 'app-actions-bar',
@@ -13,7 +14,10 @@ export class ActionsBarComponent implements OnInit {
   isAddingGroup: boolean = false;
   isAddingTransition: boolean = false;
   
-  constructor(private canvasManager: CanvasManagerService) {
+  constructor(
+    private canvasManager: CanvasManagerService,
+    private paramManager: ParameterManagerService
+  ) {
     canvasManager.updateBtnState.subscribe(() => {
       this.updateButtonColors();
     });
@@ -71,6 +75,7 @@ export class ActionsBarComponent implements OnInit {
 
   clear() {
     this.canvasManager.clearCanvas();
+    this.paramManager.updateCurrentMicro(undefined);
   }
 
   saveInteractionToLocal() {

@@ -6,13 +6,13 @@ import {MicroInteraction} from '../models/microInteraction';
 })
 export class ParameterManagerService {
 
-  micro: MicroInteraction = new MicroInteraction();
+  micro: MicroInteraction | undefined = new MicroInteraction();
 
   @Output() getUpdatedMicro: EventEmitter<MicroInteraction> = new EventEmitter();
 
   constructor() { }
 
-  updateCurrentMicro(micro: MicroInteraction) {
+  updateCurrentMicro(micro: MicroInteraction | undefined) {
     this.micro = micro;
     this.getUpdatedMicro.emit(this.micro);
   }
