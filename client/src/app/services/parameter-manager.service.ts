@@ -1,3 +1,8 @@
+/*
+This service manages state for the current microinteraction
+displayed in the interaction options pane.
+*/
+
 import { EventEmitter, Injectable, Output } from '@angular/core';
 import {MicroInteraction} from '../models/microInteraction';
 
@@ -6,9 +11,9 @@ import {MicroInteraction} from '../models/microInteraction';
 })
 export class ParameterManagerService {
 
-  micro: MicroInteraction | undefined = new MicroInteraction();
+  micro: MicroInteraction | undefined;
 
-  @Output() getUpdatedMicro: EventEmitter<MicroInteraction> = new EventEmitter();
+  @Output() getUpdatedMicro: EventEmitter<MicroInteraction | undefined> = new EventEmitter();
 
   constructor() { }
 

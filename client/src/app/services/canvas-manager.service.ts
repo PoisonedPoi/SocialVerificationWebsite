@@ -7,6 +7,7 @@ import {Parameter} from '../models/parameter';
 import {MicroType} from '../models/microType';
 import {ParameterResult} from '../models/parameterResult';
 import { getTrackedMicroTypes } from '../models/trackedMicroTypes';
+import {Transition} from '../models/transition';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,8 @@ export class CanvasManagerService {
 
   isAddingGroup: boolean = false;
   addingTransition: number = 0;
+  currentTransition: Transition;
+
   currentMicroType: string = '';
 
   @Output() updateBtnState: EventEmitter<any> = new EventEmitter();
@@ -25,7 +28,9 @@ export class CanvasManagerService {
   canvasOffset: Position = new Position(0, 0);
   canvasScrollOffset: Position = new Position(0, 0);
 
-  constructor() {}
+  constructor() {
+    this.currentTransition = new Transition(-1, -1, -1);
+  }
 
   /* Group related CRUD functions */
 
@@ -130,6 +135,25 @@ export class CanvasManagerService {
         this.getUpdatedInteraction.emit(this.interaction);
       }
     }
+  }
+
+  /* Transition related CRUD functions */
+
+  setGroup1Id(gid: number) {
+    this.currentTransition.firstGroupId = gid;
+    this.addingTransition++;
+  }
+
+  setGroup2Id(gid: number) {
+    this.currentTransition.secondGroupId = gid;
+
+    this.currentTransition.id = this.interaction.transitionIdCounter;
+    this.interaction.transitionIdCounter++;
+
+    this.interaction.transitions.push(this.currentTransition);
+    console.log(this.currentTransition);
+
+    this.setAddingTransition(0);
   }
 
 

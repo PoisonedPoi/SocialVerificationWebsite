@@ -1,20 +1,19 @@
-import { Group } from "./group";
 import { State } from "./state";
 
 export class Transition {
     
-    firstGroup: Group;
-    secondGroup: Group;
+    firstGroupId: number;
+    secondGroupId: number;
     state: State;
     id: number;
 
     constructor(
-        id: number,
-        firstGroup: Group,
-        secondGroup: Group
+        id: number = -1,
+        firstGroup: number = -1,
+        secondGroup: number = -1
     ) {
-        this.firstGroup = firstGroup;
-        this.secondGroup = secondGroup;
+        this.firstGroupId = firstGroup;
+        this.secondGroupId = secondGroup;
         this.state = new State();
         this.id = id;
     }

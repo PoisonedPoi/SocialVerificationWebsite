@@ -77,4 +77,12 @@ export class GroupComponent implements OnInit {
     this.canvasManager.addMicroToGroup(this.group.id);
     this.canvasManager.updateGroup(this.group);
   }
+
+  addTransition() {
+    if (this.canvasManager.addingTransition == 1) {
+      this.canvasManager.setGroup1Id(this.group.id);
+    } else if (this.canvasManager.addingTransition == 2) {
+      this.canvasManager.setGroup2Id(this.group.id);
+    }
+  }
 }

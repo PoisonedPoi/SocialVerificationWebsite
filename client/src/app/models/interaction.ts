@@ -1,7 +1,5 @@
 import { Group } from "./group";
-import { MicroInteraction } from "./microInteraction";
 import { MicroType } from "./microType";
-import { ParameterResult } from "./parameterResult";
 import { State } from "./state";
 import { Transition } from "./transition";
 import { Violation } from "./violation";
@@ -10,7 +8,7 @@ import { getTrackedMicroTypes } from "./trackedMicroTypes";
 export class Interaction {
 
     groupIdCounter: number = 0;
-    transitionIDNum: number = 0;
+    transitionIdCounter: number = 0;
     microIDNum: number = 0;
     violations: Violation[] = [];
     groups: Group[] = [];
@@ -189,12 +187,14 @@ export class Interaction {
         }
         let toRemove = [];
         for (let i = 0; i < this.transitions.length; i++) {
+          /*
             if (this.transitions[i].firstGroup.id == id || this.transitions[i].secondGroup.id == id) {
                 toRemove.push(this.transitions[i].id);
             }
+            */
         }
         for (let i = 0; i < toRemove.length; i++) {
-            this.removeTransition(toRemove[i]);
+            //this.removeTransition(toRemove[i]);
         }
 
 
@@ -263,6 +263,7 @@ export class Interaction {
     }
     */
 
+    /*
     addTransition(group1id: number, group2id: number) {
         let group1 = this.getGroup(group1id);
         let group2 = this.getGroup(group2id);
@@ -281,6 +282,7 @@ export class Interaction {
         this.transitionIDNum++;
         return newTransition.id;
     }
+    */
 
     removeTransition(id: number) {
         for (let i = 0; i < this.transitions.length; i++) {

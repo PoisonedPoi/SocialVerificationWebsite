@@ -105,14 +105,6 @@ export class InteractionCanvasComponent implements OnInit {
       this.canvasManager.addGroup(event.offsetX - this.scrollPosition.x, event.offsetY - this.scrollPosition.y);
 
       this.canvasManager.setAddingGroup(false);
-    } else if (this.canvasManager.addingTransition == 1) {
-      console.log('Init transition here (%d,%d)', event.offsetX, event.offsetY);
-
-      this.canvasManager.setAddingTransition(2);
-    }  else if (this.canvasManager.addingTransition == 2) {
-      console.log('Final transition here (%d,%d)', event.offsetX, event.offsetY);
-
-      this.canvasManager.setAddingTransition(0);
     }
   }
 
