@@ -2,6 +2,9 @@
 This component displays the current parameters for
 the currently selected microinteraction. The parameters
 can be modified and therefore update the current interaction.
+The parameters are housed in a child component and this component
+communicates with its child to reflect the appropriate parameter
+results.
 */
 
 import { Component, OnInit } from '@angular/core';

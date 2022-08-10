@@ -2,10 +2,12 @@ import { Component, ComponentRef, ElementRef, HostListener, OnInit, Renderer2, V
 import { Group } from 'src/app/models/group';
 import { Interaction } from 'src/app/models/interaction';
 import {Position} from 'src/app/models/position';
+import {Transition} from 'src/app/models/transition';
 import { CanvasManagerService } from 'src/app/services/canvas-manager.service';
 import {ContextMenuService} from 'src/app/services/context-menu.service';
 import {ContextMenuComponent} from './context-menu/context-menu.component';
 import { GroupComponent } from './group/group.component';
+import {TransitionComponent} from './transition/transition.component';
 
 @Component({
   selector: 'app-interaction-canvas',
@@ -87,6 +89,14 @@ export class InteractionCanvasComponent implements OnInit {
 
       // Set the component to match the model
       groupComponent.setGroup(g);
+    });
+
+    this.interaction.transitions.forEach((t: Transition) => {
+      // Create a transition component
+      const transitionComponent = this.container.createComponent(TransitionComponent).instance;
+
+      // Set the component to match the model
+      transitionComponent.setTransition(t);
     });
 
     this.contextMenuComponent = this.container.createComponent(ContextMenuComponent).instance;

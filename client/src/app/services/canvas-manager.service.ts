@@ -151,11 +151,11 @@ export class CanvasManagerService {
     this.interaction.transitionIdCounter++;
 
     this.interaction.transitions.push(this.currentTransition);
-    console.log(this.currentTransition);
+
+    this.getUpdatedInteraction.emit(this.interaction);
 
     this.setAddingTransition(0);
   }
-
 
   /* State management for view reflection */
 

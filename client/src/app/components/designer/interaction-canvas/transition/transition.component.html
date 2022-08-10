@@ -1,1 +1,14 @@
-<p>transition works!</p>
+<svg
+  *ngIf="transition != undefined"
+  class="absolute top-0 left-0 w-[5000px] h-[3000px]"
+  xmlns="http://www.w3.org/2000/svg" 
+>
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" 
+    refX="0" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" />
+    </marker>
+  </defs>
+  <line [attr.x1]="x1" [attr.y1]="y1" [attr.x2]="x2" [attr.y2]="y2" stroke="#000" 
+  stroke-width="2" marker-end="url(#arrowhead)" />
+</svg>
