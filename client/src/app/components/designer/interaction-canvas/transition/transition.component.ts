@@ -49,12 +49,12 @@ export class TransitionComponent implements OnInit {
     // x1 and y1 offsets
     if (g1.x < g2.x && (g2.x - g1.x) > this.width) {
       newX1 = g1.x + this.width;
-      newY1 = g1.y + (this.height * (2/3));
+      newY1 = g1.y + (this.height * (1/3));
     } else if (g1.x > g2.x && (g1.x - g2.x) > this.width) {
       newX1 = g1.x;
       newY1 = g1.y + (this.height * (2/3));
     } else if (g1.y > g2.y && (g1.y - g2.y) > this.height) {
-      newX1 = g1.x + (this.width * (2/3));
+      newX1 = g1.x + (this.width * (1/3));
       newY1 = g1.y;
     } else if (g1.y < g2.y && (g2.y - g1.y) > this.height) {
       newX1 = g1.x + (this.width * (2/3));
@@ -70,12 +70,12 @@ export class TransitionComponent implements OnInit {
     // x2 and y2 offsets
     if (g1.x > g2.x && (g1.x - g2.x) > this.width) {
       newX2 = g2.x + this.width;
-      newY2 = g2.y + (this.height * (1/3));
+      newY2 = g2.y + (this.height * (2/3));
     } else if (g1.x < g2.x && (g2.x - g1.x) > this.width) {
       newX2 = g2.x;
       newY2 = g2.y + (this.height * (1/3));
     } else if (g1.y < g2.y && (g2.y - g1.y) > this.height) {
-      newX2 = g2.x + (this.width * (1/3));
+      newX2 = g2.x + (this.width * (2/3));
       newY2 = g2.y;
     } else if (g1.y > g2.y && (g1.y - g2.y) > this.height) {
       newX2 = g2.x + (this.width * (1/3));
