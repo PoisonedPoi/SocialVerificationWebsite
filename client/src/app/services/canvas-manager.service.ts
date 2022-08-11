@@ -140,6 +140,7 @@ export class CanvasManagerService {
   /* Transition related CRUD functions */
 
   setGroup1Id(gid: number) {
+    this.currentTransition = new Transition();
     this.currentTransition.firstGroupId = gid;
     this.addingTransition++;
   }
