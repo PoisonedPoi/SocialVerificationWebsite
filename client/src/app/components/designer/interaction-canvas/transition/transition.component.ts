@@ -41,56 +41,55 @@ export class TransitionComponent implements OnInit {
   }
 
   setOffsets(g1: Group, g2: Group) {
-    let newX1: number = g1.x;
-    let newY1: number = g1.y;
-    let newX2: number = g2.x;
-    let newY2: number = g2.y;
 
-    // x1 and y1 offsets
-    if (g1.x < g2.x && (g2.x - g1.x) > this.width) {
-      newX1 = g1.x + this.width;
-      newY1 = g1.y + (this.height * (1/3));
-    } else if (g1.x > g2.x && (g1.x - g2.x) > this.width) {
-      newX1 = g1.x;
-      newY1 = g1.y + (this.height * (2/3));
-    } else if (g1.y > g2.y && (g1.y - g2.y) > this.height) {
-      newX1 = g1.x + (this.width * (1/3));
-      newY1 = g1.y;
-    } else if (g1.y < g2.y && (g2.y - g1.y) > this.height) {
-      newX1 = g1.x + (this.width * (2/3));
-      newY1 = g1.y + this.height;
-    }
+    // Calculate in and out anchor positions
 
-    // calculate offset given arrow length
+    let EOut: {x: number, y: number} = {x: g1.x + this.width, y: g1.y + (this.height * (1/3))};
+    let WOut: {x: number, y: number} = {x: g1.x, y: g1.y + (this.height * (2/3))};
+    let NOut: {x: number, y: number} = {x: g1.x + (this.width * (1/3)), y: g1.y};
+    let SOut: {x: number, y: number} = {x: g1.x + (this.width * (2/3)), y: g1.y + this.height};
+
+    let EIn:  {x: number, y: number} = {x: g2.x + this.width, y: g2.y + (this.height * (2/3))};
+    let WIn:  {x: number, y: number} = {x: g2.x, y: g2.y + (this.height * (1/3))};
+    let NIn:  {x: number, y: number} = {x: g2.x + (this.width * (2/3)), y: g2.y};
+    let SIn:  {x: number, y: number} = {x: g2.x + (this.width * (1/3)), y: g2.y + this.height};
+
+    let outAnchors = [EOut, WOut, NOut, SOut];
+    let inAnchors = [EIn, WIn, NIn, SIn];
+
+    // Get distances between in and out anchors
+    let distances: {p1: {x: number, y: number}, p2: {x: number, y: number}, distance: number}[] = [];
+
+    outAnchors.forEach((outAnchor) => {
+      inAnchors.forEach((inAnchor) => {
+        let d = Math.sqrt(Math.pow(outAnchor.x - inAnchor.x, 2) + Math.pow(outAnchor.y - inAnchor.y, 2));
+        distances.push({ p1: outAnchor, p2: inAnchor, distance: d });
+      });
+    });
+
+    // Get the points with the smallest distance
+    let smallest = distances.pop();
+    distances.forEach((line) => {
+        if (smallest && line.distance < smallest.distance) {
+            smallest = line;
+        }
+    });
+
+    // Set the arrow offset 
     let theta: number = Math.atan2(g1.y - g2.y, g1.x - g2.x);
 
     let xOff = this.arrowLength * Math.cos(theta);
     let yOff = this.arrowLength * Math.sin(theta);
 
-    // x2 and y2 offsets
-    if (g1.x > g2.x && (g1.x - g2.x) > this.width) {
-      newX2 = g2.x + this.width;
-      newY2 = g2.y + (this.height * (2/3));
-    } else if (g1.x < g2.x && (g2.x - g1.x) > this.width) {
-      newX2 = g2.x;
-      newY2 = g2.y + (this.height * (1/3));
-    } else if (g1.y < g2.y && (g2.y - g1.y) > this.height) {
-      newX2 = g2.x + (this.width * (2/3));
-      newY2 = g2.y;
-    } else if (g1.y > g2.y && (g1.y - g2.y) > this.height) {
-      newX2 = g2.x + (this.width * (1/3));
-      newY2 = g2.y + this.height;
+    // Set the offsets
+    if (smallest) {
+      this.x1 = smallest.p1.x + "px";
+      this.y1 = smallest.p1.y + "px";
+
+      this.x2 = smallest.p2.x + xOff + "px";
+      this.y2 = smallest.p2.y + yOff + "px";
     }
 
-    newX2 += xOff;
-    newY2 += yOff;
-
-
-    this.x1 = newX1 + "px";
-    this.y1 = newY1 + "px";
-
-    this.x2 = newX2 + "px";
-    this.y2 = newY2 + "px";
   }
 
 }
