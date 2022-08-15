@@ -23,7 +23,12 @@ export class TransitionComponent implements OnInit {
   y1: string ='0px';
   x2: string = '0px';
   y2: string = '0px';
-  d: string = 'M 130 110 C 120 140, 180 140, 170 110';
+  d: string = '';
+
+  rectX: string = '0px';
+  rectY: string = '0px';
+  textX: string = '0px';
+  textY: string = '0px';
 
   constructor(private canvasManager: CanvasManagerService) { }
 
@@ -99,13 +104,24 @@ export class TransitionComponent implements OnInit {
 
       this.x2 = smallest.p2.x + xOff + "px";
       this.y2 = smallest.p2.y + yOff + "px";
-    }
 
+      this.rectX = ((smallest.p1.x + (smallest.p2.x - 100)) / 2) + "px";
+      this.rectY = ((smallest.p1.y + smallest.p2.y) / 2) + "px";
+
+      this.textX = (((smallest.p1.x + (smallest.p2.x - 100)) / 2) + 25) + "px";
+      this.textY = (((smallest.p1.y + smallest.p2.y) / 2) + 13) + "px";
+    }
   }
 
   setSelfOffsets(g: Group) {
     let NOutX = g.x + this.width / 3
     let EInY = g.y + this.height / 3
+
+    this.rectX = (g.x - 60) + "px";
+    this.rectY = (g.y - 30) + "px";
+
+    this.textX = (g.x - 35) + "px";
+    this.textY = (g.y - 17) + "px";
 
     this.d = 'M ' + NOutX + ' ' + g.y +
       ' C ' + g.x + ' ' + (g.y - 50) + ', ' +
