@@ -9,6 +9,7 @@
       <polygon points="0 0, 10 3.5, 0 7" />
     </marker>
   </defs>
-  <line [attr.x1]="x1" [attr.y1]="y1" [attr.x2]="x2" [attr.y2]="y2" stroke="#000" 
+  <line *ngIf="isLine" [attr.x1]="x1" [attr.y1]="y1" [attr.x2]="x2" [attr.y2]="y2" stroke="#000" 
   stroke-width="2" marker-end="url(#arrowhead)" />
+  <path *ngIf="!isLine" [attr.d]="d" stroke="#000" stroke-width="2px" fill="transparent" marker-end="url(#arrowhead)"></path>
 </svg>

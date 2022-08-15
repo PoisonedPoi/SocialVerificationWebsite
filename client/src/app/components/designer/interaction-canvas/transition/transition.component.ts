@@ -13,6 +13,8 @@ export class TransitionComponent implements OnInit {
 
   transition: Transition | undefined;
 
+  isLine: boolean = true;
+
   width: number = 96;
   height: number = 192;
   arrowLength: number = 15;
@@ -21,6 +23,7 @@ export class TransitionComponent implements OnInit {
   y1: string ='0px';
   x2: string = '0px';
   y2: string = '0px';
+  d: string = 'M 130 110 C 120 140, 180 140, 170 110';
 
   constructor(private canvasManager: CanvasManagerService) { }
 
@@ -41,6 +44,14 @@ export class TransitionComponent implements OnInit {
   }
 
   setOffsets(g1: Group, g2: Group) {
+
+    if (g1.id === g2.id) {
+      this.isLine = false;
+      this.setSelfOffsets(g1);
+      return;
+    }
+    
+    this.isLine = true;
 
     // Calculate in and out anchor positions
 
@@ -90,6 +101,15 @@ export class TransitionComponent implements OnInit {
       this.y2 = smallest.p2.y + yOff + "px";
     }
 
+  }
+
+  setSelfOffsets(g: Group) {
+    let NOutX = g.x + this.width / 3
+    let EInY = g.y + this.height / 3
+
+    this.d = 'M ' + NOutX + ' ' + g.y +
+      ' C ' + g.x + ' ' + (g.y - 50) + ', ' +
+      (g.x - 60) + ' ' + g.y + ', ' + (g.x - 10) + ' ' + (EInY - 15);
   }
 
 }
