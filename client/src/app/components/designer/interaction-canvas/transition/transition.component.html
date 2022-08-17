@@ -12,6 +12,14 @@
   <line *ngIf="isLine" [attr.x1]="x1" [attr.y1]="y1" [attr.x2]="x2" [attr.y2]="y2" stroke="#000" 
   stroke-width="2" marker-end="url(#arrowhead)" />
   <path *ngIf="!isLine" [attr.d]="d" stroke="#000" stroke-width="2px" fill="transparent" marker-end="url(#arrowhead)"></path>
-  <rect [attr.x]="rectX" [attr.y]="rectY" width="140px" height="15px" fill="yellow"></rect>
-  <text [attr.x]="textX" [attr.y]="textY">Hello there</text>
 </svg>
+<div class="absolute flex flex-col z-40 bg-gray-300 rounded p-1" [style.top]="conditionsY" [style.left]="conditionsX">
+  <div>
+    <input name="readyInput" type="checkbox" [(ngModel)]="ready" />
+    <label for="readyInput">Ready</label>
+  </div>
+  <div>
+    <input name="notReadyInput" type="checkbox" [(ngModel)]="notReady" />
+    <label for="notReadyInput">Not Ready</label>
+  </div>
+</div>
