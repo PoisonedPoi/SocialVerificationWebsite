@@ -158,6 +158,16 @@ export class CanvasManagerService {
     this.setAddingTransition(0);
   }
 
+  updateTransition(transition: Transition) {
+    let ts: Transition[] = this.interaction.transitions.filter((x: Transition) => x.id != transition.id);
+
+    ts.push(transition);
+
+    this.interaction.transitions = ts;
+
+    this.getUpdatedInteraction.emit(this.interaction);
+  }
+
   /* State management for view reflection */
 
   setAddingGroup(val: boolean) {

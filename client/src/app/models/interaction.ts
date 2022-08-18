@@ -111,56 +111,6 @@ export class Interaction {
         return true;
     }
 
-    /* Transitions */
-
-    setTransitionState(id: number, transitionState: State) {
-        for (let i = 0; i < this.transitions.length; i++) {
-            if (this.transitions[i].id == id) {
-                this.transitions[i].state = transitionState;
-            }
-        }
-    }
-
-    getTransitionState(id: number): State {
-        for (let i = 0; i < this.transitions.length; i++) {
-            if (this.transitions[i].id == id) {
-                return this.transitions[i].state;
-            }
-        }
-        console.log("Error: getTransitionState ID " + id + " is not found");
-        return new State();
-    }
-
-    /*
-    addTransition(group1id: number, group2id: number) {
-        let group1 = this.getGroup(group1id);
-        let group2 = this.getGroup(group2id);
-        //check for an existing transition between these two groups, there should only be on transition between two specific groups
-        for (let i = 0; i < this.transitions.length; i++) {
-            if (this.transitions[i].firstGroup == group1 && this.transitions[i].secondGroup == group2) {
-                console.error("Transition already exists")
-                return -1; //error
-            }
-        }
-
-        if (!group1 || !group2) { return; }
-
-        let newTransition = new Transition(this.transitionIDNum, group1, group2);
-        this.transitions.push(newTransition);
-        this.transitionIDNum++;
-        return newTransition.id;
-    }
-    */
-
-    removeTransition(id: number) {
-        for (let i = 0; i < this.transitions.length; i++) {
-            if (this.transitions[i].id == id) {
-                this.transitions.splice(i, 1);
-                return;
-            }
-        }
-    }
-
     /* Microinteraction types */
 
     getMicroTypeByName(name: string) {

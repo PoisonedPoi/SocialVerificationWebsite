@@ -15,11 +15,11 @@
 </svg>
 <div class="absolute flex flex-col z-40 bg-gray-300 rounded p-1" [style.top]="conditionsY" [style.left]="conditionsX">
   <div>
-    <input name="readyInput" type="checkbox" [(ngModel)]="ready" />
+    <input name="readyInput" type="checkbox" [(ngModel)]="transition.ready" (change)="updateTransition()" />
     <label for="readyInput">Ready</label>
   </div>
   <div>
-    <input name="notReadyInput" type="checkbox" [(ngModel)]="notReady" />
+    <input name="notReadyInput" type="checkbox" [(ngModel)]="transition.notReady" (change)="updateTransition()" />
     <label for="notReadyInput">Not Ready</label>
   </div>
 </div>

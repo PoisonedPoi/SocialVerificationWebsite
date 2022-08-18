@@ -11,7 +11,7 @@ import {CanvasManagerService} from 'src/app/services/canvas-manager.service';
 })
 export class TransitionComponent implements OnInit {
 
-  transition: Transition | undefined;
+  transition: Transition = new Transition();
 
   isLine: boolean = true;
 
@@ -27,8 +27,6 @@ export class TransitionComponent implements OnInit {
 
   conditionsX: string = '0px';
   conditionsY: string = '0px';
-  ready: boolean = false;
-  notReady: boolean = false;
 
   constructor(private canvasManager: CanvasManagerService) { }
 
@@ -120,6 +118,10 @@ export class TransitionComponent implements OnInit {
     this.d = 'M ' + NOutX + ' ' + g.y +
       ' C ' + g.x + ' ' + (g.y - 50) + ', ' +
       (g.x - 60) + ' ' + g.y + ', ' + (g.x - 10) + ' ' + (EInY - 15);
+  }
+
+  updateTransition() {
+    this.canvasManager.updateTransition(this.transition);
   }
 
 }
