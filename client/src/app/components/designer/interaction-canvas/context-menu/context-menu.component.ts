@@ -24,6 +24,7 @@ export class ContextMenuComponent implements OnInit {
   menuHidden: boolean = true;
 
   removeGroupHidden: boolean = true;
+  removeTransitionHidden: boolean = true;
   removeMicroHidden: boolean = true;
 
   @HostListener('document:click', ['$event'])
@@ -60,6 +61,10 @@ export class ContextMenuComponent implements OnInit {
 
   removeGroup() {
     this.canvasManager.removeGroup(this.groupId);
+  }
+
+  removeTransition() {
+    this.canvasManager.removeTransition(this.transitionId);
   }
 
   removeMicro() {

@@ -124,7 +124,7 @@ export class InteractionCanvasComponent implements OnInit {
     this.contextMenuHidden = false;
 
     if (this.contextMenuComponent) {
-      this.contextMenuComponent.setMenu(this.contextMenu.type, this.contextMenu.position, this.contextMenu.groupId, this.contextMenu.microId);
+      this.contextMenuComponent.setMenu(this.contextMenu.type, this.contextMenu.position, this.contextMenu.groupId, this.contextMenu.microId, this.contextMenu.transitionId);
     } else {
       console.log("context menu comp doesn't exist");
     }

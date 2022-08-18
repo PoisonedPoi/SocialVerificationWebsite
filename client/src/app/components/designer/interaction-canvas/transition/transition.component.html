@@ -13,7 +13,12 @@
   stroke-width="2" marker-end="url(#arrowhead)" />
   <path *ngIf="!isLine" [attr.d]="d" stroke="#000" stroke-width="2px" fill="transparent" marker-end="url(#arrowhead)"></path>
 </svg>
-<div class="absolute flex flex-col z-40 bg-gray-300 rounded p-1" [style.top]="conditionsY" [style.left]="conditionsX">
+<div 
+  class="absolute flex flex-col z-40 bg-gray-300 rounded p-1" 
+  [style.top]="conditionsY" 
+  [style.left]="conditionsX"
+  (contextmenu)='showContextMenu($event)'
+>
   <div>
     <input name="readyInput" type="checkbox" [(ngModel)]="transition.ready" (change)="updateTransition()" />
     <label for="readyInput">Ready</label>

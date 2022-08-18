@@ -1,5 +1,5 @@
 <div
-  class="absolute z-10"
+  class="absolute z-50"
   [hidden]="menuHidden"
   [style.left]="x"
   [style.top]="y"
@@ -9,6 +9,11 @@
     [hidden]="type != 'group'"
     (click)="removeGroup()"
   >Remove Group</button>
+  <button
+    class="absolute px-3 py-1.5 rounded-md text-white bg-red-600 hover:bg-red-700 shadow mx-0.5"
+    [hidden]="type != 'transition'"
+    (click)="removeTransition()"
+  >Remove Transition</button>
   <button
     class="absolute px-3 py-1.5 rounded-md text-white bg-red-600 hover:bg-red-700 shadow mx-0.5"
     [hidden]="type != 'micro'"

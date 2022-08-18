@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {Group} from 'src/app/models/group';
 import {Transition} from 'src/app/models/transition';
+import { Position } from 'src/app/models/position';
 import {CanvasManagerService} from 'src/app/services/canvas-manager.service';
+import { ContextMenuService } from 'src/app/services/context-menu.service';
 
 @Component({
   selector: 'app-transition',
@@ -28,9 +30,30 @@ export class TransitionComponent implements OnInit {
   conditionsX: string = '0px';
   conditionsY: string = '0px';
 
-  constructor(private canvasManager: CanvasManagerService) { }
+  constructor(
+    private canvasManager: CanvasManagerService,
+    private contextMenu: ContextMenuService,
+  ) { }
 
   ngOnInit(): void {
+  }
+
+  showContextMenu(event: any) {
+    if (this.contextMenu.type != '') {
+      return;
+    }
+
+    event.preventDefault();
+
+    let x1Num: number = parseInt(this.x1.substring(0, this.x1.length - 2));
+    let y1Num: number = parseInt(this.y1.substring(0, this.x1.length - 2));
+    let x2Num: number = parseInt(this.x2.substring(0, this.x2.length - 2));
+    let y2Num: number = parseInt(this.y2.substring(0, this.x2.length - 2));
+
+    let xNum = (x1Num + x2Num) / 2;
+    let yNum = (y1Num + y2Num) / 2;
+
+    this.contextMenu.displayContextMenu('transition', new Position(xNum + event.offsetX - 50, yNum + event.offsetY - 25), -1, -1, this.transition.id);
   }
 
   setTransition(t: Transition) {

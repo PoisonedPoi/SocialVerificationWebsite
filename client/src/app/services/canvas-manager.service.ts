@@ -70,7 +70,15 @@ export class CanvasManagerService {
   }
 
   removeGroup(groupId: number):void {
-    this.interaction.removeGroup(groupId);
+    // Remove transitions associated with the groupId
+    let ts: Transition[] = this.interaction.transitions.filter((x: Transition) => x.firstGroupId != groupId && x.secondGroupId != groupId);
+
+    this.interaction.transitions = ts;
+
+    // Remove the group from the groups list
+    let gs: Group[] = this.interaction.groups.filter((x: Group) => x.id != groupId);
+
+    this.interaction.groups = gs;
 
     if (this.interaction.groups.length == 0) {
       this.interaction.groupIdCounter = 0;
@@ -138,6 +146,18 @@ export class CanvasManagerService {
   }
 
   /* Transition related CRUD functions */
+
+  removeTransition(tid: number) {
+    let ts: Transition[] = this.interaction.transitions.filter((x: Transition) => x.id != tid);
+
+    this.interaction.transitions = ts;
+
+    if (this.interaction.transitions.length == 0) {
+      this.interaction.transitionIdCounter = 0;
+    }
+
+    this.getUpdatedInteraction.emit(this.interaction);
+  }
 
   setGroup1Id(gid: number) {
     this.currentTransition = new Transition();

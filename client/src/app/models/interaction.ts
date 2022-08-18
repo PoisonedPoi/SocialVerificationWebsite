@@ -111,6 +111,10 @@ export class Interaction {
         return true;
     }
 
+    /* Transitions */
+
+
+
     /* Microinteraction types */
 
     getMicroTypeByName(name: string) {
