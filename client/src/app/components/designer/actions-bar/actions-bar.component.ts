@@ -43,10 +43,6 @@ export class ActionsBarComponent implements OnInit {
     }
   }
 
-  exportToXML() {
-    console.log("Export to XML");
-  }
-
   verifyModel() {
     console.log("Verify model");
   }
@@ -54,8 +50,8 @@ export class ActionsBarComponent implements OnInit {
   saveToFile() {
     console.log("Save to file");
 
-    let file = "interaction.xml";
-    let text = this.canvasManager.interaction.exportModelToXML();
+    let file = "interaction.json";
+    let text = JSON.stringify(this.canvasManager.interaction);
     var element = document.createElement('a');
     element.setAttribute('href', 'data:text/plain;charset=utf-8, ' + encodeURIComponent(text));
     element.setAttribute('download', file);
@@ -70,7 +66,7 @@ export class ActionsBarComponent implements OnInit {
   }
 
   loadFromUpload(event: any) {
-    this.canvasManager.loadInteractionFromXMLFile(event.target.files[0]);
+    this.canvasManager.loadInteractionFromJSONFile(event.target.files[0]);
   }
 
   clear() {

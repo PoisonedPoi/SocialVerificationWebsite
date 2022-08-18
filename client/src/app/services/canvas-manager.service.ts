@@ -176,7 +176,7 @@ export class CanvasManagerService {
 
   /* Loading from file on disk */
 
-  async loadInteractionFromXMLFile(file: File) {
+  async loadInteractionFromJSONFile(file: File) {
     let t: string = await file.text();
 
     this.interaction = new Interaction(t);
@@ -187,26 +187,25 @@ export class CanvasManagerService {
   /* Save and load interaction from local storage */
 
   loadInteractionFromLocal(): void {
-    let xmlString = localStorage.getItem('interactionXML');
+    let interactionString = localStorage.getItem('interaction');
 
-    this.interaction = new Interaction(xmlString);
-
-    console.log(this.interaction);
+    if (interactionString) {
+      this.interaction = new Interaction(interactionString);
+    } else {
+      this.interaction = new Interaction();
+    }
 
     this.getUpdatedInteraction.emit(this.interaction);
   }
 
-
   saveInteractionToLocal() {
-    let xmlString = this.interaction.exportModelToXML();
-
-    localStorage.setItem('interactionXML', xmlString);
+    localStorage.setItem('interaction', JSON.stringify(this.interaction));
   }
 
   /* New interaction */
 
   clearCanvas() {
-    this.interaction = new Interaction(null);
+    this.interaction = new Interaction();
 
     this.getUpdatedInteraction.emit(this.interaction);
 
