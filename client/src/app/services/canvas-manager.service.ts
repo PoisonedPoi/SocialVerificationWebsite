@@ -166,6 +166,14 @@ export class CanvasManagerService {
   }
 
   setGroup2Id(gid: number) {
+
+    // Check that this is going to be a unique transition
+    let dup = this.interaction.transitions.find((t: Transition) => t.firstGroupId == this.currentTransition.firstGroupId && t.secondGroupId == gid);
+
+    if (dup != undefined) {
+      return;
+    }
+
     this.currentTransition.secondGroupId = gid;
 
     this.currentTransition.id = this.interaction.transitionIdCounter;
