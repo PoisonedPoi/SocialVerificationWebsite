@@ -7,6 +7,8 @@
     #canvas
     class="h-[3000px] w-[5000px]"
     (click)="clickCanvas($event)"
+    (dragover)="allowDrop($event)"
+    (drop)="addMicro($event)"
   >
   </div>
 </div>

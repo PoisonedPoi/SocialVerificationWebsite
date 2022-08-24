@@ -147,4 +147,16 @@ export class InteractionCanvasComponent implements OnInit {
       }
     }
   }
+
+  allowDrop(event: any) {
+    event.preventDefault();
+  }
+
+  addMicro(event: any) {
+    let g: Group = this.canvasManager.addGroup(event.offsetX - this.scrollPosition.x, event.offsetY - this.scrollPosition.y);
+    this.canvasManager.setAddingGroup(false);
+
+    this.canvasManager.addMicroToGroup(g.id);
+    this.canvasManager.updateGroup(g);
+  }
 }
