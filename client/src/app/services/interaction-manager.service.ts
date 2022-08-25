@@ -75,6 +75,11 @@ export class InteractionManagerService {
 
   removeMicro(microId: number):void {
 
+    let m = this.getMicroById(microId);
+    if (m == undefined) {
+      console.log("no such micro");
+    }
+
     // Remove transitions associated with the microId
     let ts: Transition[] = this.interaction.transitions.filter((x: Transition) => x.firstMicroId != microId && x.secondMicroId != microId);
 

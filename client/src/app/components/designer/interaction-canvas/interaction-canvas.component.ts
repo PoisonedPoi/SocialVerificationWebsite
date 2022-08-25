@@ -113,17 +113,6 @@ export class InteractionCanvasComponent implements OnInit {
     this.scrollPosition.y = event.target.scrollTop;
   }
 
-  /* CANVAS INPUT */
-
-  clickCanvas(event: any) {
-    if (this.interactionManager.isAddingGroup) {
-      // Add group model to current interaction
-      //this.interactionManager.addGroup(event.offsetX - this.scrollPosition.x, event.offsetY - this.scrollPosition.y);
-
-      //this.interactionManager.setAddingGroup(false);
-    }
-  }
-
   /* CONTEXT MENU */
 
   showContextMenu(): void {

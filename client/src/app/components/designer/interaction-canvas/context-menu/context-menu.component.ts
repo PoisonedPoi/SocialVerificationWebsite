@@ -18,7 +18,6 @@ import { ContextMenuService } from 'src/app/services/context-menu.service';
 export class ContextMenuComponent implements OnInit {
 
   @Input() type: string = 'group';
-  @Input() groupId: number = -1;
   @Input() microId: number = -1;
   @Input() transitionId: number = -1;
 
@@ -51,13 +50,12 @@ export class ContextMenuComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  setMenu(type: string, position: Position, groupId: number = -1, microId: number = -1, transitionId: number = -1): void {
+  setMenu(type: string, position: Position, microId: number = -1, transitionId: number = -1): void {
     this.menuHidden = false;
 
     this.type = type;
     this.position = position;
 
-    this.groupId = groupId;
     this.microId = microId;
     this.transitionId = transitionId;
 
