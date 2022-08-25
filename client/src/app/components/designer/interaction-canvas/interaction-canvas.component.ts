@@ -3,18 +3,16 @@ This component displays the current interaction model on a canvas.
 */
 
 import { Component, ComponentRef, ElementRef, HostListener, OnInit, Renderer2, ViewChild, ViewContainerRef } from '@angular/core';
-import { Group } from 'src/app/models/group';
 import { Interaction } from 'src/app/models/interaction';
 import { Position } from 'src/app/models/position';
 import { Transition } from 'src/app/models/transition';
 import { InteractionManagerService } from 'src/app/services/interaction-manager.service';
 import { ContextMenuService } from 'src/app/services/context-menu.service';
 import { ContextMenuComponent } from './context-menu/context-menu.component';
-import { GroupComponent } from './group/group.component';
 import { TransitionComponent } from './transition/transition.component';
 import {CanvasManagerService} from 'src/app/services/canvas-manager.service';
-import {MicroInteraction} from 'src/app/models/microInteraction';
-import {MicroComponent} from './group/micro/micro.component';
+import { MicroInteraction } from 'src/app/models/microInteraction';
+import { MicroComponent } from './micro/micro.component';
 
 @Component({
   selector: 'app-interaction-canvas',

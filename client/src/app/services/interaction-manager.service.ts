@@ -3,7 +3,6 @@ This service manages the current interaction being built.
 */
 
 import { EventEmitter, Injectable, Output } from '@angular/core';
-import { Group } from '../models/group';
 import { Interaction } from '../models/interaction';
 import { MicroInteraction } from '../models/microInteraction';
 import { Parameter } from '../models/parameter';
@@ -34,63 +33,6 @@ export class InteractionManagerService {
   ) {
     this.currentTransition = new Transition(-1, -1, -1);
   }
-
-  /* Group related CRUD functions */
-  
-  /*
-  addGroup(x: number, y: number): Group {
-
-    let isInitial: boolean = this.interaction.groupIdCounter == 0 ? true : false;
-    let name: string = 'untitled' + this.interaction.groupIdCounter;
-
-    let g = new Group(isInitial, this.interaction.groupIdCounter, name, x + this.canvasManager.canvasScrollOffset.x, y + this.canvasManager.canvasScrollOffset.y);
-
-    this.interaction.groupIdCounter++;
-
-    this.interaction.groups.push(g);
-
-    this.getUpdatedInteraction.emit(this.interaction);
-
-    return g;
-  }
-
-  getGroupById(id: number): Group | undefined {
-    let g: Group | undefined = this.interaction.groups.find((x: Group) => x.id === id);
-
-    if (g) {
-      return g;
-    }
-    return undefined;
-  }
-
-  updateGroup(group: Group) {
-    let gs: Group[] = this.interaction.groups.filter((x: Group) => x.id != group.id);
-
-    gs.push(group);
-
-    this.interaction.groups = gs;
-
-    this.getUpdatedInteraction.emit(this.interaction);
-  }
-
-  removeGroup(groupId: number):void {
-    // Remove transitions associated with the groupId
-    let ts: Transition[] = this.interaction.transitions.filter((x: Transition) => x.firstGroupId != groupId && x.secondGroupId != groupId);
-
-    this.interaction.transitions = ts;
-
-    // Remove the group from the groups list
-    let gs: Group[] = this.interaction.groups.filter((x: Group) => x.id != groupId);
-
-    this.interaction.groups = gs;
-
-    if (this.interaction.groups.length == 0) {
-      this.interaction.groupIdCounter = 0;
-    }
-
-    this.getUpdatedInteraction.emit(this.interaction);
-  }
-  */
 
   /* Micro related CRUD functions */
 
