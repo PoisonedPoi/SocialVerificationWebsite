@@ -21,8 +21,7 @@ import { CdkDragEnd } from '@angular/cdk/drag-drop';
 })
 export class MicroComponent implements OnInit {
 
-  @Input() micro: MicroInteraction = new MicroInteraction(1, 0, 0, 'Greeter');
-  @Input() groupId: number = -1;
+  micro: MicroInteraction = new MicroInteraction(1, 0, 0, 'Greeter');
 
   @ViewChild('microEl') el!: ElementRef;
 
@@ -41,7 +40,9 @@ export class MicroComponent implements OnInit {
   }
 
   setMicro(m: MicroInteraction) {
-    console.log(`Create micro at (${m.x}, ${m.y})`);
+    this.x = m.x + 'px';
+    this.y = m.y + 'px';
+    this.micro = m;
   }
 
   /* Show microinteraction's parameter options in the interaction options pane */
@@ -71,7 +72,7 @@ export class MicroComponent implements OnInit {
     let xOffset = xPos - canvasPos.x;
     let yOffset = yPos - canvasPos.y;
 
-    this.contextMenu.displayContextMenu('micro', new Position(xOffset + event.offsetX, yOffset + event.offsetY), this.groupId, this.micro.id);
+    this.contextMenu.displayContextMenu('micro', new Position(xOffset + event.offsetX, yOffset + event.offsetY), this.micro.id);
   }
 
   droppedMicro(event: CdkDragEnd) {

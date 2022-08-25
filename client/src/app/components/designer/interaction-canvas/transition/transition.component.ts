@@ -3,7 +3,6 @@ This component displays a transition between two microinteractions.
 */
 
 import { Component, OnInit } from '@angular/core';
-import { Group } from 'src/app/models/group';
 import { Transition } from 'src/app/models/transition';
 import { Position } from 'src/app/models/position';
 import { InteractionManagerService } from 'src/app/services/interaction-manager.service';
@@ -58,7 +57,7 @@ export class TransitionComponent implements OnInit {
     let xNum = (x1Num + x2Num) / 2;
     let yNum = (y1Num + y2Num) / 2;
 
-    this.contextMenu.displayContextMenu('transition', new Position(xNum + event.offsetX - 50, yNum + event.offsetY - 25), -1, -1, this.transition.id);
+    this.contextMenu.displayContextMenu('transition', new Position(xNum + event.offsetX - 50, yNum + event.offsetY - 25), -1, this.transition.id);
   }
 
   setTransition(t: Transition) {
