@@ -1,26 +1,27 @@
 import { Group } from "./group";
 import { MicroType } from "./microType";
-import { State } from "./state";
 import { Transition } from "./transition";
+
 import { Violation } from "./violation";
 import { getTrackedMicroTypes } from "./trackedMicroTypes";
+import { MicroInteraction } from "./microInteraction";
 
 export class Interaction {
 
-    groupIdCounter: number = 0;
+    microIdCounter: number = 0;
     transitionIdCounter: number = 0;
     violations: Violation[] = [];
-    groups: Group[] = [];
+    micros: MicroInteraction[] = [];
     transitions: Transition[] = [];
 
     constructor(json: string | null = null) {
       if (json) {
         let interactionData = JSON.parse(json);
 
-        this.groupIdCounter = interactionData.groupIdCounter;
+        this.microIdCounter = interactionData.microIdCounter;
         this.transitionIdCounter = interactionData.transitionIdCounter;
 
-        this.groups = interactionData.groups;
+        this.micros = interactionData.micros;
         this.transitions = interactionData.transitions;
       }
     }
@@ -44,44 +45,50 @@ export class Interaction {
     addGroup(x: number, y: number, id: number, isInitial: boolean, name: string): Group {
       let group: Group = new Group(isInitial, id, name, x, y);
 
-      this.groups.push(group);
+      //this.groups.push(group);
 
       return group;
     }
 
     getGroup(id: number) {
+        /*
       for (let i = 0; i < this.groups.length; i++) {
           if (this.groups[i].id == id) {
               return this.groups[i];
           }
       }
+          */
       return;
     }
 
     getInitialGroup() {
+      /*
         for (let i = 0; i < this.groups.length; i++) {
             if (this.groups[i].isInitialGroup == true) {
                 return this.groups[i];
             }
         }
         console.log("couldnt find initial group in getGroup");
+        */
         return;
     }
 
 
     setGroupXY(id: number, x: number, y: number) {
+      /*
         let g = this.getGroup(id);
         if (g) {
             g.setXY(x, y);
             return;
         }
+        */
         console.log("Error here in setGroupXY");
     }
 
 
     removeGroup(id: number) {
         let removeGroup = this.getGroup(id);
-
+        /*
         if (!removeGroup) { return; }
 
         for (let i = 0; i < this.groups.length; i++) {
@@ -97,17 +104,14 @@ export class Interaction {
         }
         let toRemove = [];
         for (let i = 0; i < this.transitions.length; i++) {
-          /*
             if (this.transitions[i].firstGroup.id == id || this.transitions[i].secondGroup.id == id) {
                 toRemove.push(this.transitions[i].id);
             }
-            */
         }
         for (let i = 0; i < toRemove.length; i++) {
             //this.removeTransition(toRemove[i]);
         }
-
-
+        */
         return true;
     }
 

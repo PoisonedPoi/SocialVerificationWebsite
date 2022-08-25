@@ -8,6 +8,7 @@ import { Transition } from 'src/app/models/transition';
 import { Position } from 'src/app/models/position';
 import { InteractionManagerService } from 'src/app/services/interaction-manager.service';
 import { ContextMenuService } from 'src/app/services/context-menu.service';
+import {MicroInteraction} from 'src/app/models/microInteraction';
 
 @Component({
   selector: 'app-transition',
@@ -64,20 +65,20 @@ export class TransitionComponent implements OnInit {
     this.transition = t;
 
     if (this.transition) {
-      let group1 = this.interactionManager.getGroupById(this.transition.firstGroupId);
-      let group2 = this.interactionManager.getGroupById(this.transition.secondGroupId);
+      let firstMicro = this.interactionManager.getMicroById(this.transition.firstMicroId);
+      let secondMicro = this.interactionManager.getMicroById(this.transition.secondMicroId);
 
-      if (group1 && group2) {
-        this.setOffsets(group1, group2);
+      if (firstMicro && secondMicro) {
+        this.setOffsets(firstMicro, secondMicro);
       }
     }
   }
 
-  setOffsets(g1: Group, g2: Group) {
+  setOffsets(m1: MicroInteraction, m2: MicroInteraction) {
 
-    if (g1.id === g2.id) {
+    if (m1.id === m2.id) {
       this.isLine = false;
-      this.setSelfOffsets(g1);
+      this.setSelfOffsets(m1);
       return;
     }
 
@@ -85,15 +86,15 @@ export class TransitionComponent implements OnInit {
 
     // Calculate in and out anchor positions
 
-    let EOut: {x: number, y: number} = {x: g1.x + this.width, y: g1.y + (this.height * (1/3))};
-    let WOut: {x: number, y: number} = {x: g1.x, y: g1.y + (this.height * (2/3))};
-    let NOut: {x: number, y: number} = {x: g1.x + (this.width * (1/3)), y: g1.y};
-    let SOut: {x: number, y: number} = {x: g1.x + (this.width * (2/3)), y: g1.y + this.height};
+    let EOut: {x: number, y: number} = {x: m1.x + this.width, y: m1.y + (this.height * (1/3))};
+    let WOut: {x: number, y: number} = {x: m1.x, y: m1.y + (this.height * (2/3))};
+    let NOut: {x: number, y: number} = {x: m1.x + (this.width * (1/3)), y: m1.y};
+    let SOut: {x: number, y: number} = {x: m1.x + (this.width * (2/3)), y: m1.y + this.height};
 
-    let EIn:  {x: number, y: number} = {x: g2.x + this.width, y: g2.y + (this.height * (2/3))};
-    let WIn:  {x: number, y: number} = {x: g2.x, y: g2.y + (this.height * (1/3))};
-    let NIn:  {x: number, y: number} = {x: g2.x + (this.width * (2/3)), y: g2.y};
-    let SIn:  {x: number, y: number} = {x: g2.x + (this.width * (1/3)), y: g2.y + this.height};
+    let EIn:  {x: number, y: number} = {x: m2.x + this.width, y: m2.y + (this.height * (2/3))};
+    let WIn:  {x: number, y: number} = {x: m2.x, y: m2.y + (this.height * (1/3))};
+    let NIn:  {x: number, y: number} = {x: m2.x + (this.width * (2/3)), y: m2.y};
+    let SIn:  {x: number, y: number} = {x: m2.x + (this.width * (1/3)), y: m2.y + this.height};
 
     let outAnchors = [EOut, WOut, NOut, SOut];
     let inAnchors = [EIn, WIn, NIn, SIn];
@@ -117,7 +118,7 @@ export class TransitionComponent implements OnInit {
     });
 
     // Set the arrow offset
-    let theta: number = Math.atan2(g1.y - g2.y, g1.x - g2.x);
+    let theta: number = Math.atan2(m1.y - m2.y, m1.x - m2.x);
 
     let xOff = this.arrowLength * Math.cos(theta);
     let yOff = this.arrowLength * Math.sin(theta);
@@ -135,16 +136,16 @@ export class TransitionComponent implements OnInit {
     }
   }
 
-  setSelfOffsets(g: Group) {
-    let NOutX = g.x + this.width / 3
-    let EInY = g.y + this.height / 3
+  setSelfOffsets(m: MicroInteraction) {
+    let NOutX = m.x + this.width / 3
+    let EInY = m.y + this.height / 3
 
-    this.conditionsX = (g.x - 50) + "px";
-    this.conditionsY = (g.y - 30) + "px";
+    this.conditionsX = (m.x - 50) + "px";
+    this.conditionsY = (m.y - 30) + "px";
 
-    this.d = 'M ' + NOutX + ' ' + g.y +
-      ' C ' + g.x + ' ' + (g.y - 50) + ', ' +
-      (g.x - 60) + ' ' + g.y + ', ' + (g.x - 10) + ' ' + (EInY - 15);
+    this.d = 'M ' + NOutX + ' ' + m.y +
+      ' C ' + m.x + ' ' + (m.y - 50) + ', ' +
+      (m.x - 60) + ' ' + m.y + ', ' + (m.x - 10) + ' ' + (EInY - 15);
   }
 
   updateTransition() {

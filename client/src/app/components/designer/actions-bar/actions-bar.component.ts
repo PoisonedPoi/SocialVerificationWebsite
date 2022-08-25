@@ -5,6 +5,7 @@ normal program.
 */
 
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { CanvasManagerService } from 'src/app/services/canvas-manager.service';
 import { InteractionManagerService } from 'src/app/services/interaction-manager.service';
 import { ParameterManagerService } from 'src/app/services/parameter-manager.service';
 
@@ -22,9 +23,10 @@ export class ActionsBarComponent implements OnInit {
 
   constructor(
     private interactionManager: InteractionManagerService,
+    private canvasManager: CanvasManagerService,
     private paramManager: ParameterManagerService
   ) {
-    interactionManager.updateBtnState.subscribe(() => {
+    this.canvasManager.updateBtnState.subscribe(() => {
       this.updateButtonColors();
     });
   }

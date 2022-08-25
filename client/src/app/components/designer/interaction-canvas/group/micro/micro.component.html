@@ -1,8 +1,14 @@
 <div
   #microEl
-  (click)="selectMicro($event)"
+  [style.left]='x'
+  [style.top]='y'
+  cdkScrollable
+  cdkDragBoundary=".bounding-canvas"
+  cdkDrag
+  (cdkDragEnded)="droppedMicro($event)"
+  (click)="clickMicro($event)"
   (contextmenu)="showContextMenu($event)"
-  class="z-10 h-8 mb-2 text-center bg-yellow-100 border-2 border-black rounded-xl"
+  class="absolute z-10 w-24 h-48 mb-2 text-center align-middle bg-yellow-100 border-2 border-black rounded-xl"
 >
 {{micro.type}}
 </div>

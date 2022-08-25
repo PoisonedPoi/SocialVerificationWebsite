@@ -47,7 +47,6 @@ export class Group {
       for (mid = 0; mid < micros.length; mid++) {
 
         let micro: MicroInteraction = new MicroInteraction();
-        micro.setMircoFromXML(micros[mid], mid, id);
 
         this.micros.push(micro);
       }
@@ -64,7 +63,6 @@ export class Group {
       xmlString += '<name>' + this.name + '</name>';
 
       this.micros.forEach((micro: MicroInteraction) => {
-        xmlString += micro.getMicroFromXML();
       });
 
       xmlString += '</group>';

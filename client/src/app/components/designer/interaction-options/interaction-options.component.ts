@@ -41,7 +41,7 @@ export class InteractionOptionsComponent implements OnInit {
   /* Updates the current microinteraction in the interaction model */
   saveOptions() {
     if (this.micro) {
-      this.interactionManager.updateParams(this.micro.groupId, this.micro.id, this.paramRes);
+      this.interactionManager.updateParams(this.micro.id, this.paramRes);
     }
   }
 

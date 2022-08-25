@@ -4,6 +4,7 @@ import { Group } from 'src/app/models/group';
 import { Position } from 'src/app/models/position';
 import { InteractionManagerService } from 'src/app/services/interaction-manager.service';
 import { ContextMenuService } from 'src/app/services/context-menu.service';
+import { CanvasManagerService } from 'src/app/services/canvas-manager.service';
 
 @Component({
   selector: 'app-group',
@@ -20,6 +21,7 @@ export class GroupComponent implements OnInit {
 
   constructor(
     private interactionManager: InteractionManagerService,
+    private canvasManager: CanvasManagerService,
     private contextMenu: ContextMenuService,
   ) {}
 
@@ -66,8 +68,8 @@ export class GroupComponent implements OnInit {
 
   droppedGroup(event: CdkDragEnd) {
     let rect = event.source.getRootElement().getBoundingClientRect();
-    this.group.x = rect.x - this.interactionManager.canvasOffset.x + this.interactionManager.canvasScrollOffset.x;
-    this.group.y = rect.y - this.interactionManager.canvasOffset.y + this.interactionManager.canvasScrollOffset.y;
+    this.group.x = rect.x - this.canvasManager.canvasOffset.x + this.canvasManager.canvasScrollOffset.x;
+    this.group.y = rect.y - this.canvasManager.canvasOffset.y + this.canvasManager.canvasScrollOffset.y;
     this.interactionManager.updateGroup(this.group);
   }
 

@@ -6,15 +6,17 @@ import { getTrackedMicroTypes } from "./trackedMicroTypes";
 export class MicroInteraction {
 
     id: number;
-    groupId: number;
+    x: number;
+    y: number;
     type: string | null; // i.e. 'Greeter', 'Farewell'
     parameters: Parameter[] = [];
     parameterResults: ParameterResult[] = [];  
     //Note: results are stored as follows: {parameter id: resultString} (or list instead of result string case of type=array) so parameterResults looks like [{0,"yes"},{20,"option1"}] --these will be passed to backend along with the variable name(which is stored in parameter)
 
-    constructor(id: number = -1, groupId: number = -1, type: string = '', parameters: Parameter[] = [], parameterResults: ParameterResult[] = []) { //micros are built off a microType defined
+    constructor(id: number = -1, x: number = 0, y: number = 0, type: string = '', parameters: Parameter[] = [], parameterResults: ParameterResult[] = []) { //micros are built off a microType defined
         this.id = id;
-        this.groupId = groupId;
+        this.x = x;
+        this.y = y;
         this.type = type;
         this.parameters = parameters;
         if (parameterResults == []) {
@@ -32,49 +34,6 @@ export class MicroInteraction {
         } else {
           this.parameterResults = parameterResults;
         }
-    }
-
-    setMircoFromXML(el: Element, mid: number, gid: number) {
-
-      let trackedMicroTypes: MicroType[] = getTrackedMicroTypes();
-
-      // Set micro properties
-      this.id = mid;
-      this.groupId = gid;
-
-      this.type = el.getElementsByTagName("name")[0].textContent;
-
-      // Set parameters based on trackedMicroTypes
-
-      let curMicroType: MicroType | undefined = trackedMicroTypes.find((m: MicroType) => m.type === this.type);
-
-      if (curMicroType) {
-        this.parameters = curMicroType.parameters;
-      }
-
-      // Get parameter results
-      let parameterResults = el.getElementsByTagName("parameter");
-
-      for (let pid = 0; pid < parameterResults.length; pid++) {
-        let pr: ParameterResult = new ParameterResult();
-        pr.setParameterResultFromXML(parameterResults[pid], pid);
-        this.parameterResults.push(pr);
-      }
-    }
-
-    getMicroFromXML(): string {
-      let xmlString: string = '';
-
-      xmlString += '<micro id="' + this.id + '">';
-      xmlString += '<name>' + this.type + '</name>';
-
-      this.parameterResults.forEach((paramRes: ParameterResult, i: number) => {
-        xmlString += paramRes.getParameterResultInXML(this.parameters[i].variableName);
-      });
-
-      xmlString += '</micro>';
-
-      return xmlString;
     }
 
     updateResults(results: ParameterResult[]) {

@@ -65,16 +65,12 @@ export class ContextMenuComponent implements OnInit {
     this.y = position.y + 'px';
   }
 
-  removeGroup() {
-    this.interactionManager.removeGroup(this.groupId);
-  }
-
   removeTransition() {
     this.interactionManager.removeTransition(this.transitionId);
   }
 
   removeMicro() {
-    this.interactionManager.removeMicro(this.groupId, this.microId);
+    this.interactionManager.removeMicro(this.microId);
   }
 
 }

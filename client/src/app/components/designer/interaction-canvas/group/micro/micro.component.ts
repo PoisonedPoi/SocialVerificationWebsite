@@ -8,8 +8,10 @@ import { Component, OnInit, Input, ElementRef, ViewChild } from '@angular/core';
 import { MicroInteraction } from 'src/app/models/microInteraction';
 import { ContextMenuService } from 'src/app/services/context-menu.service';
 import { Position } from 'src/app/models/position';
-import { InteractionManagerService } from 'src/app/services/interaction-manager.service';
 import { ParameterManagerService } from 'src/app/services/parameter-manager.service';
+import { CanvasManagerService } from 'src/app/services/canvas-manager.service';
+import { InteractionManagerService } from 'src/app/services/interaction-manager.service';
+import { CdkDragEnd } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-micro',
@@ -19,13 +21,18 @@ import { ParameterManagerService } from 'src/app/services/parameter-manager.serv
 })
 export class MicroComponent implements OnInit {
 
-  @Input() micro: MicroInteraction = new MicroInteraction(1, 1, 'Greeter');
+  @Input() micro: MicroInteraction = new MicroInteraction(1, 0, 0, 'Greeter');
   @Input() groupId: number = -1;
 
   @ViewChild('microEl') el!: ElementRef;
 
+  tempAddTrans: boolean = false;
+  x: string = '';
+  y: string = '';
+
   constructor(
     private contextMenu: ContextMenuService,
+    private canvasManager: CanvasManagerService,
     private interactionManager: InteractionManagerService,
     private parameterManager: ParameterManagerService
   ) { }
@@ -33,11 +40,23 @@ export class MicroComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  /* Show microinteraction's parameter options in the interaction options pane */
-  selectMicro(event: any) {
-    event.preventDefault();
+  setMicro(m: MicroInteraction) {
+    console.log(`Create micro at (${m.x}, ${m.y})`);
+  }
 
-    this.parameterManager.updateCurrentMicro(this.micro);
+  /* Show microinteraction's parameter options in the interaction options pane */
+  clickMicro(event: any) {
+    event.preventDefault();
+    
+    if (this.tempAddTrans) {
+      if (this.interactionManager.addingTransition == 1) {
+        this.interactionManager.setFirstMicroId(this.micro.id);
+      } else if (this.interactionManager.addingTransition == 2) {
+        this.interactionManager.setSecondMicroId(this.micro.id);
+      }
+    } else {
+      this.parameterManager.updateCurrentMicro(this.micro);
+    }
   }
 
   /* Show options menu when right-clicked */
@@ -47,12 +66,19 @@ export class MicroComponent implements OnInit {
     let xPos = this.el.nativeElement.getBoundingClientRect().x;
     let yPos = this.el.nativeElement.getBoundingClientRect().y;
 
-    let canvasPos: Position = this.interactionManager.canvasOffset;
+    let canvasPos: Position = this.canvasManager.canvasOffset;
 
     let xOffset = xPos - canvasPos.x;
     let yOffset = yPos - canvasPos.y;
 
     this.contextMenu.displayContextMenu('micro', new Position(xOffset + event.offsetX, yOffset + event.offsetY), this.groupId, this.micro.id);
+  }
+
+  droppedMicro(event: CdkDragEnd) {
+    let rect = event.source.getRootElement().getBoundingClientRect();
+    this.micro.x = rect.x - this.canvasManager.canvasOffset.x + this.canvasManager.canvasScrollOffset.x;
+    this.micro.y = rect.y - this.canvasManager.canvasOffset.y + this.canvasManager.canvasScrollOffset.y;
+    this.interactionManager.updateMicro(this.micro);
   }
 
 }

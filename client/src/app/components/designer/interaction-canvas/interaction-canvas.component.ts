@@ -12,6 +12,9 @@ import { ContextMenuService } from 'src/app/services/context-menu.service';
 import { ContextMenuComponent } from './context-menu/context-menu.component';
 import { GroupComponent } from './group/group.component';
 import { TransitionComponent } from './transition/transition.component';
+import {CanvasManagerService} from 'src/app/services/canvas-manager.service';
+import {MicroInteraction} from 'src/app/models/microInteraction';
+import {MicroComponent} from './group/micro/micro.component';
 
 @Component({
   selector: 'app-interaction-canvas',
@@ -51,6 +54,7 @@ export class InteractionCanvasComponent implements OnInit {
 
   constructor(
     private interactionManager: InteractionManagerService,
+    private canvasManager: CanvasManagerService,
     private contextMenu: ContextMenuService,
     private render: Renderer2,
     private el: ElementRef
@@ -63,8 +67,8 @@ export class InteractionCanvasComponent implements OnInit {
 
       // Set canvas offset in canvasManager OnLoad
       // TODO Update canvas offsets when user changes the window size
-      this.interactionManager.canvasOffset = this.position;
-      this.interactionManager.canvasScrollOffset = this.scrollPosition;
+      this.canvasManager.canvasOffset = this.position;
+      this.canvasManager.canvasScrollOffset = this.scrollPosition;
     });
 
     // When interaction changes, re-render the canvas
@@ -87,12 +91,12 @@ export class InteractionCanvasComponent implements OnInit {
   /* CANVAS RENDERING */
 
   renderCanvas(): void {
-    this.interaction.groups.forEach((g: Group) => {
-      // Create a group component
-      const groupComponent = this.container.createComponent(GroupComponent).instance;
+    this.interaction.micros.forEach((m: MicroInteraction) => {
+      // Create a micro component
+      const microComponent = this.container.createComponent(MicroComponent).instance;
 
       // Set the component to match the model
-      groupComponent.setGroup(g);
+      microComponent.setMicro(m);
     });
 
     this.interaction.transitions.forEach((t: Transition) => {
@@ -116,9 +120,9 @@ export class InteractionCanvasComponent implements OnInit {
   clickCanvas(event: any) {
     if (this.interactionManager.isAddingGroup) {
       // Add group model to current interaction
-      this.interactionManager.addGroup(event.offsetX - this.scrollPosition.x, event.offsetY - this.scrollPosition.y);
+      //this.interactionManager.addGroup(event.offsetX - this.scrollPosition.x, event.offsetY - this.scrollPosition.y);
 
-      this.interactionManager.setAddingGroup(false);
+      //this.interactionManager.setAddingGroup(false);
     }
   }
 
@@ -157,10 +161,7 @@ export class InteractionCanvasComponent implements OnInit {
   }
 
   addMicro(event: any) {
-    let g: Group = this.interactionManager.addGroup(event.offsetX - this.scrollPosition.x, event.offsetY - this.scrollPosition.y);
-    this.interactionManager.setAddingGroup(false);
-
-    this.interactionManager.addMicroToGroup(g.id);
-    this.interactionManager.updateGroup(g);
+    this.interactionManager.addMicro(event.offsetX - this.scrollPosition.x, event.offsetY - this.scrollPosition.y);
   }
+
 }

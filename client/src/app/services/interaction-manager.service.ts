@@ -1,13 +1,17 @@
+/*
+This service manages the current interaction being built.
+*/
+
 import { EventEmitter, Injectable, Output } from '@angular/core';
 import { Group } from '../models/group';
 import { Interaction } from '../models/interaction';
-import { Position } from '../models/position';
 import { MicroInteraction } from '../models/microInteraction';
-import {Parameter} from '../models/parameter';
-import {MicroType} from '../models/microType';
-import {ParameterResult} from '../models/parameterResult';
+import { Parameter } from '../models/parameter';
+import { MicroType } from '../models/microType';
+import { ParameterResult } from '../models/parameterResult';
 import { getTrackedMicroTypes } from '../models/trackedMicroTypes';
-import {Transition} from '../models/transition';
+import { Transition } from '../models/transition';
+import { CanvasManagerService } from './canvas-manager.service';
 
 @Injectable({
   providedIn: 'root'
@@ -22,24 +26,24 @@ export class InteractionManagerService {
 
   currentMicroType: string = '';
 
-  @Output() updateBtnState: EventEmitter<any> = new EventEmitter();
   @Output() getUpdatedInteraction: EventEmitter<Interaction> = new EventEmitter<Interaction>();
 
-  canvasOffset: Position = new Position(0, 0);
-  canvasScrollOffset: Position = new Position(0, 0);
 
-  constructor() {
+  constructor(
+    private canvasManager: CanvasManagerService
+  ) {
     this.currentTransition = new Transition(-1, -1, -1);
   }
 
   /* Group related CRUD functions */
-
+  
+  /*
   addGroup(x: number, y: number): Group {
 
     let isInitial: boolean = this.interaction.groupIdCounter == 0 ? true : false;
     let name: string = 'untitled' + this.interaction.groupIdCounter;
 
-    let g = new Group(isInitial, this.interaction.groupIdCounter, name, x + this.canvasScrollOffset.x, y + this.canvasScrollOffset.y);
+    let g = new Group(isInitial, this.interaction.groupIdCounter, name, x + this.canvasManager.canvasScrollOffset.x, y + this.canvasManager.canvasScrollOffset.y);
 
     this.interaction.groupIdCounter++;
 
@@ -86,19 +90,29 @@ export class InteractionManagerService {
 
     this.getUpdatedInteraction.emit(this.interaction);
   }
-  
+  */
+
   /* Micro related CRUD functions */
 
-  addMicroToGroup(groupId: number): MicroInteraction  | null {
+  updateMicro(micro: MicroInteraction) {
+    let ms: MicroInteraction[] = this.interaction.micros.filter((x: MicroInteraction) => x.id != micro.id);
+
+    ms.push(micro);
+
+    this.interaction.micros = ms;
+
+    this.getUpdatedInteraction.emit(this.interaction);
+  }
+
+  getMicroById(mid: number) {
+    let m: MicroInteraction | undefined = this.interaction.micros.find((x: MicroInteraction) => x.id === mid);
+
+    return m;
+  }
+
+  addMicro(x: number, y: number): MicroInteraction | null {
 
     let trackedMicroTypes: MicroType[] = getTrackedMicroTypes();
-
-    const g: Group | undefined = this.interaction.getGroup(groupId);
-    
-    if (!g) {
-      console.log("ERROR: add micro to group failure with groupId: %d", groupId);
-      return null;
-    }
 
     let params: Parameter[] = [];
 
@@ -108,40 +122,43 @@ export class InteractionManagerService {
       params = mt.parameters;
     }
 
-    let m: MicroInteraction = new MicroInteraction(g.microIdCounter++, g.id, this.currentMicroType, params);
+    let m: MicroInteraction = new MicroInteraction(this.interaction.microIdCounter++, x, y, this.currentMicroType, params);
 
-    g.micros.push(m);
+    this.interaction.micros.push(m);
 
     this.getUpdatedInteraction.emit(this.interaction);
-    
+
     return m;
   }
 
-  removeMicro(groupId: number, microId: number):void {
-    const g: Group | undefined = this.interaction.getGroup(groupId);
-    
-    if (!g) {
-      console.log("ERROR: remove micro failure with groupId: %d", groupId);
-      return;
-    }
+  removeMicro(microId: number):void {
 
-    g.removeMicro(microId);
+    // Remove transitions associated with the microId
+    let ts: Transition[] = this.interaction.transitions.filter((x: Transition) => x.firstMicroId != microId && x.secondMicroId != microId);
+
+    this.interaction.transitions = ts;
+
+    // Remove the micro from the micros list
+    let ms: MicroInteraction[] = this.interaction.micros.filter((x: MicroInteraction) => x.id != microId);
+
+    this.interaction.micros = ms;
+
+    if (this.interaction.micros.length == 0) {
+      this.interaction.microIdCounter = 0;
+    }
 
     this.getUpdatedInteraction.emit(this.interaction);
   }
 
   /* Parameter related CRUD functions */
-  
-  updateParams(groupId: number, microId: number, paramRes: ParameterResult[]) {
-    let g = this.interaction.groups.find(group => group.id === groupId);
 
-    if (g) {
-      let m = g.micros.find(micro => micro.id === microId);
-      if (m) {
-        m.updateResults(paramRes);
+  updateParams(microId: number, paramRes: ParameterResult[]) {
+    let m = this.interaction.micros.find(micro => micro.id === microId);
 
-        this.getUpdatedInteraction.emit(this.interaction);
-      }
+    if (m) {
+      m.updateResults(paramRes);
+
+      this.getUpdatedInteraction.emit(this.interaction);
     }
   }
 
@@ -159,22 +176,22 @@ export class InteractionManagerService {
     this.getUpdatedInteraction.emit(this.interaction);
   }
 
-  setGroup1Id(gid: number) {
+  setFirstMicroId(mid: number) {
     this.currentTransition = new Transition();
-    this.currentTransition.firstGroupId = gid;
+    this.currentTransition.firstMicroId = mid;
     this.addingTransition++;
   }
 
-  setGroup2Id(gid: number) {
+  setSecondMicroId(mid: number) {
 
     // Check that this is going to be a unique transition
-    let dup = this.interaction.transitions.find((t: Transition) => t.firstGroupId == this.currentTransition.firstGroupId && t.secondGroupId == gid);
+    let dup = this.interaction.transitions.find((t: Transition) => t.firstMicroId == this.currentTransition.firstMicroId && t.secondMicroId == mid);
 
     if (dup != undefined) {
       return;
     }
 
-    this.currentTransition.secondGroupId = gid;
+    this.currentTransition.secondMicroId = mid;
 
     this.currentTransition.id = this.interaction.transitionIdCounter;
     this.interaction.transitionIdCounter++;
@@ -202,14 +219,14 @@ export class InteractionManagerService {
     this.isAddingGroup = val;
     this.addingTransition = 0;
 
-    this.updateBtnState.emit();
+    this.canvasManager.updateBtnState.emit();
   }
 
   setAddingTransition(val: number) {
     this.addingTransition = val;
     this.isAddingGroup = false;
 
-    this.updateBtnState.emit();
+    this.canvasManager.updateBtnState.emit();
   }
 
   /* Loading from file on disk */
