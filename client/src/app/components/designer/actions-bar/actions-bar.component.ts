@@ -1,6 +1,12 @@
+/*
+This component displays the macro-actions available
+to a user. Similar to the 'File' menu displayed in a
+normal program.
+*/
+
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { CanvasManagerService } from 'src/app/services/canvas-manager.service';
-import {ParameterManagerService} from 'src/app/services/parameter-manager.service';
+import { InteractionManagerService } from 'src/app/services/interaction-manager.service';
+import { ParameterManagerService } from 'src/app/services/parameter-manager.service';
 
 @Component({
   selector: 'app-actions-bar',
@@ -13,12 +19,12 @@ export class ActionsBarComponent implements OnInit {
 
   isAddingGroup: boolean = false;
   isAddingTransition: boolean = false;
-  
+
   constructor(
-    private canvasManager: CanvasManagerService,
+    private interactionManager: InteractionManagerService,
     private paramManager: ParameterManagerService
   ) {
-    canvasManager.updateBtnState.subscribe(() => {
+    interactionManager.updateBtnState.subscribe(() => {
       this.updateButtonColors();
     });
   }
@@ -28,18 +34,18 @@ export class ActionsBarComponent implements OnInit {
 
   /* Action button click functions */
   addGroup() {
-    if (this.canvasManager.isAddingGroup) {
-      this.canvasManager.setAddingGroup(false);
+    if (this.interactionManager.isAddingGroup) {
+      this.interactionManager.setAddingGroup(false);
     } else {
-      this.canvasManager.setAddingGroup(true);
+      this.interactionManager.setAddingGroup(true);
     }
   }
 
   addTransition() {
-    if (this.canvasManager.addingTransition != 0) {
-      this.canvasManager.setAddingTransition(0);
+    if (this.interactionManager.addingTransition != 0) {
+      this.interactionManager.setAddingTransition(0);
     } else {
-      this.canvasManager.setAddingTransition(1);
+      this.interactionManager.setAddingTransition(1);
     }
   }
 
@@ -51,7 +57,7 @@ export class ActionsBarComponent implements OnInit {
     console.log("Save to file");
 
     let file = "interaction.json";
-    let text = JSON.stringify(this.canvasManager.interaction);
+    let text = JSON.stringify(this.interactionManager.interaction);
     var element = document.createElement('a');
     element.setAttribute('href', 'data:text/plain;charset=utf-8, ' + encodeURIComponent(text));
     element.setAttribute('download', file);
@@ -66,30 +72,27 @@ export class ActionsBarComponent implements OnInit {
   }
 
   loadFromUpload(event: any) {
-    this.canvasManager.loadInteractionFromJSONFile(event.target.files[0]);
+    this.interactionManager.loadInteractionFromJSONFile(event.target.files[0]);
   }
 
   clear() {
-    this.canvasManager.clearCanvas();
+    this.interactionManager.clearCanvas();
     this.paramManager.updateCurrentMicro(undefined);
   }
 
   saveInteractionToLocal() {
-    this.canvasManager.saveInteractionToLocal();
+    this.interactionManager.saveInteractionToLocal();
   }
 
   /* Update view functions */
   updateButtonColors() {
-    if (this.canvasManager.isAddingGroup) {
+    if (this.interactionManager.isAddingGroup) {
       this.isAddingGroup = true;
       this.isAddingTransition = false;
-    } else if (this.canvasManager.addingTransition != 0) {
-      this.isAddingGroup = false;
       this.isAddingTransition = true;
     } else {
       this.isAddingGroup = false;
       this.isAddingTransition = false;
     }
-  
   }
 }

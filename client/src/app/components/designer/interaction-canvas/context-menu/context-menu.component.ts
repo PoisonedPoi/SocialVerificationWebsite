@@ -1,7 +1,13 @@
+/*
+This component is generated when the user right-clicks
+on another component. It displays actions that are possible
+to apply to the component that was clicked on.
+*/
+
 import { Component, OnInit, Input, ElementRef, HostListener } from '@angular/core';
-import {Position} from 'src/app/models/position';
-import {CanvasManagerService} from 'src/app/services/canvas-manager.service';
-import {ContextMenuService} from 'src/app/services/context-menu.service';
+import { Position } from 'src/app/models/position';
+import { InteractionManagerService } from 'src/app/services/interaction-manager.service';
+import { ContextMenuService } from 'src/app/services/context-menu.service';
 
 @Component({
   selector: 'app-context-menu',
@@ -33,11 +39,11 @@ export class ContextMenuComponent implements OnInit {
       this.menuHidden = true;
       this.contextMenu.type = '';
       this.contextMenu.hideContextMenuEmitter.emit();
-    }  
-  } 
+    }
+  }
 
   constructor(
-    private canvasManager: CanvasManagerService,
+    private interactionManager: InteractionManagerService,
     private contextMenu: ContextMenuService,
     private el: ElementRef
   ) { }
@@ -60,15 +66,15 @@ export class ContextMenuComponent implements OnInit {
   }
 
   removeGroup() {
-    this.canvasManager.removeGroup(this.groupId);
+    this.interactionManager.removeGroup(this.groupId);
   }
 
   removeTransition() {
-    this.canvasManager.removeTransition(this.transitionId);
+    this.interactionManager.removeTransition(this.transitionId);
   }
 
   removeMicro() {
-    this.canvasManager.removeMicro(this.groupId, this.microId);
+    this.interactionManager.removeMicro(this.groupId, this.microId);
   }
 
 }

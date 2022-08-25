@@ -1,8 +1,8 @@
-import { CdkDragEnd, CdkDragMove } from '@angular/cdk/drag-drop';
+import { CdkDragEnd } from '@angular/cdk/drag-drop';
 import { Component, OnInit } from '@angular/core';
 import { Group } from 'src/app/models/group';
 import { Position } from 'src/app/models/position';
-import { CanvasManagerService } from 'src/app/services/canvas-manager.service';
+import { InteractionManagerService } from 'src/app/services/interaction-manager.service';
 import { ContextMenuService } from 'src/app/services/context-menu.service';
 
 @Component({
@@ -19,7 +19,7 @@ export class GroupComponent implements OnInit {
   group: Group = new Group();
 
   constructor(
-    private canvasManager: CanvasManagerService, 
+    private interactionManager: InteractionManagerService,
     private contextMenu: ContextMenuService,
   ) {}
 
@@ -27,7 +27,7 @@ export class GroupComponent implements OnInit {
   }
 
   ngViewAfterInit(): void {
-    this.canvasManager.getUpdatedInteraction.subscribe((interaction) => {
+    this.interactionManager.getUpdatedInteraction.subscribe((interaction) => {
       let g = interaction.getGroup(this.group.id);
       if (g) {
         this.group = g;
@@ -44,7 +44,7 @@ export class GroupComponent implements OnInit {
 
   updateName(event: any) {
     this.group.name = event.target.value;
-    this.canvasManager.updateGroup(this.group);
+    this.interactionManager.updateGroup(this.group);
   }
 
   showContextMenu(event: any) {
@@ -66,23 +66,23 @@ export class GroupComponent implements OnInit {
 
   droppedGroup(event: CdkDragEnd) {
     let rect = event.source.getRootElement().getBoundingClientRect();
-    this.group.x = rect.x - this.canvasManager.canvasOffset.x + this.canvasManager.canvasScrollOffset.x;
-    this.group.y = rect.y - this.canvasManager.canvasOffset.y + this.canvasManager.canvasScrollOffset.y;
-    this.canvasManager.updateGroup(this.group);
+    this.group.x = rect.x - this.interactionManager.canvasOffset.x + this.interactionManager.canvasScrollOffset.x;
+    this.group.y = rect.y - this.interactionManager.canvasOffset.y + this.interactionManager.canvasScrollOffset.y;
+    this.interactionManager.updateGroup(this.group);
   }
 
   dropMicro() {
     // Add micro to group
     //this.group.micros.push(new MicroInteraction(this.group.microIdCounter++, this.canvasManager.currentMicroType));
-    this.canvasManager.addMicroToGroup(this.group.id);
-    this.canvasManager.updateGroup(this.group);
+    this.interactionManager.addMicroToGroup(this.group.id);
+    this.interactionManager.updateGroup(this.group);
   }
 
   addTransition() {
-    if (this.canvasManager.addingTransition == 1) {
-      this.canvasManager.setGroup1Id(this.group.id);
-    } else if (this.canvasManager.addingTransition == 2) {
-      this.canvasManager.setGroup2Id(this.group.id);
+    if (this.interactionManager.addingTransition == 1) {
+      this.interactionManager.setGroup1Id(this.group.id);
+    } else if (this.interactionManager.addingTransition == 2) {
+      this.interactionManager.setGroup2Id(this.group.id);
     }
   }
 }

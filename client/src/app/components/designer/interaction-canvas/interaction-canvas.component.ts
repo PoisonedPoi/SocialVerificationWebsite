@@ -1,13 +1,17 @@
+/*
+This component displays the current interaction model on a canvas.
+*/
+
 import { Component, ComponentRef, ElementRef, HostListener, OnInit, Renderer2, ViewChild, ViewContainerRef } from '@angular/core';
 import { Group } from 'src/app/models/group';
 import { Interaction } from 'src/app/models/interaction';
-import {Position} from 'src/app/models/position';
-import {Transition} from 'src/app/models/transition';
-import { CanvasManagerService } from 'src/app/services/canvas-manager.service';
-import {ContextMenuService} from 'src/app/services/context-menu.service';
-import {ContextMenuComponent} from './context-menu/context-menu.component';
+import { Position } from 'src/app/models/position';
+import { Transition } from 'src/app/models/transition';
+import { InteractionManagerService } from 'src/app/services/interaction-manager.service';
+import { ContextMenuService } from 'src/app/services/context-menu.service';
+import { ContextMenuComponent } from './context-menu/context-menu.component';
 import { GroupComponent } from './group/group.component';
-import {TransitionComponent} from './transition/transition.component';
+import { TransitionComponent } from './transition/transition.component';
 
 @Component({
   selector: 'app-interaction-canvas',
@@ -36,17 +40,17 @@ export class InteractionCanvasComponent implements OnInit {
   // Load XML stored in local storage
   @HostListener('window:load', ['$event'])
   onLoadHander() {
-    this.canvasManager.loadInteractionFromLocal();
+    this.interactionManager.loadInteractionFromLocal();
   }
 
   // Save XML to local storage
   @HostListener('window:beforeunload', ['$event'])
   beforeUnloadHander() {
-    this.canvasManager.saveInteractionToLocal();
+    this.interactionManager.saveInteractionToLocal();
   }
 
   constructor(
-    private canvasManager: CanvasManagerService,
+    private interactionManager: InteractionManagerService,
     private contextMenu: ContextMenuService,
     private render: Renderer2,
     private el: ElementRef
@@ -59,12 +63,12 @@ export class InteractionCanvasComponent implements OnInit {
 
       // Set canvas offset in canvasManager OnLoad
       // TODO Update canvas offsets when user changes the window size
-      this.canvasManager.canvasOffset = this.position;
-      this.canvasManager.canvasScrollOffset = this.scrollPosition;
+      this.interactionManager.canvasOffset = this.position;
+      this.interactionManager.canvasScrollOffset = this.scrollPosition;
     });
 
     // When interaction changes, re-render the canvas
-    this.canvasManager.getUpdatedInteraction.subscribe((interaction) => {
+    this.interactionManager.getUpdatedInteraction.subscribe((interaction) => {
       this.container.clear();
       this.interaction = interaction;
       this.renderCanvas();
@@ -110,11 +114,11 @@ export class InteractionCanvasComponent implements OnInit {
   /* CANVAS INPUT */
 
   clickCanvas(event: any) {
-    if (this.canvasManager.isAddingGroup) {
+    if (this.interactionManager.isAddingGroup) {
       // Add group model to current interaction
-      this.canvasManager.addGroup(event.offsetX - this.scrollPosition.x, event.offsetY - this.scrollPosition.y);
+      this.interactionManager.addGroup(event.offsetX - this.scrollPosition.x, event.offsetY - this.scrollPosition.y);
 
-      this.canvasManager.setAddingGroup(false);
+      this.interactionManager.setAddingGroup(false);
     }
   }
 
@@ -134,7 +138,7 @@ export class InteractionCanvasComponent implements OnInit {
     this.contextMenuHidden = true;
 
     let c = ContextMenuComponent;
-  
+
     const contextMenu = this.components.find((component: ComponentRef<any>) => component.instance instanceof c);
     if (contextMenu) {
       const componentIndex = this.components.indexOf(contextMenu);
@@ -153,10 +157,10 @@ export class InteractionCanvasComponent implements OnInit {
   }
 
   addMicro(event: any) {
-    let g: Group = this.canvasManager.addGroup(event.offsetX - this.scrollPosition.x, event.offsetY - this.scrollPosition.y);
-    this.canvasManager.setAddingGroup(false);
+    let g: Group = this.interactionManager.addGroup(event.offsetX - this.scrollPosition.x, event.offsetY - this.scrollPosition.y);
+    this.interactionManager.setAddingGroup(false);
 
-    this.canvasManager.addMicroToGroup(g.id);
-    this.canvasManager.updateGroup(g);
+    this.interactionManager.addMicroToGroup(g.id);
+    this.interactionManager.updateGroup(g);
   }
 }

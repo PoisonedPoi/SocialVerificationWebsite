@@ -1,8 +1,12 @@
+/*
+This component displays a transition between two microinteractions.
+*/
+
 import { Component, OnInit } from '@angular/core';
-import {Group} from 'src/app/models/group';
-import {Transition} from 'src/app/models/transition';
+import { Group } from 'src/app/models/group';
+import { Transition } from 'src/app/models/transition';
 import { Position } from 'src/app/models/position';
-import {CanvasManagerService} from 'src/app/services/canvas-manager.service';
+import { InteractionManagerService } from 'src/app/services/interaction-manager.service';
 import { ContextMenuService } from 'src/app/services/context-menu.service';
 
 @Component({
@@ -31,7 +35,7 @@ export class TransitionComponent implements OnInit {
   conditionsY: string = '0px';
 
   constructor(
-    private canvasManager: CanvasManagerService,
+    private interactionManager: InteractionManagerService,
     private contextMenu: ContextMenuService,
   ) { }
 
@@ -60,8 +64,8 @@ export class TransitionComponent implements OnInit {
     this.transition = t;
 
     if (this.transition) {
-      let group1 = this.canvasManager.getGroupById(this.transition.firstGroupId);
-      let group2 = this.canvasManager.getGroupById(this.transition.secondGroupId);
+      let group1 = this.interactionManager.getGroupById(this.transition.firstGroupId);
+      let group2 = this.interactionManager.getGroupById(this.transition.secondGroupId);
 
       if (group1 && group2) {
         this.setOffsets(group1, group2);
@@ -76,7 +80,7 @@ export class TransitionComponent implements OnInit {
       this.setSelfOffsets(g1);
       return;
     }
-    
+
     this.isLine = true;
 
     // Calculate in and out anchor positions
@@ -112,7 +116,7 @@ export class TransitionComponent implements OnInit {
         }
     });
 
-    // Set the arrow offset 
+    // Set the arrow offset
     let theta: number = Math.atan2(g1.y - g2.y, g1.x - g2.x);
 
     let xOff = this.arrowLength * Math.cos(theta);
@@ -144,7 +148,7 @@ export class TransitionComponent implements OnInit {
   }
 
   updateTransition() {
-    this.canvasManager.updateTransition(this.transition);
+    this.interactionManager.updateTransition(this.transition);
   }
 
 }

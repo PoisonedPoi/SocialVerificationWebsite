@@ -5,11 +5,11 @@ the robot when the group is executed.
 */
 
 import { Component, OnInit, Input, ElementRef, ViewChild } from '@angular/core';
-import {MicroInteraction} from 'src/app/models/microInteraction';
-import {ContextMenuService} from 'src/app/services/context-menu.service';
+import { MicroInteraction } from 'src/app/models/microInteraction';
+import { ContextMenuService } from 'src/app/services/context-menu.service';
 import { Position } from 'src/app/models/position';
-import {CanvasManagerService} from 'src/app/services/canvas-manager.service';
-import {ParameterManagerService} from 'src/app/services/parameter-manager.service';
+import { InteractionManagerService } from 'src/app/services/interaction-manager.service';
+import { ParameterManagerService } from 'src/app/services/parameter-manager.service';
 
 @Component({
   selector: 'app-micro',
@@ -26,7 +26,7 @@ export class MicroComponent implements OnInit {
 
   constructor(
     private contextMenu: ContextMenuService,
-    private canvasManager: CanvasManagerService,
+    private interactionManager: InteractionManagerService,
     private parameterManager: ParameterManagerService
   ) { }
 
@@ -47,7 +47,7 @@ export class MicroComponent implements OnInit {
     let xPos = this.el.nativeElement.getBoundingClientRect().x;
     let yPos = this.el.nativeElement.getBoundingClientRect().y;
 
-    let canvasPos: Position = this.canvasManager.canvasOffset;
+    let canvasPos: Position = this.interactionManager.canvasOffset;
 
     let xOffset = xPos - canvasPos.x;
     let yOffset = yPos - canvasPos.y;

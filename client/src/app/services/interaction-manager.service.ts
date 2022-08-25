@@ -12,7 +12,7 @@ import {Transition} from '../models/transition';
 @Injectable({
   providedIn: 'root'
 })
-export class CanvasManagerService {
+export class InteractionManagerService {
 
   interaction: Interaction = new Interaction();
 
