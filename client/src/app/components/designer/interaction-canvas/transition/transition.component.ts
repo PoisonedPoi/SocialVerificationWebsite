@@ -19,10 +19,13 @@ export class TransitionComponent implements OnInit {
 
   transition: Transition = new Transition();
 
+  isReady: boolean = false;
+  isNotReady: boolean = false;
+
   isLine: boolean = true;
 
   width: number = 96;
-  height: number = 192;
+  height: number = 176;
   arrowLength: number = 15;
 
   x1: string ='0px';
@@ -49,15 +52,10 @@ export class TransitionComponent implements OnInit {
 
     event.preventDefault();
 
-    let x1Num: number = parseInt(this.x1.substring(0, this.x1.length - 2));
-    let y1Num: number = parseInt(this.y1.substring(0, this.x1.length - 2));
-    let x2Num: number = parseInt(this.x2.substring(0, this.x2.length - 2));
-    let y2Num: number = parseInt(this.y2.substring(0, this.x2.length - 2));
+    let xNum: number = parseInt(this.conditionsX.substring(0, this.conditionsX.length - 2));
+    let yNum: number = parseInt(this.conditionsY.substring(0, this.conditionsY.length - 2));
 
-    let xNum = (x1Num + x2Num) / 2;
-    let yNum = (y1Num + y2Num) / 2;
-
-    this.contextMenu.displayContextMenu('transition', new Position(xNum + event.offsetX - 50, yNum + event.offsetY - 25), -1, this.transition.id);
+    this.contextMenu.displayContextMenu('transition', new Position(xNum + 50, yNum + 25), -1, this.transition.id);
   }
 
   setTransition(t: Transition) {
@@ -66,6 +64,9 @@ export class TransitionComponent implements OnInit {
     if (this.transition) {
       let firstMicro = this.interactionManager.getMicroById(this.transition.firstMicroId);
       let secondMicro = this.interactionManager.getMicroById(this.transition.secondMicroId);
+
+      //this.isReady = this.transition.ready;
+      //this.isNotReady = this.transition.notReady;
 
       if (firstMicro && secondMicro) {
         this.setOffsets(firstMicro, secondMicro);
@@ -132,6 +133,7 @@ export class TransitionComponent implements OnInit {
 
       this.conditionsX = (((smallest.p1.x + (smallest.p2.x - 100)) / 2)) + "px";
       this.conditionsY = (((smallest.p1.y + smallest.p2.y) / 2) - 30) + "px";
+
     }
   }
 
@@ -139,8 +141,8 @@ export class TransitionComponent implements OnInit {
     let NOutX = m.x + this.width / 3
     let EInY = m.y + this.height / 3
 
-    this.conditionsX = (m.x - 50) + "px";
-    this.conditionsY = (m.y - 30) + "px";
+    this.conditionsX = (m.x - 100) + "px";
+    this.conditionsY = (m.y - 50) + "px";
 
     this.d = 'M ' + NOutX + ' ' + m.y +
       ' C ' + m.x + ' ' + (m.y - 50) + ', ' +
@@ -148,7 +150,9 @@ export class TransitionComponent implements OnInit {
   }
 
   updateTransition() {
-    this.interactionManager.updateTransition(this.transition);
+    //this.transition.ready = this.isReady;
+    //this.transition.notReady = this.isNotReady;
+    //this.interactionManager.updateTransition(this.transition);
   }
 
 }

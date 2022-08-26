@@ -25,9 +25,11 @@ export class MicroComponent implements OnInit {
 
   @ViewChild('microEl') el!: ElementRef;
 
-  tempAddTrans: boolean = false;
+  addTrans: boolean = false;
   x: string = '';
   y: string = '';
+
+  highlightColor: string = 'black';
 
   constructor(
     private contextMenu: ContextMenuService,
@@ -48,13 +50,9 @@ export class MicroComponent implements OnInit {
   /* Show microinteraction's parameter options in the interaction options pane */
   clickMicro(event: any) {
     event.preventDefault();
-    
-    if (this.tempAddTrans) {
-      if (this.interactionManager.addingTransition == 1) {
-        this.interactionManager.setFirstMicroId(this.micro.id);
-      } else if (this.interactionManager.addingTransition == 2) {
-        this.interactionManager.setSecondMicroId(this.micro.id);
-      }
+
+    if (this.interactionManager.isAddingTransition) {
+      this.interactionManager.setSecondMicroId(this.micro.id);
     } else {
       this.parameterManager.updateCurrentMicro(this.micro);
     }
@@ -75,6 +73,34 @@ export class MicroComponent implements OnInit {
     this.contextMenu.displayContextMenu('micro', new Position(xOffset + event.offsetX, yOffset + event.offsetY), this.micro.id);
   }
 
+  /* Transition related methods */
+  initAddingTransition(event: any) {
+    event.preventDefault();
+
+    if (!this.interactionManager.isAddingTransition) {
+      event.stopPropagation();
+      this.addTrans = true;
+      this.interactionManager.setFirstMicroId(this.micro.id);
+    }
+
+  }
+
+  cancelAddingTransition(event: any) {
+    event.preventDefault();
+    event.stopPropagation();
+    this.interactionManager.isAddingTransition = false;
+    this.addTrans = false;
+  }
+
+  setHightlightColor(val: string) {
+    if (this.interactionManager.isAddingTransition) {
+      this.highlightColor = val;
+    } else {
+      this.highlightColor = 'black';
+    }
+  }
+
+  /* Reposition micro in canvas */
   droppedMicro(event: CdkDragEnd) {
     let rect = event.source.getRootElement().getBoundingClientRect();
     this.micro.x = rect.x - this.canvasManager.canvasOffset.x + this.canvasManager.canvasScrollOffset.x;

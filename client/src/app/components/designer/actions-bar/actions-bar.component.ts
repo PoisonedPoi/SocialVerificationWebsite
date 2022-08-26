@@ -5,7 +5,6 @@ normal program.
 */
 
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { CanvasManagerService } from 'src/app/services/canvas-manager.service';
 import { InteractionManagerService } from 'src/app/services/interaction-manager.service';
 import { ParameterManagerService } from 'src/app/services/parameter-manager.service';
 
@@ -23,32 +22,10 @@ export class ActionsBarComponent implements OnInit {
 
   constructor(
     private interactionManager: InteractionManagerService,
-    private canvasManager: CanvasManagerService,
     private paramManager: ParameterManagerService
-  ) {
-    this.canvasManager.updateBtnState.subscribe(() => {
-      this.updateButtonColors();
-    });
-  }
+  ) {}
 
   ngOnInit(): void {
-  }
-
-  /* Action button click functions */
-  addGroup() {
-    if (this.interactionManager.isAddingGroup) {
-      this.interactionManager.setAddingGroup(false);
-    } else {
-      this.interactionManager.setAddingGroup(true);
-    }
-  }
-
-  addTransition() {
-    if (this.interactionManager.addingTransition != 0) {
-      this.interactionManager.setAddingTransition(0);
-    } else {
-      this.interactionManager.setAddingTransition(1);
-    }
   }
 
   verifyModel() {
@@ -84,17 +61,5 @@ export class ActionsBarComponent implements OnInit {
 
   saveInteractionToLocal() {
     this.interactionManager.saveInteractionToLocal();
-  }
-
-  /* Update view functions */
-  updateButtonColors() {
-    if (this.interactionManager.isAddingGroup) {
-      this.isAddingGroup = true;
-      this.isAddingTransition = false;
-      this.isAddingTransition = true;
-    } else {
-      this.isAddingGroup = false;
-      this.isAddingTransition = false;
-    }
   }
 }

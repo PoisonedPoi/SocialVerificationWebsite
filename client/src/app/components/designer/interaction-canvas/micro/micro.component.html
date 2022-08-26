@@ -2,13 +2,34 @@
   #microEl
   [style.left]='x'
   [style.top]='y'
+  [style.border-color]='highlightColor'
   cdkScrollable
   cdkDragBoundary=".bounding-canvas"
   cdkDrag
   (cdkDragEnded)="droppedMicro($event)"
   (click)="clickMicro($event)"
+  (mouseenter)="setHightlightColor('yellow')"
+  (mouseleave)="setHightlightColor('black')"
   (contextmenu)="showContextMenu($event)"
-  class="absolute z-10 w-24 h-48 mb-2 text-center align-middle bg-yellow-100 border-2 border-black rounded-xl"
+  class="absolute z-10 w-24 mb-2 text-center align-middle bg-yellow-100 border-2 border-black h-44 rounded-xl"
 >
 {{micro.type}}
+  <div
+    class="absolute bottom-1"
+  >
+    <button
+      *ngIf="!addTrans"
+      class="px-3 py-1.5 text-xs rounded-md text-white bg-blue-600 hover:bg-blue-700 shadow mx-0.5 w-[88px] h-[44px]"
+      (click)="initAddingTransition($event)"
+    >
+      Add Transition
+    </button>
+    <button
+      *ngIf="addTrans"
+      class="px-3 py-1.5 rounded-md text-white bg-red-600 hover:bg-red-700 shadow mx-0.5 w-[88px] h-[44px]"
+      (click)="cancelAddingTransition($event)"
+    >
+      Cancel
+    </button>
+  </div>
 </div>

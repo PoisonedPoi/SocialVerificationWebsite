@@ -10,7 +10,6 @@ import { MicroType } from '../models/microType';
 import { ParameterResult } from '../models/parameterResult';
 import { getTrackedMicroTypes } from '../models/trackedMicroTypes';
 import { Transition } from '../models/transition';
-import { CanvasManagerService } from './canvas-manager.service';
 
 @Injectable({
   providedIn: 'root'
@@ -19,9 +18,8 @@ export class InteractionManagerService {
 
   interaction: Interaction = new Interaction();
 
-  isAddingGroup: boolean = false;
-  addingTransition: number = 0;
   currentTransition: Transition;
+  isAddingTransition: boolean = false;
 
   currentMicroType: string = '';
 
@@ -29,7 +27,6 @@ export class InteractionManagerService {
 
 
   constructor(
-    private canvasManager: CanvasManagerService
   ) {
     this.currentTransition = new Transition(-1, -1, -1);
   }
@@ -126,7 +123,7 @@ export class InteractionManagerService {
   setFirstMicroId(mid: number) {
     this.currentTransition = new Transition();
     this.currentTransition.firstMicroId = mid;
-    this.addingTransition++;
+    this.isAddingTransition = true;
   }
 
   setSecondMicroId(mid: number) {
@@ -139,6 +136,7 @@ export class InteractionManagerService {
     }
 
     this.currentTransition.secondMicroId = mid;
+    this.isAddingTransition = false;
 
     this.currentTransition.id = this.interaction.transitionIdCounter;
     this.interaction.transitionIdCounter++;
@@ -146,8 +144,6 @@ export class InteractionManagerService {
     this.interaction.transitions.push(this.currentTransition);
 
     this.getUpdatedInteraction.emit(this.interaction);
-
-    this.setAddingTransition(0);
   }
 
   updateTransition(transition: Transition) {
@@ -158,22 +154,6 @@ export class InteractionManagerService {
     this.interaction.transitions = ts;
 
     this.getUpdatedInteraction.emit(this.interaction);
-  }
-
-  /* State management for view reflection */
-
-  setAddingGroup(val: boolean) {
-    this.isAddingGroup = val;
-    this.addingTransition = 0;
-
-    this.canvasManager.updateBtnState.emit();
-  }
-
-  setAddingTransition(val: number) {
-    this.addingTransition = val;
-    this.isAddingGroup = false;
-
-    this.canvasManager.updateBtnState.emit();
   }
 
   /* Loading from file on disk */
