@@ -65,8 +65,8 @@ export class TransitionComponent implements OnInit {
       let firstMicro = this.interactionManager.getMicroById(this.transition.firstMicroId);
       let secondMicro = this.interactionManager.getMicroById(this.transition.secondMicroId);
 
-      //this.isReady = this.transition.ready;
-      //this.isNotReady = this.transition.notReady;
+      this.isReady = this.transition.ready;
+      this.isNotReady = this.transition.notReady;
 
       if (firstMicro && secondMicro) {
         this.setOffsets(firstMicro, secondMicro);
@@ -131,8 +131,8 @@ export class TransitionComponent implements OnInit {
       this.x2 = smallest.p2.x + xOff + "px";
       this.y2 = smallest.p2.y + yOff + "px";
 
-      this.conditionsX = (((smallest.p1.x + (smallest.p2.x - 100)) / 2)) + "px";
-      this.conditionsY = (((smallest.p1.y + smallest.p2.y) / 2) - 30) + "px";
+      this.conditionsX = (((smallest.p1.x + (smallest.p2.x - 176)) / 2)) + "px";
+      this.conditionsY = (((smallest.p1.y + smallest.p2.y) / 2) - 20) + "px";
 
     }
   }
@@ -150,9 +150,9 @@ export class TransitionComponent implements OnInit {
   }
 
   updateTransition() {
-    //this.transition.ready = this.isReady;
-    //this.transition.notReady = this.isNotReady;
-    //this.interactionManager.updateTransition(this.transition);
+    this.transition.ready = this.isReady;
+    this.transition.notReady = this.isNotReady;
+    this.interactionManager.updateTransition(this.transition);
   }
 
 }

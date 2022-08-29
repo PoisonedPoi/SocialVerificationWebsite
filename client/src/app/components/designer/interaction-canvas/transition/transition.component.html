@@ -14,29 +14,23 @@
   <path *ngIf="!isLine" [attr.d]="d" stroke="#000" stroke-width="2px" fill="transparent" marker-end="url(#arrowhead)"></path>
 </svg>
 <div
-  class="absolute z-40 flex flex-row justify-between h-10 p-1 bg-gray-300 rounded w-36"
+  class="absolute z-40 flex w-48 h-10 p-1 bg-gray-300 rounded"
   [style.top]="conditionsY"
   [style.left]="conditionsX"
   (contextmenu)='showContextMenu($event)'
 >
-  <div>
-    <input type="checkbox" id="readyInput" [(ngModel)]="isReady" (change)="updateTransition()" class="hidden">
-    <label
-      [ngClass]="isReady ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-500 hover:bg-gray-400'"
-      for="readyInput"
-      class="w-full p-1 text-center text-white border-black cursor-pointer rounded-md"
-    >
-      Ready
-    </label>
-  </div>
-  <div>
-    <input type="checkbox" id="notReadyInput" [(ngModel)]="isNotReady" (change)="updateTransition()" class="hidden">
-    <label
-      [ngClass]="isNotReady ? 'bg-red-600 hover:bg-red-700' : 'bg-gray-500 hover:bg-gray-400'"
-      for="notReadyInput"
-      class="w-full p-1 text-center text-white border-black cursor-pointer rounded-md"
-    >
-      Not Ready
-    </label>
-  </div>
+  <button
+    (click)="isReady = !isReady; updateTransition()"
+    [ngClass]="isReady ? 'bg-green-600 hover:bg-green-700' : 'bg-gray-500 hover:bg-gray-400'"
+    class="w-1/2 p-1 text-center text-white border-black cursor-pointer rounded-l-md"
+  >
+    Ready
+  </button>
+  <button
+    (click)="isNotReady = !isNotReady; updateTransition()"
+    [ngClass]="isNotReady ? 'bg-red-600 hover:bg-red-700' : 'bg-gray-500 hover:bg-gray-400'"
+    class="w-1/2 p-1 text-center text-white border-black cursor-pointer rounded-r-md"
+  >
+    Not Ready
+  </button>
 </div>
